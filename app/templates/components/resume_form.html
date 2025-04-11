@@ -1,0 +1,23 @@
+<!-- Work Experience Form -->
+<div>
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold">Work Experience</h2>
+        <div class="flex space-x-2">
+            <button class="flex items-center text-sm text-purple-600 hover:text-purple-800 transition-colors">
+                <i class="fas fa-file-import mr-1"></i> Import from Profile
+            </button>
+            <button class="flex items-center text-sm text-green-600 hover:text-green-800 transition-colors"
+                    hx-post="/api/resume/experience"
+                    hx-target="#experience-list"
+                    hx-swap="beforeend">
+                <i class="fas fa-plus mr-1"></i> Add Work Experience
+            </button>
+        </div>
+    </div>
+
+    <div id="experience-list">
+        {% for item in resume_data.experience %}
+            {% include 'components/experience_item.html' with context %}
+        {% endfor %}
+    </div>
+</div>

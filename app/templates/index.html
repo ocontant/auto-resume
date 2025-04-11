@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="resume-editor">
+    <!-- Left side - Editor -->
+    <div class="bg-white rounded-lg shadow-md p-6 overflow-y-auto">
+        {% include 'components/sidebar.html' %}
+        {% include 'components/resume_form.html' %}
+    </div>
+    
+    <!-- Right side - Preview -->
+    <div class="bg-white rounded-lg shadow-md p-6 overflow-y-auto">
+        {% include 'components/resume_preview.html' %}
+    </div>
+</div>
+{% endblock %}

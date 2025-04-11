@@ -1,0 +1,72 @@
+<div class="resume-preview">
+    <!-- Header -->
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-center">{{ resume_data.personal_info.name }}</h1>
+        <div class="text-center text-gray-600 mt-1">
+            {{ resume_data.personal_info.location }} •
+            <a href="mailto:{{ resume_data.personal_info.email }}" class="text-blue-600">{{ resume_data.personal_info.email }}</a> •
+            <a href="https://{{ resume_data.personal_info.linkedin }}" class="text-blue-600">{{ resume_data.personal_info.linkedin }}</a> •
+            <a href="https://{{ resume_data.personal_info.github }}" class="text-blue-600">{{ resume_data.personal_info.github }}</a>
+        </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="mb-6">
+        <h2 class="text-lg font-bold uppercase mb-2">Skills</h2>
+        <p><strong>Programming Languages:</strong> {{ resume_data.skills.programming_languages }}</p>
+        <p><strong>Frameworks/Libraries:</strong> {{ resume_data.skills.frameworks }}</p>
+        <p><strong>Developer Tools:</strong> {{ resume_data.skills.developer_tools }}</p>
+    </div>
+
+    <!-- Experience -->
+    <div class="mb-6">
+        <h2 class="text-lg font-bold uppercase mb-2">Experience</h2>
+        {% for exp in resume_data.experience %}
+        <div class="mb-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-md font-bold">{{ exp.title }}</h3>
+                <span class="text-gray-600">{{ exp.start_date }} – {{ exp.end_date }}</span>
+            </div>
+            <p class="font-medium">{{ exp.company }}</p>
+            <ul class="list-disc ml-5 mt-2">
+                {% for point in exp.points %}
+                <li class="mb-1">{{ point }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Projects -->
+    <div class="mb-6">
+        <h2 class="text-lg font-bold uppercase mb-2">Projects</h2>
+        {% for project in resume_data.projects %}
+        <div class="mb-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-md font-bold">{{ project.name }}</h3>
+                <a href="https://{{ project.url }}" class="text-blue-600">{{ project.url }}</a>
+            </div>
+            <p class="text-sm"><strong>Technologies:</strong> {{ project.technologies }}</p>
+            <ul class="list-disc ml-5 mt-2">
+                {% for point in project.points %}
+                <li class="mb-1">{{ point }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Education -->
+    <div>
+        <h2 class="text-lg font-bold uppercase mb-2">Education</h2>
+        {% for edu in resume_data.education %}
+        <div class="mb-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-md font-bold">{{ edu.institution }}</h3>
+                <span class="text-gray-600">{{ edu.graduation_date }}</span>
+            </div>
+            <p>{{ edu.degree }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
