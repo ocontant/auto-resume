@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request, Depends, HTTPException
-from fastapi.templating import Jinja2Templates
+from fastapi.templating import Jinja2Templates 
 from fastapi.responses import HTMLResponse, JSONResponse
 from typing import Dict, Any
 
@@ -41,27 +41,41 @@ async def add_experience(request: Request):
     return templates.TemplateResponse(
         "components/experience_item.html",
         {"request": request, "item": new_exp, "index": index}
-    )
-
-
+    ) 
+ 
+ 
 # Delete experience
 @router.delete("/experience/{index}", response_class=JSONResponse)
 async def delete_experience(index: int):
     if 0 <= index < len(main.current_resume["experience"]):
-        main.current_resume["experience"].pop(index)
+        main.current_resume["experience"].pop(index) 
         return {"success": True}
     return {"success": False, "error": "Invalid index"}
-
-
+ 
+ 
 # Update experience field
-@router.patch("/experience/{index}/{field}", response_class=JSONResponse)
+@router.patch("/experience/{index}/{field}", response_class=HTMLResponse)
 async def update_experience_field(index: int, field: str, request: Request):
-    data = await request.json()
+    form = await request.form()
+    value = form.get("value", "")
+    
     if 0 <= index < len(main.current_resume["experience"]):
         if field in main.current_resume["experience"][index]:
-            main.current_resume["experience"][index][field] = data.get("value")
-            return {"success": True}
-    return {"success": False, "error": "Invalid index or field"}
+            main.current_resume["experience"][index][field] = value
+            return f"{value}" # Return just the value as HTML for HTMX to swap
+    return "Error updating field"
+ 
+# Update experience point
+@router.patch("/experience/{exp_index}/point/{point_index}", response_class=HTMLResponse)
+async def update_experience_point(exp_index: int, point_index: int, request: Request):
+    form = await request.form()
+    value = form.get("value", "")
+    
+    if (0 <= exp_index < len(main.current_resume["experience"]) and
+            0 <= point_index < len(main.current_resume["experience"][exp_index]["points"])):
+        main.current_resume["experience"][exp_index]["points"][point_index] = value
+        return f"{value}" # Return just the value as HTML for HTMX to swap
+    return "Error updating point"
 
 
 # Add point to experience
