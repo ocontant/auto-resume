@@ -11,6 +11,7 @@
                    class="w-full p-2 border border-gray-300 rounded"
                    hx-patch="/api/resume/personal_info/name"
                    hx-trigger="change"
+                   hx-swap="innerHTML"
                    name="value">
         </div>
 
@@ -21,6 +22,7 @@
                    class="w-full p-2 border border-gray-300 rounded"
                    hx-patch="/api/resume/personal_info/location"
                    hx-trigger="change"
+                   hx-swap="innerHTML"
                    name="value">
         </div>
 
@@ -31,6 +33,7 @@
                    class="w-full p-2 border border-gray-300 rounded"
                    hx-patch="/api/resume/personal_info/email"
                    hx-trigger="change"
+                   hx-swap="innerHTML"
                    name="value">
         </div>
 
@@ -40,14 +43,18 @@
                 <input type="text" value="{{ resume_data.personal_info.linkedin }}"
                        class="w-full p-2 border border-gray-300 rounded"
                        hx-patch="/api/resume/personal_info/linkedin"
-                       hx-trigger="change" name="value">
+                       hx-trigger="change"
+                       hx-swap="innerHTML"
+                       name="value">
             </div>
             <div>
                 <h3 class="text-gray-700 font-medium mb-2">GITHUB</h3>
                 <input type="text" value="{{ resume_data.personal_info.github }}"
                        class="w-full p-2 border border-gray-300 rounded"
                        hx-patch="/api/resume/personal_info/github"
-                       hx-trigger="change" name="value">
+                       hx-trigger="change"
+                       hx-swap="innerHTML"
+                       name="value">
             </div>
         </div>
     </div>

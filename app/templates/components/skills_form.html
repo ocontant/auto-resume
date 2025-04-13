@@ -10,6 +10,7 @@
                 class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-none"
                 hx-patch="/api/resume/skills/programming_languages"
                 hx-trigger="change"
+                hx-swap="innerHTML"
                 name="value">{{ resume_data.skills.programming_languages }}</textarea>
             <div class="mt-1 text-sm text-gray-500">
                 Separate technologies with commas
@@ -22,6 +23,7 @@
                 class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-none"
                 hx-patch="/api/resume/skills/frameworks"
                 hx-trigger="change"
+                hx-swap="innerHTML"
                 name="value">{{ resume_data.skills.frameworks }}</textarea>
             <div class="mt-1 text-sm text-gray-500">
                 Separate technologies with commas
@@ -34,6 +36,7 @@
                 class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-none"
                 hx-patch="/api/resume/skills/developer_tools"
                 hx-trigger="change"
+                hx-swap="innerHTML"
                 name="value">{{ resume_data.skills.developer_tools }}</textarea>
             <div class="mt-1 text-sm text-gray-500">
                 Separate technologies with commas

@@ -35,7 +35,8 @@ async def get_section(request: Request, section: str):
         "experience": "components/resume_form.html",  # Reusing existing component
         "education": "components/education_form.html",
         "skills": "components/skills_form.html",
-        "projects": "components/projects_form.html",
+        "preview": "components/resume_preview.html",
+        "projects": "components/resume_form.html",  # Reusing until we create a separate component
         "layout": "components/layout_form.html"
     }
     
@@ -58,6 +59,18 @@ async def get_section(request: Request, section: str):
         return HTMLResponse(
             content=f"<div class='p-4 bg-yellow-100 text-yellow-800 rounded'>Coming soon: {section} tab</div>"
         )
+
+# Get only the resume preview (for AJAX updates)
+@router.get("/section/preview", response_class=HTMLResponse)
+async def get_preview(request: Request):
+    """Get just the resume preview component for AJAX updates."""
+    try:
+        return templates.TemplateResponse(
+            "components/resume_preview.html",
+            {"request": request, "resume_data": main.current_resume}
+        )
+    except Exception as e:
+        return HTMLResponse(content=f"<div class='p-4 bg-red-100 text-red-800 rounded'>Error loading preview: {str(e)}</div>")
 
 # Get complete resume
 @router.get("/", response_class=JSONResponse)
@@ -135,19 +148,20 @@ async def add_experience_point(index: int, request: Request):
                 "request": request,
                 "point": "New responsibility or achievement...",
                 "exp_index": index,
-                "point_index": point_index
+                "point_index": f"new_{point_index}"
             }
         )
     raise HTTPException(status_code=404, detail="Experience not found")
 
 # Delete point from experience
-@router.delete("/experience/{exp_index}/point/{point_index}", response_class=JSONResponse)
+@router.delete("/experience/{exp_index}/point/{point_index}", response_class=HTMLResponse)
 async def delete_experience_point(exp_index: int, point_index: int):
     if (0 <= exp_index < len(main.current_resume["experience"]) and
             0 <= point_index < len(main.current_resume["experience"][exp_index]["points"])):
         main.current_resume["experience"][exp_index]["points"].pop(point_index)
-        return {"success": True}
-    return {"success": False, "error": "Invalid indices"}
+        return HTMLResponse(content="", status_code=200)
+    else:
+        return "<div class='text-red-500'>Could not delete point</div>"
 
 # Skills endpoints
 @router.patch("/skills/{field}", response_class=HTMLResponse)
@@ -162,6 +176,31 @@ async def update_skills_field(field: str, request: Request):
         save_resume_section("skills", main.current_resume["skills"])
         
         return f"{value}"
+    return "Error updating field"
+
+# Personal info endpoints
+@router.patch("/personal_info/{field}", response_class=HTMLResponse)
+async def update_personal_info_field(field: str, request: Request):
+    form = await request.form()
+    value = form.get("value", "")
+    
+    if field in main.current_resume["personal_info"]:
+        main.current_resume["personal_info"][field] = value
+        
+        # Save to database
+        save_resume_section("personal_info", main.current_resume["personal_info"])
+        
+        # Use HTMX OOB swap to update the preview without JS
+        response_content = value
+        
+        # Return the updated field value and refresh the preview with OOB swap
+        # This is the key part - we send both the form field response and the preview update
+        # in a single response using HTMX's OOB swap feature
+        preview_html = templates.get_template("components/resume_preview.html").render(
+            request=request, resume_data=main.current_resume
+        )
+        
+        return f"{value}<div id='resume-preview' hx-swap-oob='true'>{preview_html}</div>"
     return "Error updating field"
 
 # Education endpoints
