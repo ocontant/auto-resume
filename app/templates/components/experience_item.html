@@ -71,13 +71,6 @@
                             hx-swap="outerHTML">
                         <i class="fas fa-trash"></i>
                     </button>
-                    <button class="text-purple-500 hover:text-purple-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                            hx-post="/api/ai/enhance"
-                            hx-include="closest textarea"
-                            hx-target="closest textarea"
-                            hx-swap="innerHTML">
-                        <i class="fas fa-magic"></i>
-                    </button>
                 </div>
             </div>
             {% endfor %}
@@ -89,16 +82,6 @@
                     hx-target="#responsibility-list-{{ index }}"
                     hx-swap="beforeend">
                 <i class="fas fa-plus mr-1"></i> Add Point
-            </button>
-            <button class="flex items-center text-sm text-purple-600 hover:text-purple-800 transition-colors"
-                    hx-post="/api/ai/generate-points-html"
-                    hx-target="#responsibility-list-{{ index }}"
-                    hx-swap="beforeend"
-                    hx-include="this">
-                <input type="hidden" name="job_title" value="{{ item.title }}">
-                <input type="hidden" name="company" value="{{ item.company }}">
-                <input type="hidden" name="exp_index" value="{{ index }}">
-                <i class="fas fa-robot mr-1"></i> Write points with AI
             </button>
         </div>
     </div>
