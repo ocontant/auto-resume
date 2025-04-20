@@ -1,5 +1,7 @@
 from typing import List, Optional
+
 from pydantic import BaseModel
+
 
 class PersonalInfo(BaseModel):
     name: str
@@ -8,13 +10,16 @@ class PersonalInfo(BaseModel):
     linkedin: str
     github: str
 
+
 class SkillSet(BaseModel):
     programming_languages: str
     frameworks: str
     developer_tools: str
 
+
 class ExperiencePoint(BaseModel):
     content: str
+
 
 class Experience(BaseModel):
     title: str
@@ -24,16 +29,19 @@ class Experience(BaseModel):
     end_date: str
     points: List[str]
 
+
 class Project(BaseModel):
     name: str
     url: str
     technologies: str
     points: List[str]
 
+
 class Education(BaseModel):
     institution: str
     degree: str
     graduation_date: str
+
 
 class Resume(BaseModel):
     personal_info: PersonalInfo
@@ -42,8 +50,10 @@ class Resume(BaseModel):
     projects: List[Project]
     education: List[Education]
 
+
 class AIEnhanceRequest(BaseModel):
     text: str
+
 
 class AIPointsRequest(BaseModel):
     job_title: str

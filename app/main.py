@@ -4,10 +4,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 
 from app.models import Resume
-from app.routes import resume, ai
 
-# Sample initial data
-from app.data import sample_resume
 
 app = FastAPI()
 
@@ -17,23 +14,11 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Templates
 templates = Jinja2Templates(directory="app/templates")
 
-# Include routers
-app.include_router(resume.router)
-app.include_router(ai.router)
-
-# Global state (would be replaced by database in production)
-current_resume = sample_resume
-
-# Get current resume data
-def get_resume_data():
-    return current_resume
-
-
 @app.get("/", response_class=HTMLResponse)
-async def get_home(request: Request, resume_data: Resume = Depends(get_resume_data)):
+async def home(request: Request, resume_data: Resume):
     return templates.TemplateResponse("index.html", {
         "request": request,
-        "resume_data": resume_data
+        # "resume_data": resume_data
     })
 
 
