@@ -11,7 +11,19 @@
         
         <!-- Dynamic content container for tab sections -->
         <div id="resume-content-section">
-            {% include 'components/resume_form.html' %}
+            {% if active_tab == 'personal' %}
+                {% include 'components/personal_form.html' %}
+            {% elif active_tab == 'experience' %}
+                {% include 'components/resume_form.html' %}
+            {% elif active_tab == 'skills' %}
+                {% include 'components/skills_form.html' %}
+            {% elif active_tab == 'projects' %}
+                {% include 'components/projects_form.html' %}
+            {% elif active_tab == 'education' %}
+                {% include 'components/education_form.html' %}
+            {% else %}
+                {% include 'components/resume_form.html' %}
+            {% endif %}
         </div>
     </div>
     
