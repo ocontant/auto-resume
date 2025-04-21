@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse
 
 from sqlalchemy.orm import Session
 
+from app.routes.resume import router as resume_router
 from app.db import create_db_and_tables, get_session
 from app.services.resume_service import get_or_create_default_resume
 
@@ -15,6 +16,9 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Templates
 templates = Jinja2Templates(directory="app/templates")
+
+# Include routes
+app.include_router(resume_router)
 
 @app.on_event("startup")
 def on_startup():
