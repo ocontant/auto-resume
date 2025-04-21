@@ -1,0 +1,43 @@
+<div class="project-item bg-white p-4 rounded-md shadow mb-4" id="project-{{ index }}">
+    <div class="flex justify-between mb-2">
+        <h3 class="text-lg font-medium">Project</h3>
+        <button 
+            class="delete-project text-red-600 hover:text-red-800"
+            data-index="{{ index }}"
+            onclick="deleteProject({{ index }})">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+    </div>
+    
+    <div class="grid grid-cols-1 gap-4">
+        <!-- Project Name -->
+        <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
+            <input 
+                type="text" 
+                class="w-full p-2 border rounded focus:ring-purple-500 focus:border-purple-500" 
+                value="{{ project.name }}" 
+                onchange="updateProjectField({{ index }}, 'name', this.value)">
+        </div>
+        
+        <!-- Project URL -->
+        <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1">URL/Repository</label>
+            <input 
+                type="text" 
+                class="w-full p-2 border rounded focus:ring-purple-500 focus:border-purple-500" 
+                value="{{ project.url }}" 
+                onchange="updateProjectField({{ index }}, 'url', this.value)">
+        </div>
+        
+        <!-- Technologies Used -->
+        <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Technologies Used</label>
+            <input 
+                type="text" 
+                class="w-full p-2 border rounded focus:ring-purple-500 focus:border-purple-500" 
+                value="{{ project.technologies }}" 
+                onchange="updateProjectField({{ index }}, 'technologies', this.value)">
+        </div>
+    </div>
+</div>
