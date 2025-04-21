@@ -5,9 +5,9 @@ from fastapi.responses import HTMLResponse
 
 from sqlalchemy.orm import Session
 
-from app.routes.resume import router as resume_router
+from app.routes import router as resume_router
 from app.db import create_db_and_tables, get_session
-from app.services.resume_service import get_or_create_default_resume
+from app.services.resume import get_or_create_default_resume
 
 app = FastAPI()
 
@@ -29,7 +29,7 @@ def on_startup():
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request, session: Session = Depends(get_session)):
     # Get resume data directly from the service
-    resume_data = get_or_create_default_resume(session)
+    resume_data = await get_or_create_default_resume(session)
     return templates.TemplateResponse("index.html", {
         "request": request,
         "resume_data": resume_data

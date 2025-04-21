@@ -19,7 +19,7 @@ Base = declarative_base()
 # Define models
 class PersonalInfo(Base):
     __tablename__ = "personal_info"
-    
+
     id = Column(Integer, primary_key=True)
     resume_id = Column(Integer, ForeignKey("resume.id"))
     name = Column(String, nullable=False)
@@ -27,7 +27,7 @@ class PersonalInfo(Base):
     email = Column(String, nullable=False)
     linkedin = Column(String, nullable=False)
     github = Column(String, nullable=False)
-    
+
     # Relationship
     resume = relationship("Resume", back_populates="personal_info")
 
