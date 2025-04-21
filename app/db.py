@@ -8,12 +8,10 @@ from datetime import datetime
 os.makedirs('app/data', exist_ok=True)
 
 # Database settings
-SQLITE_FILE_NAME = "app/data/resume.db"
+SQLITE_FILE_NAME = "resume.db"
 SQLITE_URL = f"sqlite:///{SQLITE_FILE_NAME}"
 
-# Connection settings for SQLite
-CONNECT_ARGS = {"check_same_thread": False}
-engine = create_engine(SQLITE_URL, connect_args=CONNECT_ARGS)
+engine = create_engine(SQLITE_URL)
 
 # Create base model
 Base = declarative_base()
