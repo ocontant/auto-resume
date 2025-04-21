@@ -17,8 +17,7 @@
                 <button class="text-red-500 hover:text-red-700 transition-colors"
                         hx-delete="/api/resume/project/{{ loop.index0 }}"
                         hx-target="#project-{{ loop.index0 }}"
-                        hx-swap="outerHTML"
-                        hx-confirm="Are you sure you want to delete this project?">
+                        hx-swap="outerHTML">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
