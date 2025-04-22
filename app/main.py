@@ -5,8 +5,10 @@ from fastapi.responses import HTMLResponse
 
 from sqlalchemy.orm import Session
 
-from app.routes import router as resume_router
+
+from app.routes import router as resume_router, ats_router
 from app.db import create_db_and_tables, get_session
+from app.services.ats import init_llm
 from app.services.resume import get_or_create_default_resume
 
 app = FastAPI()
@@ -22,10 +24,12 @@ templates = Jinja2Templates(directory="app/templates")
 
 # Include routes
 app.include_router(resume_router)
+app.include_router(ats_router)
 
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
+    init_llm()
 
 
 # let's keep it here for simplicity
