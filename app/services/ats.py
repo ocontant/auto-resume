@@ -82,7 +82,9 @@ EDUCATION:
 
 Please rewrite this resume to be ATS-optimized, keeping the same basic structure but improving the language and organization.
 Format the response as clean plain text that can be directly rendered in an HTML template.
-OUTPUT HTML FORMATED
+OUTPUT HTML FORMATED. IT Will be added inside a container. You can use Tailwind for it. Compact spacing
+Apply required css to keep html formated
+The outer div spacing should keep a small padding only besides font sans
 """
 
 
