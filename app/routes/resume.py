@@ -1,93 +1,120 @@
-from fastapi import APIRouter, Request, Depends, HTTPException
+from fastapi import APIRouter, Request, Depends, Form
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, JSONResponse
-from typing import Dict, Any
+from sqlalchemy.orm import Session
+from app.db import get_session 
+from app.services.resume import (
+    get_or_create_default_resume, add_education, delete_education,
+    add_project, delete_project
+)
 
-from app.models import Experience, Resume
-import app.main as main
 
-router = APIRouter(prefix="/api/resume")
+router = APIRouter(prefix="/api/resume", tags=["resume"])
 templates = Jinja2Templates(directory="app/templates")
 
 
-# Get complete resume
-@router.get("/", response_class=JSONResponse)
-async def get_resume():
-    return main.current_resume
+@router.get("/section/personal")
+async def get_personal_section(request: Request, session: Session = Depends(get_session)):
+    """Get the personal information section of the resume form"""
+    resume_data = await get_or_create_default_resume(session)
+    return templates.TemplateResponse("components/personal_form.html", {
+        "request": request,
+        "resume_data": resume_data
+    })
+
+@router.get("/section/experience")
+async def get_experience_section(request: Request, session: Session = Depends(get_session)):
+    """Get the experience section of the resume form"""
+    resume_data = await get_or_create_default_resume(session)
+    return templates.TemplateResponse("components/resume_form.html", {
+        "request": request,
+        "resume_data": resume_data
+    })
+
+@router.get("/section/skills")
+async def get_skills_section(request: Request, session: Session = Depends(get_session)):
+    """Get the skills section of the resume form"""
+    resume_data = await get_or_create_default_resume(session)
+    return templates.TemplateResponse("components/skills_form.html", {
+        "request": request,
+        "resume_data": resume_data
+    })
+
+@router.get("/section/education")
+async def get_education_section(request: Request, session: Session = Depends(get_session)):
+    """Get the education section of the resume form"""
+    resume_data = await get_or_create_default_resume(session)
+    return templates.TemplateResponse("components/education_form.html", {
+        "request": request,
+        "resume_data": resume_data
+    })
 
 
-# Update complete resume
-@router.post("/", response_class=JSONResponse)
-async def update_resume(resume: Dict[str, Any]):
-    main.current_resume = resume
-    return {"success": True}
+@router.get("/section/projects")
+async def get_projects_section(request: Request, session: Session = Depends(get_session)):
+    """Get the projects section of the resume form"""
+    resume_data = await get_or_create_default_resume(session)
+    return templates.TemplateResponse("components/projects_form.html", {
+        "request": request,
+        "resume_data": resume_data
+    })
 
 
-# Add new experience
-@router.post("/experience", response_class=HTMLResponse)
-async def add_experience(request: Request):
-    new_exp = {
-        "title": "New Position",
-        "company": "Company Name",
-        "location": "Location",
-        "start_date": "Start Date",
-        "end_date": "Present",
-        "points": ["Describe your responsibilities and achievements..."]
-    }
+@router.post("/education")
+async def add_education_endpoint(request: Request, session: Session = Depends(get_session)):
+    """Add a new education entry to the resume"""
+    resume_data = await get_or_create_default_resume(session)
+    new_education, index = await add_education(session, resume_data["id"])
+    
+    return templates.TemplateResponse("components/education_item.html", {
+        "request": request,
+        "edu": new_education,
+        "index": index
+    })
 
-    main.current_resume["experience"].append(new_exp)
-    index = len(main.current_resume["experience"]) - 1
+@router.delete("/education/{index}")
+async def delete_education_endpoint(index: int, session: Session = Depends(get_session)):
+    """Delete an education entry from the resume"""
+    resume_data = await get_or_create_default_resume(session)
+    await delete_education(session, resume_data["id"], index)
 
-    return templates.TemplateResponse(
-        "components/experience_item.html",
-        {"request": request, "item": new_exp, "index": index}
-    )
+    return 200
 
+# Project endpoints
+@router.post("/project")
+async def add_project_endpoint(request: Request, session: Session = Depends(get_session)):
+    """Add a new project to the resume"""
+    resume_data = await get_or_create_default_resume(session)
+    
+    new_project, index = await add_project(session, resume_data["id"])
+    
+    return templates.TemplateResponse("components/project_item.html", {
+        "request": request,
+        "project": new_project,
+        "index": index
+    })
 
-# Delete experience
-@router.delete("/experience/{index}", response_class=JSONResponse)
-async def delete_experience(index: int):
-    if 0 <= index < len(main.current_resume["experience"]):
-        main.current_resume["experience"].pop(index)
-        return {"success": True}
-    return {"success": False, "error": "Invalid index"}
+@router.delete("/project/{index}")
+async def delete_project_endpoint(index: int, session: Session = Depends(get_session)):
+    """Delete a project from the resume"""
+    resume_data = await get_or_create_default_resume(session)
+    await delete_project(session, resume_data["id"], index)
 
+    return ""
 
-# Update experience field
-@router.patch("/experience/{index}/{field}", response_class=JSONResponse)
-async def update_experience_field(index: int, field: str, request: Request):
-    data = await request.json()
-    if 0 <= index < len(main.current_resume["experience"]):
-        if field in main.current_resume["experience"][index]:
-            main.current_resume["experience"][index][field] = data.get("value")
-            return {"success": True}
-    return {"success": False, "error": "Invalid index or field"}
-
-
-# Add point to experience
-@router.post("/experience/{index}/point", response_class=HTMLResponse)
-async def add_experience_point(index: int, request: Request):
-    if 0 <= index < len(main.current_resume["experience"]):
-        main.current_resume["experience"][index]["points"].append("New responsibility or achievement...")
-        point_index = len(main.current_resume["experience"][index]["points"]) - 1
-
-        return templates.TemplateResponse(
-            "components/point_item.html",
-            {
-                "request": request,
-                "point": "New responsibility or achievement...",
-                "exp_index": index,
-                "point_index": point_index
-            }
-        )
-    raise HTTPException(status_code=404, detail="Experience not found")
-
-
-# Delete point from experience
-@router.delete("/experience/{exp_index}/point/{point_index}", response_class=JSONResponse)
-async def delete_experience_point(exp_index: int, point_index: int):
-    if (0 <= exp_index < len(main.current_resume["experience"]) and
-            0 <= point_index < len(main.current_resume["experience"][exp_index]["points"])):
-        main.current_resume["experience"][exp_index]["points"].pop(point_index)
-        return {"success": True}
-    return {"success": False, "error": "Invalid indices"}
+@router.patch("/project/{index}/{field}")
+async def update_project_field(
+    index: int, 
+    field: str, 
+    value: str = Form(...),
+    session: Session = Depends(get_session)
+):
+    """Update a field in a project"""
+    resume_data = await get_or_create_default_resume(session)
+    
+    if 0 <= index < len(resume_data["projects"]):
+        project = resume_data.projects[index]
+        
+        setattr(project, field, value)
+        session.commit()
+        
+    return value

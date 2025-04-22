@@ -1,0 +1,26 @@
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9fafb;
+}
+
+.resume-editor {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    height: calc(100vh - 64px);
+}
+
+@media (max-width: 1024px) {
+    .resume-editor {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tab styling */
+.tab-btn.selected {
+    border-bottom-width: 2px;
+    border-color: #9333ea; /* purple-600 */
+    background-color: #f8f9fa !important; /* Light gray background instead of white */
+    color: #9333ea; /* purple-600 text */
+    font-weight: 500;
+}

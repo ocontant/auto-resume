@@ -4,8 +4,27 @@
 <div class="resume-editor">
     <!-- Left side - Editor -->
     <div class="bg-white rounded-lg shadow-md p-6 overflow-y-auto">
-        {% include 'components/sidebar.html' %}
-        {% include 'components/resume_form.html' %}
+        <div class="mb-6">
+        {% include 'components/action_bar.html' %}
+        {% include 'components/tab_bar.html' %}
+        </div>
+        
+        <!-- Dynamic content container for tab sections -->
+        <div id="resume-content-section">
+            {% if active_tab == 'personal' %}
+                {% include 'components/personal_form.html' %}
+            {% elif active_tab == 'experience' %}
+                {% include 'components/resume_form.html' %}
+            {% elif active_tab == 'skills' %}
+                {% include 'components/skills_form.html' %}
+            {% elif active_tab == 'projects' %}
+                {% include 'components/projects_form.html' %}
+            {% elif active_tab == 'education' %}
+                {% include 'components/education_form.html' %}
+            {% else %}
+                {% include 'components/resume_form.html' %}
+            {% endif %}
+        </div>
     </div>
     
     <!-- Right side - Preview -->

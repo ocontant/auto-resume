@@ -1,39 +1,54 @@
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, Depends, Query
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 
-from app.models import Resume
-from app.routes import resume, ai
+from sqlalchemy.orm import Session
 
-# Sample initial data
-from app.data import sample_resume
+
+from app.routes import router as resume_router, ats_router
+from app.db import create_db_and_tables, get_session
+from app.services.ats import init_llm
+from app.services.resume import get_or_create_default_resume
 
 app = FastAPI()
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+# Constants
+DEFAULT_TAB = "personal"  # Same default as in static/js/app.js
+
 # Templates
 templates = Jinja2Templates(directory="app/templates")
 
-# Include routers
-app.include_router(resume.router)
-app.include_router(ai.router)
+# Include routes
+app.include_router(resume_router)
+app.include_router(ats_router)
 
-# Global state (would be replaced by database in production)
-current_resume = sample_resume
-
-# Get current resume data
-def get_resume_data():
-    return current_resume
+@app.on_event("startup")
+def on_startup():
+    create_db_and_tables()
+    init_llm()
 
 
+# let's keep it here for simplicity
 @app.get("/", response_class=HTMLResponse)
-async def get_home(request: Request, resume_data: Resume = Depends(get_resume_data)):
+async def home(
+    request: Request, 
+    tab: str = Query(None),
+    session: Session = Depends(get_session)
+):
+    # Get resume data directly from the service
+    resume_data = await get_or_create_default_resume(session)
+    
+    # Use the same default tab as frontend
+    active_tab = tab or DEFAULT_TAB
+    
     return templates.TemplateResponse("index.html", {
         "request": request,
-        "resume_data": resume_data
+        "resume_data": resume_data,
+        "active_tab": active_tab
     })
 
 
