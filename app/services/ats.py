@@ -1,6 +1,7 @@
 from typing import Dict, Any
 import os
 import json
+import re
 from litellm import completion
 from dotenv import load_dotenv
 
@@ -86,11 +87,10 @@ OUTPUT HTML FORMATED
 
 
 def _parse_llm_response(content: str, original_resume: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Parse the LLM response into a structured format
-    For now, we're just returning the raw content since we'll render it as HTML
-    """
+    cleaned_content = re.sub(r'^```\s*(?:html|HTML)?\s*\n', '', content.strip())
+    cleaned_content = re.sub(r'\n```\s*$', '', cleaned_content)
+    
     optimized = dict(original_resume)
-    optimized["ats_content"] = content
+    optimized["ats_content"] = cleaned_content
     
     return optimized
