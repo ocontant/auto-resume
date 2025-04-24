@@ -34,7 +34,7 @@ def test_resume_to_dict_conversion(sample_resume_object):
 
 
 def test_resume_to_dict_handles_missing_optional_relations(
-    sample_resume_object_missing_data,
+    sample_resume_object_missing_data,  # Use the configured mock fixture
 ):
     """Test dictionary conversion handles missing optional relations."""
 
@@ -73,7 +73,7 @@ async def test_update_skills_invalid_field(mock_session, default_resume):
 
 # --- Test update_education_field ---
 @pytest.mark.asyncio
-async def test_update_education_field_success(mock_session, sample_education):
+async def test_update_education_field_success(mock_session, sample_education_object):
     """Test successfully updating a field in an Education entry."""
 
 
@@ -83,13 +83,13 @@ async def test_update_education_field_not_found(mock_session):
 
 
 @pytest.mark.asyncio
-async def test_update_education_field_invalid_field(mock_session, sample_education):
+async def test_update_education_field_invalid_field(mock_session, sample_education_object):
     """Test updating Education raises ValueError for an invalid field."""
 
 
 # --- Test update_experience_field ---
 @pytest.mark.asyncio
-async def test_update_experience_field_success(mock_session, sample_experience):
+async def test_update_experience_field_success(mock_session, sample_experience_object):
     """Test successfully updating a field in an Experience entry."""
 
 
@@ -99,13 +99,13 @@ async def test_update_experience_field_not_found(mock_session):
 
 
 @pytest.mark.asyncio
-async def test_update_experience_field_invalid_field(mock_session, sample_experience):
+async def test_update_experience_field_invalid_field(mock_session, sample_experience_object):
     """Test updating Experience raises ValueError for an invalid field."""
 
 
 # --- Test update_project_field ---
 @pytest.mark.asyncio
-async def test_update_project_field_success(mock_session, sample_project):
+async def test_update_project_field_success(mock_session, sample_project_object):
     """Test successfully updating a field in a Project entry."""
 
 
@@ -115,7 +115,7 @@ async def test_update_project_field_not_found(mock_session, default_resume):
 
 
 @pytest.mark.asyncio
-async def test_update_project_field_invalid_field(mock_session, sample_project):
+async def test_update_project_field_invalid_field(mock_session, sample_project_object):
     """Test updating Project raises ValueError for an invalid field."""
 
 
@@ -143,7 +143,7 @@ async def test_add_education_success(mock_session, default_resume):
 
 # --- Test delete_education_by_id ---
 @pytest.mark.asyncio
-async def test_delete_education_by_id_success(mock_session, sample_education):
+async def test_delete_education_by_id_success(mock_session, sample_education_object):
     """Test successfully deleting an Education entry by ID."""
 
 
@@ -160,7 +160,7 @@ async def test_add_project_success(mock_session, default_resume):
 
 # --- Test delete_project_by_id ---
 @pytest.mark.asyncio
-async def test_delete_project_by_id_success(mock_session, sample_project):
+async def test_delete_project_by_id_success(mock_session, sample_project_object):
     """Test successfully deleting a Project entry by ID."""
 
 
@@ -177,7 +177,7 @@ async def test_add_experience_success(mock_session, default_resume):
 
 # --- Test delete_experience_by_id ---
 @pytest.mark.asyncio
-async def test_delete_experience_by_id_success(mock_session, sample_experience):
+async def test_delete_experience_by_id_success(mock_session, sample_experience_object):
     """Test successfully deleting an Experience entry by ID."""
 
 
