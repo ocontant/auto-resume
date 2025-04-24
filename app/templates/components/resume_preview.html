@@ -28,11 +28,9 @@
                 <span class="text-gray-600">{{ exp.start_date }} – {{ exp.end_date }}</span>
             </div>
             <p class="font-medium">{{ exp.company }}</p>
-            <ul class="list-disc ml-5 mt-2">
-                {% for point in exp.points %}
-                <li class="mb-1">{{ point }}</li>
-                {% endfor %}
-            </ul>
+            <div class="whitespace-pre-line mt-2 text-sm">
+                {{ exp.points }}
+            </div>
         </div>
         {% endfor %}
     </div>

@@ -11,20 +11,20 @@
 
     <div id="projects-list">
         {% for project in resume_data.projects %}
-        <div class="border border-gray-200 rounded-lg p-4 mb-4" id="project-{{ loop.index0 }}" data-index="{{ loop.index0 }}">
-            <div class="flex justify-between mb-2">
+        <div class="border border-gray-200 rounded-lg p-4 mb-4" id="project-{{ project.id }}" data-project-id="{{ project.id }}">
+            <div class="flex justify-between items-center mb-2">
                 <h3 class="text-gray-700 font-medium">PROJECT NAME</h3>
                 <button class="text-red-500 hover:text-red-700 transition-colors"
-                        hx-delete="/api/resume/project/{{ loop.index0 }}"
-                        hx-target="#project-{{ loop.index0 }}"
-                        hx-swap="outerHTML">
+                        hx-delete="/api/resume/project/{{ project.id }}"
+                        hx-target="#project-{{ project.id }}"
+                        hx-swap="outerHTML" hx-confirm="Are you sure you want to delete this project?">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
             
             <input type="text" value="{{ project.name }}"
-                   class="w-full p-2 border border-gray-300 rounded mb-4"
-                   hx-patch="/api/resume/project/{{ loop.index0 }}/name"
+                   class="w-full p-2 border border-gray-300 rounded mb-2"
+                   hx-patch="/api/resume/project/{{ project.id }}/name"
                    hx-trigger="change"
                    name="value">
         </div>
