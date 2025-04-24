@@ -1,5 +1,7 @@
-from typing import Tuple, Dict, Any, Optional
+from typing import Dict, Any, Optional
 from sqlalchemy.orm import Session
+from sqlalchemy import update
+from sqlalchemy.exc import NoResultFound
 from app.db import Resume, Education, Project, Experience, PersonalInfo, SkillSet
 
 
@@ -10,7 +12,6 @@ async def get_resume_by_id(session: Session, resume_id: int) -> Optional[Resume]
 
 async def get_or_create_default_resume(session: Session) -> Dict[str, Any]:
     """Get or create a default resume"""
-    # Check if we have any resume in the database
     resume = session.query(Resume).first()
     
     if not resume:
@@ -35,9 +36,21 @@ async def get_or_create_default_resume(session: Session) -> Dict[str, Any]:
             developer_tools="Git, Docker, VS Code"
         )
         
+        # Create a default experience entry
+        experience = Experience(
+            resume=resume,
+            title="Sample Job Title",
+            company="Sample Company",
+            location="City, Country",
+            start_date="Jan 2023",
+            end_date="Present",
+            points=["Responsibility or achievement 1.", "Responsibility or achievement 2."]
+        )
+        
         session.add(resume)
         session.add(personal_info)
         session.add(skills)
+        session.add(experience) # Add the default experience to the session
         session.commit()
     
     # Convert to dictionary for template rendering
@@ -63,50 +76,132 @@ def _resume_to_dict(resume: Resume) -> Dict[str, Any]:
             "developer_tools": resume.skills.developer_tools if resume.skills else ""
         },
         "education": [
-            {"institution": edu.institution, "degree": edu.degree, "graduation_date": edu.graduation_date}
+            {"id": edu.id, "institution": edu.institution, "degree": edu.degree, "graduation_date": edu.graduation_date}
             for edu in resume.education
         ],
         "experience": [
-            {"title": exp.title, "company": exp.company, "location": exp.location,
+            {"id": exp.id, "title": exp.title, "company": exp.company, "location": exp.location,
              "start_date": exp.start_date, "end_date": exp.end_date, "points": exp.points}
             for exp in resume.experience
         ],
         "projects": [
-            {"name": proj.name, "url": proj.url, "technologies": proj.technologies, "points": proj.points}
+            {"id": proj.id, "name": proj.name, "url": proj.url, "technologies": proj.technologies, "points": proj.points}
             for proj in resume.projects
         ]
     }
 
 
+async def update_entity_field(
+    session: Session, 
+    entity_class, 
+    filter_by: Dict[str, Any], 
+    field: str, 
+    value: str
+) -> bool:
+    """
+    Generic function to update any entity field
+    """
+    # Validate the field exists on the model
+    if not hasattr(entity_class, field):
+        raise ValueError(f"Invalid field: {field} for {entity_class.__name__}")
+    
+    # Build filter conditions
+    filter_conditions = []
+    for key, val in filter_by.items():
+        filter_conditions.append(getattr(entity_class, key) == val)
+    
+    # Create and execute update statement
+    stmt = update(entity_class).where(*filter_conditions).values({field: value})
+    result = session.execute(stmt)
+    session.commit()
+    
+    if result.rowcount == 0:
+        raise NoResultFound(f"{entity_class.__name__} not found")
+    
+    return True
+
+
+async def update_entity_point(
+    session: Session, 
+    entity_class, 
+    filter_by: Dict[str, Any], 
+    point_index: int, 
+    value: str
+) -> None:
+    """
+    Update a point in an entity's points array
+    """
+    filter_conditions = []
+    for key, val in filter_by.items():
+        filter_conditions.append(getattr(entity_class, key) == val)
+    
+    entity = session.query(entity_class).filter(*filter_conditions).first()
+    
+    if not entity:
+        raise NoResultFound(f"{entity_class.__name__} not found with given criteria")
+    
+    try:
+        points = entity.points
+        if point_index >= len(points):
+            raise IndexError(f"Point index {point_index} out of range")
+        
+        points[point_index] = value
+        entity.points = points
+        session.commit()
+    except AttributeError:
+        raise ValueError(f"{entity_class.__name__} doesn't have points attribute")
+
+
+# Specialized functions for each entity type
+async def update_personal_info(session: Session, resume_id: int, field: str, value: str) -> bool:
+    """Update a personal info field"""
+    return await update_entity_field(session, PersonalInfo, {"resume_id": resume_id}, field, value)
+
+
+async def update_skills(session: Session, resume_id: int, field: str, value: str) -> bool:
+    """Update a skills field"""
+    return await update_entity_field(session, SkillSet, {"resume_id": resume_id}, field, value)
+
+
+async def update_education_field(session: Session, education_id: int, field: str, value: str) -> None:
+    """Update an education field"""
+    await update_entity_field(session, Education, {"id": education_id}, field, value)
+
+
+async def update_experience_field(session: Session, experience_id: int, field: str, value: str) -> None:
+    """Update an experience field"""
+    await update_entity_field(session, Experience, {"id": experience_id}, field, value)
+
+
+async def update_experience_point(session: Session, experience_id: int, point_index: int, value: str) -> None:
+    """Update a specific experience point"""
+    await update_entity_point(session, Experience, {"id": experience_id}, point_index, value)
+
+
+async def update_project_field(session: Session, resume_id: int, project_id: int, field: str, value: str) -> None:
+    """Update a project field"""
+    await update_entity_field(session, Project, {"id": project_id, "resume_id": resume_id}, field, value)
+
+
+async def update_project_point(session: Session, resume_id: int, project_id: int, point_index: int, value: str) -> None:
+    """Update a specific project point"""
+    await update_entity_point(session, Project, {"id": project_id, "resume_id": resume_id}, point_index, value)
+
+
 # Generic helper function for adding items to collections
 async def _add_item_to_collection(session: Session, resume_id: int, item_class, default_values=None):
     """Generic function to add an item to a resume collection"""
-    resume = await get_resume_by_id(session, resume_id)
-    if not resume:
-        raise ValueError(f"Resume with ID {resume_id} not found")
-    
-    item = item_class(resume=resume, **(default_values or {}))
+    item = item_class(resume_id=resume_id, **(default_values or {}))
     session.add(item)
     session.commit()
-    
-    # Get the index based on the model type
-    if item_class == Education:
-        items = resume.education
-    elif item_class == Project:
-        items = resume.projects
-    elif item_class == Experience:
-        items = resume.experience
-    
-    return item, len(items) - 1
+    return item
 
 
-# Generic helper function for deleting items from collections
 async def _delete_item_from_collection(session: Session, resume_id: int, index: int, get_items_func):
     """Generic function to delete an item from a resume collection"""
     resume = await get_resume_by_id(session, resume_id)
     if not resume:
         raise ValueError(f"Resume with ID {resume_id} not found")
-    
     items = get_items_func(resume)
     if 0 <= index < len(items):
         session.delete(items[index])
@@ -114,7 +209,7 @@ async def _delete_item_from_collection(session: Session, resume_id: int, index: 
 
 
 # Specific implementation for education items
-async def add_education(session: Session, resume_id: int) -> Tuple[Education, int]:
+async def add_education(session: Session, resume_id: int) -> Education:
     """Add a new education entry to a resume"""
     return await _add_item_to_collection(session, resume_id, Education, {
         "institution": "University Name",
@@ -129,7 +224,7 @@ async def delete_education(session: Session, resume_id: int, index: int) -> None
 
 
 # Specific implementation for project items
-async def add_project(session: Session, resume_id: int) -> Tuple[Project, int]:
+async def add_project(session: Session, resume_id: int) -> Project:
     """Add a new project to a resume"""
     return await _add_item_to_collection(session, resume_id, Project, {
         "name": "Project Name",
