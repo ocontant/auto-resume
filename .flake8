@@ -1,0 +1,27 @@
+# Configuration file for flake8 linter
+
+[flake8]
+# Exclude directories/files from linting.
+# These are common directories that usually don't need checking.
+# flake8 excludes some of these by default, but being explicit is good practice.
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    .tox,
+    build,
+    dist,
+    *.egg-info,
+    alembic/versions/,
+    .env
+
+# Optional: Set max line length (default is 79, PEP 8 recommendation)
+# max-line-length = 88 # Black formatter default
+max-line-length = 115
+
+# Optional: Ignore specific error/warning codes globally
+# Example: ignore = E203, W503
+# E203: whitespace before ':' (often conflicts with Black formatter)
+# W503: line break before binary operator (PEP 8 changed preference)
+# ignore = E203, W503

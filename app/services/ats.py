@@ -1,10 +1,10 @@
-from typing import Dict, Any
-import os
 import json
+import os
 import re
-from litellm import completion
-from dotenv import load_dotenv
+from typing import Any, Dict
 
+from dotenv import load_dotenv
+from litellm import completion
 
 load_dotenv()
 
@@ -15,7 +15,7 @@ DEFAULT_MODEL = "gpt-4.1-mini"
 def init_llm():
     """Initialize LiteLLM with API keys from environment variables"""
     global llm_initialized
-    
+
     if os.getenv("OPENAI_API_KEY"):
         print("OpenAI API key found, LiteLLM initialized")
         llm_initialized = True
@@ -30,24 +30,27 @@ async def optimize_resume(resume_data: Dict[str, Any]) -> Dict[str, Any]:
     if not llm_initialized:
         print("No LLM initialized, returning original resume")
         return resume_data
-    
+
     prompt = _create_ats_prompt(resume_data)
-    
+
     try:
         response = completion(
             model=DEFAULT_MODEL,
             messages=[
-                {"role": "system", "content": "You are an expert resume writer specializing in creating ATS-optimized resumes."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are an expert resume writer specializing in creating ATS-optimized resumes.",
+                },
+                {"role": "user", "content": prompt},
             ],
-            temperature=0.3
+            temperature=0.3,
         )
-        
+
         content = response.choices[0].message.content
-        
+
         optimized_resume = _parse_llm_response(content, resume_data)
         return optimized_resume
-        
+
     except Exception as e:
         print(f"Error calling LLM: {e}")
         return resume_data
@@ -80,7 +83,8 @@ PROJECTS:
 EDUCATION:
 {json.dumps(resume_data['education'], indent=2)}
 
-Please rewrite this resume to be ATS-optimized, keeping the same basic structure but improving the language and organization.
+Please rewrite this resume to be ATS-optimized, keeping the same basic structure.
+Improve the language and organization.
 Format the response as clean plain text that can be directly rendered in an HTML template.
 OUTPUT HTML FORMATED. IT Will be added inside a container. You can use Tailwind for it. Compact spacing
 Apply required css to keep html formated
@@ -89,10 +93,10 @@ The outer div spacing should keep a small padding only besides font sans
 
 
 def _parse_llm_response(content: str, original_resume: Dict[str, Any]) -> Dict[str, Any]:
-    cleaned_content = re.sub(r'^```\s*(?:html|HTML)?\s*\n', '', content.strip())
-    cleaned_content = re.sub(r'\n```\s*$', '', cleaned_content)
-    
+    cleaned_content = re.sub(r"^```\s*(?:html|HTML)?\s*\n", "", content.strip())
+    cleaned_content = re.sub(r"\n```\s*$", "", cleaned_content)
+
     optimized = dict(original_resume)
     optimized["ats_content"] = cleaned_content
-    
+
     return optimized
