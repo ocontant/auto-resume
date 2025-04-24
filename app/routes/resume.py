@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Depends, Form, HTTPException
+from fastapi import APIRouter, Request, Depends, Form, HTTPException, Response
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
@@ -7,7 +7,7 @@ from app.db import get_session
 from app.services.resume import (
     get_or_create_default_resume, add_education, add_project,
     delete_project_by_id, update_personal_info, update_skills, update_education_field,
-    update_experience_field, add_experience, delete_experience_by_id, # Added delete_experience_by_id
+    update_experience_field, add_experience, delete_experience_by_id,
     update_project_field, delete_education_by_id,
     update_project_point
 )
@@ -146,12 +146,11 @@ async def add_education_endpoint(request: Request, session: Session = Depends(ge
 @router.delete("/education/{education_id}")
 async def delete_education_endpoint(education_id: int, session: Session = Depends(get_session)):
     """Delete an education entry from the resume by its ID."""
-    deleted = await delete_education_by_id(session, education_id)
-    if not deleted:
+    try:
+        await delete_education_by_id(session, education_id)
+    except NoResultFound:
         raise HTTPException(status_code=404, detail=f"Education entry with ID {education_id} not found")
-    # Return an empty response with status 200 OK, HTMX replaces the target with nothing
-    return ""
-
+    
 
 @router.post("/project")
 async def add_project_endpoint(request: Request, session: Session = Depends(get_session)):
@@ -167,11 +166,11 @@ async def add_project_endpoint(request: Request, session: Session = Depends(get_
 @router.delete("/project/{project_id}")
 async def delete_project_endpoint(project_id: int, session: Session = Depends(get_session)):
     """Delete a project from the resume by its ID."""
-    deleted = await delete_project_by_id(session, project_id)
-    if not deleted:
+    try:
+        await delete_project_by_id(session, project_id)
+    except NoResultFound:
         raise HTTPException(status_code=404, detail=f"Project entry with ID {project_id} not found")
-    return ""
-
+    
 
 @router.post("/experience")
 async def add_experience_endpoint(request: Request, session: Session = Depends(get_session)):
@@ -179,7 +178,6 @@ async def add_experience_endpoint(request: Request, session: Session = Depends(g
     try:
         resume_data = await get_or_create_default_resume(session)
         new_experience = await add_experience(session, resume_data["id"])
-        # Render the template for a single experience item
         return templates.TemplateResponse("components/experience_item.html", {
             "request": request,
             "item": new_experience
@@ -191,7 +189,9 @@ async def add_experience_endpoint(request: Request, session: Session = Depends(g
 @router.delete("/experience/{experience_id}")
 async def delete_experience_endpoint(experience_id: int, session: Session = Depends(get_session)):
     """Delete an experience entry by its ID."""
-    deleted = await delete_experience_by_id(session, experience_id)
-    if not deleted:
+    try:
+        await delete_experience_by_id(session, experience_id)
+    except NoResultFound:
         raise HTTPException(status_code=404, detail=f"Experience entry with ID {experience_id} not found")
-    return ""
+
+    return Response(content="", status_code=200) # Return 200 OK on success

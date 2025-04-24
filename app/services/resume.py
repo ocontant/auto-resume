@@ -100,59 +100,51 @@ async def update_entity_field(
 ) -> bool:
     """
     Generic function to update any entity field
+    Returns True on success. Raises NoResultFound if the entity was not found.
     """
-    # Validate the field exists on the model
     if not hasattr(entity_class, field):
         raise ValueError(f"Invalid field: {field} for {entity_class.__name__}")
-    
-    # Build filter conditions
     filter_conditions = []
     for key, val in filter_by.items():
         filter_conditions.append(getattr(entity_class, key) == val)
-    
-    # Create and execute update statement
-    stmt = update(entity_class).where(*filter_conditions).values({field: value})
-    result = session.execute(stmt)
+    update_stmt = update(entity_class).where(*filter_conditions).values({field: value})
+    result = session.execute(update_stmt)
     session.commit()
-    
     if result.rowcount == 0:
-        raise NoResultFound(f"{entity_class.__name__} not found")
-    
+        raise NoResultFound(f"{entity_class.__name__} not found with filter {filter_by}")
     return True
-
-
+ 
+ 
 async def update_entity_point(
     session: Session, 
     entity_class, 
     filter_by: Dict[str, Any], 
     point_index: int, 
     value: str
-) -> None:
+) -> bool:
     """
-    Update a point in an entity's points array
+    Update a point in an entity's points array (JSON field).
+    Returns True on success. Raises NoResultFound if the entity was not found or index is out of range.
     """
     filter_conditions = []
     for key, val in filter_by.items():
         filter_conditions.append(getattr(entity_class, key) == val)
-    
     entity = session.query(entity_class).filter(*filter_conditions).first()
-    
+ 
     if not entity:
-        raise NoResultFound(f"{entity_class.__name__} not found with given criteria")
-    
+        raise NoResultFound(f"{entity_class.__name__} item not found for update.")
     try:
         points = entity.points
         if point_index >= len(points):
-            raise IndexError(f"Point index {point_index} out of range")
-        
+            raise NoResultFound(f"{entity_class.__name__} item not found for update.")
         points[point_index] = value
         entity.points = points
         session.commit()
+        return True
     except AttributeError:
         raise ValueError(f"{entity_class.__name__} doesn't have points attribute")
 
 
-# Specialized functions for each entity type
 async def update_personal_info(session: Session, resume_id: int, field: str, value: str) -> bool:
     """Update a personal info field"""
     return await update_entity_field(session, PersonalInfo, {"resume_id": resume_id}, field, value)
@@ -163,27 +155,26 @@ async def update_skills(session: Session, resume_id: int, field: str, value: str
     return await update_entity_field(session, SkillSet, {"resume_id": resume_id}, field, value)
 
 
-async def update_education_field(session: Session, education_id: int, field: str, value: str) -> None:
+async def update_education_field(session: Session, education_id: int, field: str, value: str) -> bool:
     """Update an education field"""
-    await update_entity_field(session, Education, {"id": education_id}, field, value)
+    return await update_entity_field(session, Education, {"id": education_id}, field, value)
 
 
-async def update_experience_field(session: Session, experience_id: int, field: str, value: str) -> None:
+async def update_experience_field(session: Session, experience_id: int, field: str, value: str) -> bool:
     """Update an experience field"""
-    await update_entity_field(session, Experience, {"id": experience_id}, field, value)
+    return await update_entity_field(session, Experience, {"id": experience_id}, field, value)
 
 
-async def update_project_field(session: Session, resume_id: int, project_id: int, field: str, value: str) -> None:
+async def update_project_field(session: Session, resume_id: int, project_id: int, field: str, value: str) -> bool:
     """Update a project field"""
-    await update_entity_field(session, Project, {"id": project_id, "resume_id": resume_id}, field, value)
+    return await update_entity_field(session, Project, {"id": project_id, "resume_id": resume_id}, field, value)
 
 
-async def update_project_point(session: Session, resume_id: int, project_id: int, point_index: int, value: str) -> None:
+async def update_project_point(session: Session, resume_id: int, project_id: int, point_index: int, value: str) -> bool:
     """Update a specific project point"""
-    await update_entity_point(session, Project, {"id": project_id, "resume_id": resume_id}, point_index, value)
+    return await update_entity_point(session, Project, {"id": project_id, "resume_id": resume_id}, point_index, value)
 
 
-# Generic helper function for adding items to collections
 async def _add_item_to_collection(session: Session, resume_id: int, item_class, default_values=None):
     """Generic function to add an item to a resume collection"""
     item = item_class(resume_id=resume_id, **(default_values or {}))
@@ -192,7 +183,6 @@ async def _add_item_to_collection(session: Session, resume_id: int, item_class, 
     return item
 
 
-# Specific implementation for education items
 async def add_education(session: Session, resume_id: int) -> Education:
     """Add a new education entry to a resume"""
     return await _add_item_to_collection(session, resume_id, Education, {
@@ -206,13 +196,12 @@ async def delete_education_by_id(session: Session, education_id: int) -> bool:
     """Delete an education entry by its ID."""
     education_entry = session.query(Education).filter(Education.id == education_id).first()
     if not education_entry:
-        return False  # Or raise NoResultFound
+        raise NoResultFound(f"Education entry with ID {education_id} not found.")
     session.delete(education_entry)
     session.commit()
     return True
 
 
-# Specific implementation for project items
 async def add_project(session: Session, resume_id: int) -> Project:
     """Add a new project to a resume"""
     return await _add_item_to_collection(session, resume_id, Project, {
@@ -227,7 +216,7 @@ async def delete_project_by_id(session: Session, project_id: int) -> bool:
     """Delete a project by its ID."""
     project_entry = session.query(Project).filter(Project.id == project_id).first()
     if not project_entry:
-        return False # Or raise NoResultFound
+        raise NoResultFound(f"Project entry with ID {project_id} not found.")
     session.delete(project_entry)
     session.commit()
     return True
@@ -241,7 +230,7 @@ async def add_experience(session: Session, resume_id: int) -> Experience:
         "location": "City, Country",
         "start_date": "Month Year",
         "end_date": "Present",
-        "points": "• List key responsibilities and achievements here." # Default text block
+        "points": "• List key responsibilities and achievements here."
     }
     return await _add_item_to_collection(session, resume_id, Experience, default_values)
 
@@ -250,7 +239,7 @@ async def delete_experience_by_id(session: Session, experience_id: int) -> bool:
     """Delete an experience entry by its ID."""
     experience_entry = session.query(Experience).filter(Experience.id == experience_id).first()
     if not experience_entry:
-        return False
+        raise NoResultFound(f"Experience entry with ID {experience_id} not found.")
     session.delete(experience_entry)
     session.commit()
     return True
