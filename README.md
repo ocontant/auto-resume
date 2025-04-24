@@ -1,6 +1,6 @@
 # ResumeLM - AI-Powered Resume Builder
 
-[![Python CI](https://github.com/anywaifu/auto-resume/.github/workflows/ci.yml/badge.svg)](https://github.com/anywaifu/auto-resume/.github/workflows/ci.yml)
+[![Python CI](https://github.com/anywaifu/auto-resume/actions/workflows/ci.yml/badge.svg)](https://github.com/anywaifu/auto-resume/actions/workflows/ci.yml)
 
 ResumeLM is a web application designed to help users build and optimize their resumes with the assistance of AI. It features a dynamic web interface built with FastAPI and HTMX, allowing for interactive editing and real-time previews. The application integrates with Large Language Models (LLMs) via LiteLLM to provide ATS (Applicant Tracking System) optimization suggestions.
 
@@ -35,11 +35,9 @@ ResumeLM is a web application designed to help users build and optimize their re
 ### Installation & Setup
 
 1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/<your-username>/<your-repo-name>.git
-    cd <your-repo-name>
+        git clone https://github.com/anywaifu/auto-resume.git
+    cd auto-resume
     ```
-
 2.  **Create Environment File:**
     Copy the example environment file and configure your LLM settings:
     ```bash
@@ -84,10 +82,8 @@ Once the containers are running, open your web browser and navigate to:
     ```
 
 ### Running Tests
-
-```bash
+bash
 make test
-```
 
 ### Linting and Formatting
 
