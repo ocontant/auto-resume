@@ -7,7 +7,7 @@ SOURCES = app tests
 # Use SHELL for potentially more complex commands if needed later
 SHELL := /bin/bash
 
-.PHONY: all fix lint format check-imports clean install-dev check-venv
+.PHONY: all fix lint test format check-imports clean install-dev check-venv
 
 # Default target: Run the linter
 all: lint
@@ -40,3 +40,9 @@ lint: check-venv install-dev
 	@echo "Running flake8 check..."
 	flake8 $(SOURCES)
 	@echo "Lint check complete."
+
+# Target to run the test suite
+test: check-venv
+	@echo "Running pytest..."
+	pytest tests/
+	@echo "Test suite complete."
