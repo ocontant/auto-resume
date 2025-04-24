@@ -5,9 +5,9 @@ from sqlalchemy.orm import Session
 
 from app.db import get_session
 from app.services.resume import (
-    get_or_create_default_resume, add_education, delete_education, add_project,
-    delete_project, update_personal_info, update_skills, update_education_field,
-    update_experience_field, update_experience_point, update_project_field,
+    get_or_create_default_resume, add_education, add_project,
+    delete_project_by_id, update_personal_info, update_skills, update_education_field,
+    update_experience_field, update_experience_point, update_project_field, delete_education_by_id,
     update_project_point
 )
 
@@ -155,13 +155,14 @@ async def add_education_endpoint(request: Request, session: Session = Depends(ge
                                       {"request": request, "edu": new_education, "index": index})
 
 
-@router.delete("/education/{index}")
-async def delete_education_endpoint(index: int, session: Session = Depends(get_session)):
-    """Delete an education entry from the resume"""
-    resume_data = await get_or_create_default_resume(session)
-    await delete_education(session, resume_data["id"], index)
-
-    return 200
+@router.delete("/education/{education_id}")
+async def delete_education_endpoint(education_id: int, session: Session = Depends(get_session)):
+    """Delete an education entry from the resume by its ID."""
+    deleted = await delete_education_by_id(session, education_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail=f"Education entry with ID {education_id} not found")
+    # Return an empty response with status 200 OK, HTMX replaces the target with nothing
+    return ""
 
 
 @router.post("/project")
@@ -169,16 +170,17 @@ async def add_project_endpoint(request: Request, session: Session = Depends(get_
     """Add a new project to the resume"""
     resume_data = await get_or_create_default_resume(session)
 
-    new_project, index = await add_project(session, resume_data["id"])
+    new_project = await add_project(session, resume_data["id"]) # Assume add_project returns only the new item now
 
     return templates.TemplateResponse("components/project_item.html",
-                                      {"request": request, "project": new_project, "index": index})
+                                      {"request": request, "project": new_project})
 
 
-@router.delete("/project/{index}")
-async def delete_project_endpoint(index: int, session: Session = Depends(get_session)):
-    """Delete a project from the resume"""
-    resume_data = await get_or_create_default_resume(session)
-    await delete_project(session, resume_data["id"], index)
-
+@router.delete("/project/{project_id}")
+async def delete_project_endpoint(project_id: int, session: Session = Depends(get_session)):
+    """Delete a project from the resume by its ID."""
+    deleted = await delete_project_by_id(session, project_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail=f"Project entry with ID {project_id} not found")
+    # Return an empty response with status 200 OK, HTMX replaces the target with nothing
     return ""

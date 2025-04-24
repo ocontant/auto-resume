@@ -197,17 +197,6 @@ async def _add_item_to_collection(session: Session, resume_id: int, item_class, 
     return item
 
 
-async def _delete_item_from_collection(session: Session, resume_id: int, index: int, get_items_func):
-    """Generic function to delete an item from a resume collection"""
-    resume = await get_resume_by_id(session, resume_id)
-    if not resume:
-        raise ValueError(f"Resume with ID {resume_id} not found")
-    items = get_items_func(resume)
-    if 0 <= index < len(items):
-        session.delete(items[index])
-        session.commit()
-
-
 # Specific implementation for education items
 async def add_education(session: Session, resume_id: int) -> Education:
     """Add a new education entry to a resume"""
@@ -218,9 +207,14 @@ async def add_education(session: Session, resume_id: int) -> Education:
     })
 
 
-async def delete_education(session: Session, resume_id: int, index: int) -> None:
-    """Delete an education entry from a resume"""
-    await _delete_item_from_collection(session, resume_id, index, lambda resume: resume.education)
+async def delete_education_by_id(session: Session, education_id: int) -> bool:
+    """Delete an education entry by its ID."""
+    education_entry = session.query(Education).filter(Education.id == education_id).first()
+    if not education_entry:
+        return False  # Or raise NoResultFound
+    session.delete(education_entry)
+    session.commit()
+    return True
 
 
 # Specific implementation for project items
@@ -234,6 +228,11 @@ async def add_project(session: Session, resume_id: int) -> Project:
     })
 
 
-async def delete_project(session: Session, resume_id: int, index: int) -> None:
-    """Delete a project from a resume"""
-    await _delete_item_from_collection(session, resume_id, index, lambda resume: resume.projects)
+async def delete_project_by_id(session: Session, project_id: int) -> bool:
+    """Delete a project by its ID."""
+    project_entry = session.query(Project).filter(Project.id == project_id).first()
+    if not project_entry:
+        return False # Or raise NoResultFound
+    session.delete(project_entry)
+    session.commit()
+    return True
