@@ -150,7 +150,8 @@ async def delete_education_endpoint(education_id: int, session: Session = Depend
         await delete_education_by_id(session, education_id)
     except NoResultFound:
         raise HTTPException(status_code=404, detail=f"Education entry with ID {education_id} not found")
-    
+    return Response(content="", status_code=200, media_type="text/plain")
+
 
 @router.post("/project")
 async def add_project_endpoint(request: Request, session: Session = Depends(get_session)):
@@ -170,7 +171,8 @@ async def delete_project_endpoint(project_id: int, session: Session = Depends(ge
         await delete_project_by_id(session, project_id)
     except NoResultFound:
         raise HTTPException(status_code=404, detail=f"Project entry with ID {project_id} not found")
-    
+    return Response(content="", status_code=200, media_type="text/plain")
+
 
 @router.post("/experience")
 async def add_experience_endpoint(request: Request, session: Session = Depends(get_session)):
@@ -193,5 +195,4 @@ async def delete_experience_endpoint(experience_id: int, session: Session = Depe
         await delete_experience_by_id(session, experience_id)
     except NoResultFound:
         raise HTTPException(status_code=404, detail=f"Experience entry with ID {experience_id} not found")
-
-    return Response(content="", status_code=200) # Return 200 OK on success
+    return Response(content="", status_code=200, media_type="text/plain")
