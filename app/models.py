@@ -17,17 +17,13 @@ class SkillSet(BaseModel):
     developer_tools: str
 
 
-class ExperiencePoint(BaseModel):
-    content: str
-
-
 class Experience(BaseModel):
     title: str
     company: str
     location: Optional[str] = None
     start_date: str
     end_date: str
-    points: List[str]
+    points: str
 
 
 class Project(BaseModel):

@@ -7,7 +7,8 @@ from app.db import get_session
 from app.services.resume import (
     get_or_create_default_resume, add_education, add_project,
     delete_project_by_id, update_personal_info, update_skills, update_education_field,
-    update_experience_field, update_experience_point, update_project_field, delete_education_by_id,
+    update_experience_field, add_experience, delete_experience_by_id, # Added delete_experience_by_id
+    update_project_field, delete_education_by_id,
     update_project_point
 )
 
@@ -103,19 +104,6 @@ async def update_experience_field_endpoint(experience_id: int, field: str, value
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
 
-@router.patch("/experience/{experience_id}/point/{point_index}")
-async def update_experience_point_endpoint(experience_id: int, point_index: int, value: str = Form(...),
-                                           session: Session = Depends(get_session)):
-    """Update an experience point"""
-    try:
-        await update_experience_point(session, experience_id, point_index, value)
-        return {"value": value}
-    except NoResultFound:
-        raise HTTPException(status_code=404, detail=f"Experience entry with ID {experience_id} not found")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
-
-
 @router.patch("/project/{project_id}/{field}")
 async def update_project_field_endpoint(project_id: int, field: str, value: str = Form(...),
                                         session: Session = Depends(get_session)):
@@ -149,10 +137,10 @@ async def update_project_point_endpoint(project_id: int, point_index: int, value
 async def add_education_endpoint(request: Request, session: Session = Depends(get_session)):
     """Add a new education entry to the resume"""
     resume_data = await get_or_create_default_resume(session)
-    new_education, index = await add_education(session, resume_data["id"])
-
+    new_education = await add_education(session, resume_data["id"])
+    
     return templates.TemplateResponse("components/education_item.html",
-                                      {"request": request, "edu": new_education, "index": index})
+                                      {"request": request, "edu": new_education})
 
 
 @router.delete("/education/{education_id}")
@@ -182,5 +170,28 @@ async def delete_project_endpoint(project_id: int, session: Session = Depends(ge
     deleted = await delete_project_by_id(session, project_id)
     if not deleted:
         raise HTTPException(status_code=404, detail=f"Project entry with ID {project_id} not found")
-    # Return an empty response with status 200 OK, HTMX replaces the target with nothing
+    return ""
+
+
+@router.post("/experience")
+async def add_experience_endpoint(request: Request, session: Session = Depends(get_session)):
+    """Add a new experience entry to the resume"""
+    try:
+        resume_data = await get_or_create_default_resume(session)
+        new_experience = await add_experience(session, resume_data["id"])
+        # Render the template for a single experience item
+        return templates.TemplateResponse("components/experience_item.html", {
+            "request": request,
+            "item": new_experience
+        })
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error adding experience: {str(e)}")
+
+
+@router.delete("/experience/{experience_id}")
+async def delete_experience_endpoint(experience_id: int, session: Session = Depends(get_session)):
+    """Delete an experience entry by its ID."""
+    deleted = await delete_experience_by_id(session, experience_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail=f"Experience entry with ID {experience_id} not found")
     return ""

@@ -173,11 +173,6 @@ async def update_experience_field(session: Session, experience_id: int, field: s
     await update_entity_field(session, Experience, {"id": experience_id}, field, value)
 
 
-async def update_experience_point(session: Session, experience_id: int, point_index: int, value: str) -> None:
-    """Update a specific experience point"""
-    await update_entity_point(session, Experience, {"id": experience_id}, point_index, value)
-
-
 async def update_project_field(session: Session, resume_id: int, project_id: int, field: str, value: str) -> None:
     """Update a project field"""
     await update_entity_field(session, Project, {"id": project_id, "resume_id": resume_id}, field, value)
@@ -234,5 +229,28 @@ async def delete_project_by_id(session: Session, project_id: int) -> bool:
     if not project_entry:
         return False # Or raise NoResultFound
     session.delete(project_entry)
+    session.commit()
+    return True
+
+
+async def add_experience(session: Session, resume_id: int) -> Experience:
+    """Add a new experience entry to a resume"""
+    default_values = {
+        "title": "New Job Title",
+        "company": "Company Name",
+        "location": "City, Country",
+        "start_date": "Month Year",
+        "end_date": "Present",
+        "points": "• List key responsibilities and achievements here." # Default text block
+    }
+    return await _add_item_to_collection(session, resume_id, Experience, default_values)
+
+
+async def delete_experience_by_id(session: Session, experience_id: int) -> bool:
+    """Delete an experience entry by its ID."""
+    experience_entry = session.query(Experience).filter(Experience.id == experience_id).first()
+    if not experience_entry:
+        return False
+    session.delete(experience_entry)
     session.commit()
     return True

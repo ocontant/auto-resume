@@ -68,7 +68,7 @@ class Experience(Base):
     location = Column(String, nullable=True)
     start_date = Column(String, nullable=False)
     end_date = Column(String, nullable=False)
-    points = Column(JSON, nullable=False)  # Store as JSON array
+    points = Column(String, nullable=False, default="") # Store as a single text block
     
     # Relationship
     resume = relationship("Resume", back_populates="experience")

@@ -1,5 +1,5 @@
-<div class="border border-gray-200 rounded-lg p-4 mb-4" id="experience-{{ item.id }}" data-index="{{ index }}" data-experience-id="{{ item.id }}">
-    <div class="flex justify-between items-center mb-2">
+<div class="border border-gray-200 rounded-lg p-4 mb-4" id="experience-{{ item.id }}" data-experience-id="{{ item.id }}">
+    <div class="flex justify-between items-center mb-4">
         <h3 class="text-gray-700 font-medium">POSITION</h3>
         <button class="text-red-500 hover:text-red-700 transition-colors"
                 hx-delete="/api/resume/experience/{{ item.id }}"
@@ -55,33 +55,10 @@
 
     <div>
         <h3 class="text-gray-700 font-medium mb-2">Key Responsibilities & Achievements</h3>
-        <div id="responsibility-list-{{ item.id }}">
-            {% for point in item.points %}
-            <div class="relative mb-3 group" id="point-{{ item.id }}-{{ loop.index0 }}" data-point-index="{{ loop.index0 }}">
-                <textarea
-                    class="w-full p-3 pr-10 border border-gray-300 rounded min-h-[100px] resize-none"
-                    hx-patch="/api/resume/experience/{{ item.id }}/point/{{ loop.index0 }}"
-                    hx-trigger="change"
-                    name="value">{{ point }}</textarea>
-                <div class="absolute right-2 top-2 flex space-x-1">
-                    <button class="text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                            hx-delete="/api/resume/experience/{{ item.id }}/point/{{ loop.index0 }}"
-                            hx-target="#point-{{ item.id }}-{{ loop.index0 }}"
-                            hx-swap="outerHTML" hx-confirm="Are you sure you want to delete this point?">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <div class="flex justify-between mt-4">
-            <button class="flex items-center text-sm text-green-600 hover:text-green-800 transition-colors"
-                    hx-post="/api/resume/experience/{{ item.id }}/point"
-                    hx-target="#responsibility-list-{{ item.id }}"
-                    hx-swap="beforeend">
-                <i class="fas fa-plus mr-1"></i> Add Point
-            </button>
-        </div>
+        <textarea
+            class="w-full p-3 border border-gray-300 rounded min-h-[150px] resize-y"
+            hx-patch="/api/resume/experience/{{ item.id }}/points"
+            hx-trigger="change delay:500ms"
+            name="value">{{ item.points }}</textarea>
     </div>
 </div>
