@@ -42,6 +42,19 @@ def valid_personal_info() -> Dict[str, Any]:
         "phone": "123-456-7890",
         "linkedin": "linkedin.com/in/johndoe",
         "github": "github.com/johndoe",
+        "location": "Anytown, USA",
+    }
+
+
+@pytest.fixture(scope="function")
+def valid_personal_info_incomplete() -> Dict[str, Any]:
+    """Provides an incomplete PersonalInfo data dictionary (missing name)."""
+    return {
+        "email": "jane.doe@example.com",
+        "phone": "987-654-3210",
+        "linkedin": "linkedin.com/in/janedoe",
+        "github": "github.com/janedoe",
+        "location": "Otherville, USA",
     }
 
 
@@ -49,8 +62,9 @@ def valid_personal_info() -> Dict[str, Any]:
 def valid_skill_set() -> Dict[str, Any]:
     """Provides a valid SkillSet data dictionary."""
     return {
-        "technical": ["Python", "FastAPI", "SQL"],
-        "soft": ["Communication", "Teamwork"],
+        "programming_languages": "Python, FastAPI, SQL",  # Updated field names
+        "frameworks": "React, Vue",
+        "developer_tools": "Git, Docker",
     }
 
 
@@ -61,10 +75,11 @@ def valid_experience() -> Dict[str, Any]:
         "id": 1,
         "title": "Software Engineer",
         "company": "Tech Corp",
+        "location": "Anytown, USA",
         "start_date": "2020-01-01",
         "end_date": "2023-12-31",
-        "location": "Anytown, USA",
-        "points": ["Developed feature X", "Fixed bug Y"],
+        # Model expects string based on validation error
+        "points": "Developed feature X\nFixed bug Y",
     }
 
 
@@ -74,7 +89,8 @@ def valid_project() -> Dict[str, Any]:
     return {
         "id": 1,
         "name": "Cool Project",
-        "description": "A project description.",
+        "url": "github.com/johndoe/coolproject",
+        "technologies": "Python, FastAPI",
         "points": ["Implemented API", "Wrote tests"],
     }
 
@@ -86,8 +102,7 @@ def valid_education() -> Dict[str, Any]:
         "id": 1,
         "institution": "University of Example",
         "degree": "B.S. Computer Science",
-        "start_date": "2016-09-01",
-        "end_date": "2020-05-31",
+        "graduation_date": "May 2020",
     }
 
 
@@ -118,14 +133,62 @@ def sample_resume_data(
     valid_education_list,
 ) -> Dict[str, Any]:
     """Provides a dictionary representing sample resume data for service tests."""
+    pi_data = valid_personal_info
+    exp_list = valid_experience_list
+    proj_list = valid_project_list
+    edu_list = valid_education_list
+
+    personal_info_data = {k: v for k, v in pi_data.items() if k != "id"}
+    experience_data = [{k: v for k, v in exp.items() if k != "id"} for exp in exp_list]
+    project_data = [{k: v for k, v in proj.items() if k != "id"} for proj in proj_list]
+    education_data = [{k: v for k, v in edu.items() if k != "id"} for edu in edu_list]
+
     return {
         "id": 1,
-        "personal_info": valid_personal_info,
-        "skill_set": valid_skill_set,
-        "experience": valid_experience_list,
-        "projects": valid_project_list,
-        "education": valid_education_list,
+        "personal_info": personal_info_data,
+        "skills": valid_skill_set,
+        "experience": experience_data,
+        "projects": project_data,
+        "education": education_data,
     }
+
+
+@pytest.fixture(scope="function")
+def valid_ai_points_request() -> Dict[str, Any]:
+    """Provides valid AIPointsRequest data."""
+    return {
+        "context": "Project X description",
+        "num_points": 3,
+        "job_title": "Software Engineer",
+        "company": "Tech Company",
+    }
+
+
+@pytest.fixture(scope="function")
+def valid_ai_enhance_request() -> Dict[str, Any]:
+    """Provides valid AIEnhanceRequest data."""
+    return {"text": "Enhance this: Developed feature X"}
+
+
+@pytest.fixture(scope="function")
+def invalid_resume_data_section_type(valid_personal_info) -> Dict[str, Any]:
+    """Provides resume data with an invalid type for the 'skills' section."""
+    personal_info_data = {k: v for k, v in valid_personal_info.items() if k != "id"}
+    return {
+        "name": "My Resume",
+        "personal_info": personal_info_data,
+        "skills": "This is a string, not a SkillSet dict",  # Invalid type
+        "experience": [],
+        "projects": [],
+        "education": [],
+    }
+
+
+@pytest.fixture(scope="function")
+def incomplete_ai_points_request() -> Dict[str, Any]:
+    """Provides incomplete AIPointsRequest data."""
+    # Missing num_points, job_title, company
+    return {"context": "Some context only"}
 
 
 @pytest.fixture(scope="function")
@@ -152,33 +215,31 @@ def existing_resume_data(sample_resume_data) -> Dict[str, Any]:
 @pytest.fixture(scope="function")
 def sample_resume_object():
     """Provides a mock SQLAlchemy Resume object (or dict if simpler)."""
-    # Using dict for simplicity, replace with mock ORM object if needed
-    return MagicMock()  # Or return a dict similar to sample_resume_data
+    return MagicMock()
 
 
 @pytest.fixture(scope="function")
 def sample_resume_object_missing_data():
     """Provides a mock SQLAlchemy Resume object missing optional fields."""
-    # Using dict for simplicity
-    return MagicMock()  # Or a dict missing keys
+    return MagicMock()
 
 
 @pytest.fixture(scope="function")
 def sample_education():
     """Provides a mock SQLAlchemy Education object (or dict)."""
-    return MagicMock()  # Or return valid_education dict
+    return MagicMock()
 
 
 @pytest.fixture(scope="function")
 def sample_experience():
     """Provides a mock SQLAlchemy Experience object (or dict)."""
-    return MagicMock()  # Or return valid_experience dict
+    return MagicMock()
 
 
 @pytest.fixture(scope="function")
 def sample_project():
     """Provides a mock SQLAlchemy Project object (or dict)."""
-    return MagicMock()  # Or return valid_project dict
+    return MagicMock()
 
 
 @pytest.fixture(scope="function")
@@ -187,13 +248,12 @@ def sample_project_with_points(valid_project):
     mock_proj = MagicMock()
     mock_proj.id = valid_project["id"]
     mock_proj.points = valid_project["points"][:]  # Return a copy
-    return mock_proj  # Or return valid_project dict
+    return mock_proj
 
 
 @pytest.fixture(scope="function")
 def sample_llm_response_content() -> str:
     """Provides a sample successful LLM response string."""
-    # This should resemble the actual expected output format of your LLM
     return """
     Optimized Resume:
     ... (formatted optimized resume sections) ...
@@ -210,9 +270,6 @@ def malformed_llm_response_content() -> str:
 def llm_response_missing_sections() -> str:
     """Provides an LLM response string missing expected sections."""
     return "Optimized Resume:\nPersonal Info:\nName: John Doe"  # Missing other parts
-
-
-# --- Mock Fixtures (Services, External Calls) ---
 
 
 # Generic Mock Factory

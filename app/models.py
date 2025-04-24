@@ -52,5 +52,7 @@ class AIEnhanceRequest(BaseModel):
 
 
 class AIPointsRequest(BaseModel):
+    context: str  # Added field
+    num_points: int  # Added field
     job_title: str
     company: str

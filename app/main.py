@@ -22,7 +22,7 @@ async def lifespan(fast_api_app: FastAPI):
     print("Startup complete.")
     yield
     # Actions on shutdown (if any)
-    engine.dispose() # Clean up the engine's connection pool
+    engine.dispose()  # Clean up the engine's connection pool
     print("Shutting down.")
 
 
