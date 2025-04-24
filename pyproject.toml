@@ -1,0 +1,3 @@
+# Configuration for Python tools like Black, isort, pytest, etc.
+[tool.black]
+line-length = 115

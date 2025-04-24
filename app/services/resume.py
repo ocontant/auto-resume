@@ -1,8 +1,10 @@
-from typing import Dict, Any, Optional
-from sqlalchemy.orm import Session
+from typing import Any, Dict, Optional
+
 from sqlalchemy import update
 from sqlalchemy.exc import NoResultFound
-from app.db import Resume, Education, Project, Experience, PersonalInfo, SkillSet
+from sqlalchemy.orm import Session
+
+from app.db import Education, Experience, PersonalInfo, Project, Resume, SkillSet
 
 
 async def get_resume_by_id(session: Session, resume_id: int) -> Optional[Resume]:
@@ -13,11 +15,11 @@ async def get_resume_by_id(session: Session, resume_id: int) -> Optional[Resume]
 async def get_or_create_default_resume(session: Session) -> Dict[str, Any]:
     """Get or create a default resume"""
     resume = session.query(Resume).first()
-    
+
     if not resume:
         # Create a new resume with default values
         resume = Resume(name="Default Resume")
-        
+
         # Create personal info
         personal_info = PersonalInfo(
             resume=resume,
@@ -25,17 +27,17 @@ async def get_or_create_default_resume(session: Session) -> Dict[str, Any]:
             location="City, Country",
             email="your.email@example.com",
             linkedin="linkedin.com/in/yourprofile",
-            github="github.com/yourusername"
+            github="github.com/yourusername",
         )
-        
+
         # Create skills
         skills = SkillSet(
             resume=resume,
             programming_languages="Python, JavaScript, Java",
             frameworks="React, Django, FastAPI",
-            developer_tools="Git, Docker, VS Code"
+            developer_tools="Git, Docker, VS Code",
         )
-        
+
         # Create a default experience entry
         experience = Experience(
             resume=resume,
@@ -44,15 +46,18 @@ async def get_or_create_default_resume(session: Session) -> Dict[str, Any]:
             location="City, Country",
             start_date="Jan 2023",
             end_date="Present",
-            points=["Responsibility or achievement 1.", "Responsibility or achievement 2."]
+            points=[
+                "Responsibility or achievement 1.",
+                "Responsibility or achievement 2.",
+            ],
         )
-        
+
         session.add(resume)
         session.add(personal_info)
         session.add(skills)
-        session.add(experience) # Add the default experience to the session
+        session.add(experience)  # Add the default experience to the session
         session.commit()
-    
+
     # Convert to dictionary for template rendering
     return _resume_to_dict(resume)
 
@@ -68,35 +73,49 @@ def _resume_to_dict(resume: Resume) -> Dict[str, Any]:
             "location": resume.personal_info.location if resume.personal_info else "",
             "email": resume.personal_info.email if resume.personal_info else "",
             "linkedin": resume.personal_info.linkedin if resume.personal_info else "",
-            "github": resume.personal_info.github if resume.personal_info else ""
+            "github": resume.personal_info.github if resume.personal_info else "",
         },
         "skills": {
-            "programming_languages": resume.skills.programming_languages if resume.skills else "",
+            "programming_languages": (resume.skills.programming_languages if resume.skills else ""),
             "frameworks": resume.skills.frameworks if resume.skills else "",
-            "developer_tools": resume.skills.developer_tools if resume.skills else ""
+            "developer_tools": resume.skills.developer_tools if resume.skills else "",
         },
         "education": [
-            {"id": edu.id, "institution": edu.institution, "degree": edu.degree, "graduation_date": edu.graduation_date}
+            {
+                "id": edu.id,
+                "institution": edu.institution,
+                "degree": edu.degree,
+                "graduation_date": edu.graduation_date,
+            }
             for edu in resume.education
         ],
         "experience": [
-            {"id": exp.id, "title": exp.title, "company": exp.company, "location": exp.location,
-             "start_date": exp.start_date, "end_date": exp.end_date, "points": exp.points}
+            {
+                "id": exp.id,
+                "title": exp.title,
+                "company": exp.company,
+                "location": exp.location,
+                "start_date": exp.start_date,
+                "end_date": exp.end_date,
+                "points": exp.points,
+            }
             for exp in resume.experience
         ],
         "projects": [
-            {"id": proj.id, "name": proj.name, "url": proj.url, "technologies": proj.technologies, "points": proj.points}
+            {
+                "id": proj.id,
+                "name": proj.name,
+                "url": proj.url,
+                "technologies": proj.technologies,
+                "points": proj.points,
+            }
             for proj in resume.projects
-        ]
+        ],
     }
 
 
 async def update_entity_field(
-    session: Session, 
-    entity_class, 
-    filter_by: Dict[str, Any], 
-    field: str, 
-    value: str
+    session: Session, entity_class, filter_by: Dict[str, Any], field: str, value: str
 ) -> bool:
     """
     Generic function to update any entity field
@@ -113,14 +132,14 @@ async def update_entity_field(
     if result.rowcount == 0:
         raise NoResultFound(f"{entity_class.__name__} not found with filter {filter_by}")
     return True
- 
- 
+
+
 async def update_entity_point(
-    session: Session, 
-    entity_class, 
-    filter_by: Dict[str, Any], 
-    point_index: int, 
-    value: str
+    session: Session,
+    entity_class,
+    filter_by: Dict[str, Any],
+    point_index: int,
+    value: str,
 ) -> bool:
     """
     Update a point in an entity's points array (JSON field).
@@ -130,7 +149,7 @@ async def update_entity_point(
     for key, val in filter_by.items():
         filter_conditions.append(getattr(entity_class, key) == val)
     entity = session.query(entity_class).filter(*filter_conditions).first()
- 
+
     if not entity:
         raise NoResultFound(f"{entity_class.__name__} item not found for update.")
     try:
@@ -170,9 +189,13 @@ async def update_project_field(session: Session, resume_id: int, project_id: int
     return await update_entity_field(session, Project, {"id": project_id, "resume_id": resume_id}, field, value)
 
 
-async def update_project_point(session: Session, resume_id: int, project_id: int, point_index: int, value: str) -> bool:
+async def update_project_point(
+    session: Session, resume_id: int, project_id: int, point_index: int, value: str
+) -> bool:
     """Update a specific project point"""
-    return await update_entity_point(session, Project, {"id": project_id, "resume_id": resume_id}, point_index, value)
+    return await update_entity_point(
+        session, Project, {"id": project_id, "resume_id": resume_id}, point_index, value
+    )
 
 
 async def _add_item_to_collection(session: Session, resume_id: int, item_class, default_values=None):
@@ -185,11 +208,16 @@ async def _add_item_to_collection(session: Session, resume_id: int, item_class, 
 
 async def add_education(session: Session, resume_id: int) -> Education:
     """Add a new education entry to a resume"""
-    return await _add_item_to_collection(session, resume_id, Education, {
-        "institution": "University Name",
-        "degree": "Degree/Program",
-        "graduation_date": "Month Year"
-    })
+    return await _add_item_to_collection(
+        session,
+        resume_id,
+        Education,
+        {
+            "institution": "University Name",
+            "degree": "Degree/Program",
+            "graduation_date": "Month Year",
+        },
+    )
 
 
 async def delete_education_by_id(session: Session, education_id: int) -> bool:
@@ -204,12 +232,17 @@ async def delete_education_by_id(session: Session, education_id: int) -> bool:
 
 async def add_project(session: Session, resume_id: int) -> Project:
     """Add a new project to a resume"""
-    return await _add_item_to_collection(session, resume_id, Project, {
-        "name": "Project Name",
-        "url": "github.com/username/project",
-        "technologies": "Technology 1, Technology 2",
-        "points": []
-    })
+    return await _add_item_to_collection(
+        session,
+        resume_id,
+        Project,
+        {
+            "name": "Project Name",
+            "url": "github.com/username/project",
+            "technologies": "Technology 1, Technology 2",
+            "points": [],
+        },
+    )
 
 
 async def delete_project_by_id(session: Session, project_id: int) -> bool:
@@ -230,7 +263,7 @@ async def add_experience(session: Session, resume_id: int) -> Experience:
         "location": "City, Country",
         "start_date": "Month Year",
         "end_date": "Present",
-        "points": "• List key responsibilities and achievements here."
+        "points": "• List key responsibilities and achievements here.",
     }
     return await _add_item_to_collection(session, resume_id, Experience, default_values)
 

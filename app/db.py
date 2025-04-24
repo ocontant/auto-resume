@@ -1,11 +1,12 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, JSON, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
 import os
 from datetime import datetime
 
+from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, String, create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, sessionmaker
+
 # Ensure database directory exists
-os.makedirs('app/data', exist_ok=True)
+os.makedirs("app/data", exist_ok=True)
 
 # Database settings
 SQLITE_FILE_NAME = "resume.db"
@@ -15,6 +16,7 @@ engine = create_engine(SQLITE_URL)
 
 # Create base model
 Base = declarative_base()
+
 
 # Define models
 class PersonalInfo(Base):
@@ -34,33 +36,33 @@ class PersonalInfo(Base):
 
 class SkillSet(Base):
     __tablename__ = "skillset"
-    
+
     id = Column(Integer, primary_key=True)
     resume_id = Column(Integer, ForeignKey("resume.id"))
     programming_languages = Column(String, nullable=False, default="")
     frameworks = Column(String, nullable=False, default="")
     developer_tools = Column(String, nullable=False, default="")
-    
+
     # Relationship
     resume = relationship("Resume", back_populates="skills")
 
 
 class Education(Base):
     __tablename__ = "education"
-    
+
     id = Column(Integer, primary_key=True)
     resume_id = Column(Integer, ForeignKey("resume.id"))
     institution = Column(String, nullable=False)
     degree = Column(String, nullable=False)
     graduation_date = Column(String, nullable=False)
-    
+
     # Relationship
     resume = relationship("Resume", back_populates="education")
 
 
 class Experience(Base):
     __tablename__ = "experience"
-    
+
     id = Column(Integer, primary_key=True)
     resume_id = Column(Integer, ForeignKey("resume.id"))
     title = Column(String, nullable=False)
@@ -68,36 +70,41 @@ class Experience(Base):
     location = Column(String, nullable=True)
     start_date = Column(String, nullable=False)
     end_date = Column(String, nullable=False)
-    points = Column(String, nullable=False, default="") # Store as a single text block
-    
+    points = Column(String, nullable=False, default="")  # Store as a single text block
+
     # Relationship
     resume = relationship("Resume", back_populates="experience")
 
 
 class Project(Base):
     __tablename__ = "project"
-    
+
     id = Column(Integer, primary_key=True)
     resume_id = Column(Integer, ForeignKey("resume.id"))
     name = Column(String, nullable=False)
     url = Column(String, nullable=False)
     technologies = Column(String, nullable=False)
     points = Column(JSON, nullable=False)  # Store as JSON array
-    
+
     # Relationship
     resume = relationship("Resume", back_populates="projects")
 
 
 class Resume(Base):
     __tablename__ = "resume"
-    
+
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, default="Default Resume")
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    
+
     # Relationships
-    personal_info = relationship("PersonalInfo", back_populates="resume", uselist=False, cascade="all, delete-orphan")
+    personal_info = relationship(
+        "PersonalInfo",
+        back_populates="resume",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
     skills = relationship("SkillSet", back_populates="resume", uselist=False, cascade="all, delete-orphan")
     experience = relationship("Experience", back_populates="resume", cascade="all, delete-orphan")
     projects = relationship("Project", back_populates="resume", cascade="all, delete-orphan")
@@ -111,6 +118,7 @@ def create_db_and_tables():
 
 # Session dependency
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 def get_session():
     session = SessionLocal()
