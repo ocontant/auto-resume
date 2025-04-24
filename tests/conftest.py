@@ -114,7 +114,13 @@ def invalid_experience_type_data() -> Dict[str, Any]:
 @pytest.fixture(scope="function")
 def experience_data_optional_location_absent() -> Dict[str, Any]:
     """Provides Experience data without the optional location field."""
-    return {"title": "Software Engineer", "company": "Tech Corp", "start_date": "Jan 2020", "end_date": "Present", "points": "Developed feature X"}
+    return {
+        "title": "Software Engineer",
+        "company": "Tech Corp",
+        "start_date": "Jan 2020",
+        "end_date": "Present",
+        "points": "Developed feature X",
+    }
 
 
 @pytest.fixture(scope="function")
@@ -232,7 +238,7 @@ def missing_resume_section_data() -> Dict[str, Any]:
             "programming_languages": "Python",
             "frameworks": "FastAPI",
             "developer_tools": "Docker",
-         },
+        },
         "experience": [],
         "projects": [],
         "education": [],
@@ -486,7 +492,9 @@ def mock_update_education_field_error():
 
 @pytest.fixture(scope="function")
 def mock_add_education(sample_education_object):
-    return _create_mock_fixture(side_effect=lambda session, resume_id: _create_mock_db_object(sample_education_object.__dict__))
+    return _create_mock_fixture(
+        side_effect=lambda session, resume_id: _create_mock_db_object(sample_education_object.__dict__)
+    )
 
 
 @pytest.fixture(scope="function")
@@ -526,7 +534,9 @@ def mock_update_experience_field_error():
 
 @pytest.fixture(scope="function")
 def mock_add_experience(sample_experience_object):
-    return _create_mock_fixture(side_effect=lambda session, resume_id: _create_mock_db_object(sample_experience_object.__dict__))
+    return _create_mock_fixture(
+        side_effect=lambda session, resume_id: _create_mock_db_object(sample_experience_object.__dict__)
+    )
 
 
 @pytest.fixture(scope="function")
@@ -586,7 +596,9 @@ def mock_update_project_point_error():
 
 @pytest.fixture(scope="function")
 def mock_add_project(sample_project_object):
-    return _create_mock_fixture(side_effect=lambda session, resume_id: _create_mock_db_object(sample_project_object.__dict__))
+    return _create_mock_fixture(
+        side_effect=lambda session, resume_id: _create_mock_db_object(sample_project_object.__dict__)
+    )
 
 
 @pytest.fixture(scope="function")
