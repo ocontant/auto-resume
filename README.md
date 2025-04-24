@@ -35,7 +35,8 @@ ResumeLM is a web application designed to help users build and optimize their re
 ### Installation & Setup
 
 1.  **Clone the repository:**
-        git clone https://github.com/anywaifu/auto-resume.git
+    ```bash
+    git clone https://github.com/anywaifu/auto-resume.git
     cd auto-resume
     ```
 2.  **Create Environment File:**
