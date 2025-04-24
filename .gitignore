@@ -322,7 +322,8 @@ tags
 dump.rdb
 
 ### extras
-.pytest_cache/
+__pycache__
+.pytest_cache
 .env
 *.min.js
 *.min.css

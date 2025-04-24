@@ -427,12 +427,12 @@ def mock_litellm_acompletion(sample_llm_response_content):
     mock_response.choices[0].message.content = sample_llm_response_content
     mock_acompletion = AsyncMock(return_value=mock_response)
     # Use patch to replace the actual litellm.acompletion
-    with patch("app.services.ats.litellm.acompletion", new=mock_acompletion):
+    with patch("app.services.ats.acompletion", new=mock_acompletion, create=True):  # Target where it's used
         yield mock_acompletion
 
 
 @pytest.fixture(scope="function")
 def mock_litellm_acompletion_error():
     mock_acompletion = AsyncMock(side_effect=Exception("LiteLLM API Error"))
-    with patch("app.services.ats.litellm.acompletion", new=mock_acompletion):
+    with patch("app.services.ats.acompletion", new=mock_acompletion, create=True):  # Target where it's used
         yield mock_acompletion

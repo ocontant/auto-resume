@@ -1,18 +1,33 @@
+from contextlib import asynccontextmanager
+
 from fastapi import Depends, FastAPI, Query, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from app.db import create_db_and_tables, get_session
+from app.db import create_db_and_tables, engine, get_session
 from app.routes.ats import ats_router
 from app.routes.resume import resume_router
 from app.services.ats import init_llm
 from app.services.resume import get_or_create_default_resume
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(fast_api_app: FastAPI):
+    # Actions on startup
+    print("Initializing database and LLM...")
+    create_db_and_tables()
+    init_llm()
+    print("Startup complete.")
+    yield
+    # Actions on shutdown (if any)
+    engine.dispose() # Clean up the engine's connection pool
+    print("Shutting down.")
+
 
 # Mount static files
+app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Constants
@@ -24,12 +39,6 @@ templates = Jinja2Templates(directory="app/templates")
 # Include routes
 app.include_router(resume_router)
 app.include_router(ats_router)
-
-
-@app.on_event("startup")
-def on_startup():
-    create_db_and_tables()
-    init_llm()
 
 
 # let's keep it here for simplicity
