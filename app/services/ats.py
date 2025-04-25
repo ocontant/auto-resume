@@ -3,7 +3,6 @@ import os
 from typing import Any, Dict
 
 from dotenv import load_dotenv
-from litellm import completion
 from sqlalchemy.orm import Session
 
 from app.models import db_resume_to_dict
@@ -11,29 +10,9 @@ from app.services.resume import get_resume_by_id
 
 load_dotenv()
 
-llm_initialized = False
-DEFAULT_MODEL = "gpt-4.1-mini"
-
-
-def init_llm():
-    """Initialize LiteLLM with API keys from environment variables"""
-    global llm_initialized
-
-    if os.getenv("OPENAI_API_KEY"):
-        print("OpenAI API key found, LiteLLM initialized")
-        llm_initialized = True
-    elif os.getenv("ANTHROPIC_API_KEY"):
-        print("Anthropic API key found, LiteLLM initialized")
-        llm_initialized = True
-    else:
-        print("Warning: No API keys found for LLM providers")
-
 
 async def optimize_resume(session: Session, resume_id: int) -> str:
     resume = await get_resume_by_id(session, resume_id)
-    if not llm_initialized:
-        raise Exception("LiteLLM not initialized")
-
     resume_data = db_resume_to_dict(resume)
     prompt = _create_ats_prompt(resume_data)
 
