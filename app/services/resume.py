@@ -1,13 +1,14 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from sqlalchemy import update
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
 from app.db import Education, Experience, PersonalInfo, Project, Resume, SkillSet
+from app.models import db_resume_to_dict
 
 
-async def get_resume_by_id(session: Session, resume_id: int) -> Optional[Resume]:
+async def get_resume_by_id(session: Session, resume_id: int) -> Resume:
     """Get a resume by ID"""
     resume = session.query(Resume).filter(Resume.id == resume_id).one_or_none()
     if not resume:
@@ -16,9 +17,12 @@ async def get_resume_by_id(session: Session, resume_id: int) -> Optional[Resume]
 
 
 async def get_resume_dict(session: Session, resume_id: int) -> Dict[str, Any]:
-    """Get a resume by ID and convert it to a dictionary for templates"""
+    """Get a resume by ID and convert it to a dictionary using Pydantic models"""
     resume = await get_resume_by_id(session, resume_id)
-    return _resume_to_dict(resume)
+    if not resume:
+        raise NoResultFound(f"Resume with ID {resume_id} not found")
+
+    return db_resume_to_dict(resume)
 
 
 async def get_all_resumes(session: Session) -> List[Dict[str, Any]]:
@@ -39,7 +43,7 @@ async def create_resume(session: Session, name: str, data: Dict[str, Any]) -> Re
     """Create a new resume with the provided data"""
     resume = Resume(name=name)
     session.add(resume)
-    
+
     # Add personal info
     personal_info = PersonalInfo(
         resume=resume,
@@ -50,7 +54,7 @@ async def create_resume(session: Session, name: str, data: Dict[str, Any]) -> Re
         github=data.get("personal_info", {}).get("github", ""),
     )
     session.add(personal_info)
-    
+
     # Add skills
     skills = SkillSet(
         resume=resume,
@@ -59,7 +63,7 @@ async def create_resume(session: Session, name: str, data: Dict[str, Any]) -> Re
         developer_tools=data.get("skills", {}).get("developer_tools", ""),
     )
     session.add(skills)
-    
+
     # Add experiences
     for exp_data in data.get("experience", []):
         experience = Experience(
@@ -69,10 +73,10 @@ async def create_resume(session: Session, name: str, data: Dict[str, Any]) -> Re
             location=exp_data.get("location", ""),
             start_date=exp_data.get("start_date", ""),
             end_date=exp_data.get("end_date", ""),
-            points=exp_data.get("points", "")
+            points=exp_data.get("points", ""),
         )
         session.add(experience)
-    
+
     # Add projects
     for proj_data in data.get("projects", []):
         project = Project(
@@ -80,75 +84,23 @@ async def create_resume(session: Session, name: str, data: Dict[str, Any]) -> Re
             name=proj_data.get("name", ""),
             url=proj_data.get("url", ""),
             technologies=proj_data.get("technologies", ""),
-            points=proj_data.get("points", [])
+            points=proj_data.get("points", []),
         )
         session.add(project)
-    
+
     # Add education
     for edu_data in data.get("education", []):
         education = Education(
             resume=resume,
             institution=edu_data.get("institution", ""),
             degree=edu_data.get("degree", ""),
-            graduation_date=edu_data.get("graduation_date", "")
+            graduation_date=edu_data.get("graduation_date", ""),
         )
         session.add(education)
-    
+
     session.commit()
     session.refresh(resume)
     return resume
-
-
-# Private helper function to convert database models to dict
-def _resume_to_dict(resume: Resume) -> Dict[str, Any]:
-    """Convert resume database object to dictionary for templates"""
-    return {
-        "id": resume.id,
-        "name": resume.name,
-        "personal_info": {
-            "name": resume.personal_info.name if resume.personal_info else "",
-            "location": resume.personal_info.location if resume.personal_info else "",
-            "email": resume.personal_info.email if resume.personal_info else "",
-            "linkedin": resume.personal_info.linkedin if resume.personal_info else "",
-            "github": resume.personal_info.github if resume.personal_info else "",
-        },
-        "skills": {
-            "programming_languages": (resume.skills.programming_languages if resume.skills else ""),
-            "frameworks": resume.skills.frameworks if resume.skills else "",
-            "developer_tools": resume.skills.developer_tools if resume.skills else "",
-        },
-        "education": [
-            {
-                "id": edu.id,
-                "institution": edu.institution,
-                "degree": edu.degree,
-                "graduation_date": edu.graduation_date,
-            }
-            for edu in resume.education
-        ],
-        "experience": [
-            {
-                "id": exp.id,
-                "title": exp.title,
-                "company": exp.company,
-                "location": exp.location,
-                "start_date": exp.start_date,
-                "end_date": exp.end_date,
-                "points": exp.points,
-            }
-            for exp in resume.experience
-        ],
-        "projects": [
-            {
-                "id": proj.id,
-                "name": proj.name,
-                "url": proj.url,
-                "technologies": proj.technologies,
-                "points": proj.points,
-            }
-            for proj in resume.projects
-        ],
-    }
 
 
 async def update_entity_field(
@@ -211,14 +163,32 @@ async def update_skills(session: Session, resume_id: int, field: str, value: str
     return await update_entity_field(session, SkillSet, {"resume_id": resume_id}, field, value)
 
 
-async def update_education_field(session: Session, education_id: int, field: str, value: str) -> bool:
+async def update_education_field(
+    session: Session, resume_id: int, education_id: int, field: str, value: str
+) -> bool:
     """Update an education field"""
-    return await update_entity_field(session, Education, {"id": education_id}, field, value)
+    education = (
+        session.query(Education).filter(Education.id == education_id, Education.resume_id == resume_id).first()
+    )
+    if not education:
+        raise NoResultFound(f"Education entry with ID {education_id} not found for resume {resume_id}.")
+    return await update_entity_field(
+        session, Education, {"id": education_id, "resume_id": resume_id}, field, value
+    )
 
 
-async def update_experience_field(session: Session, experience_id: int, field: str, value: str) -> bool:
+async def update_experience_field(
+    session: Session, resume_id: int, experience_id: int, field: str, value: str
+) -> bool:
     """Update an experience field"""
-    return await update_entity_field(session, Experience, {"id": experience_id}, field, value)
+    experience = (
+        session.query(Experience).filter(Experience.id == experience_id, Experience.resume_id == resume_id).first()
+    )
+    if not experience:
+        raise NoResultFound(f"Experience entry with ID {experience_id} not found for resume {resume_id}.")
+    return await update_entity_field(
+        session, Experience, {"id": experience_id, "resume_id": resume_id}, field, value
+    )
 
 
 async def update_project_field(session: Session, resume_id: int, project_id: int, field: str, value: str) -> bool:
@@ -257,11 +227,13 @@ async def add_education(session: Session, resume_id: int) -> Education:
     )
 
 
-async def delete_education_by_id(session: Session, education_id: int) -> bool:
+async def delete_education_by_id(session: Session, resume_id: int, education_id: int) -> bool:
     """Delete an education entry by its ID."""
-    education_entry = session.query(Education).filter(Education.id == education_id).first()
+    education_entry = (
+        session.query(Education).filter(Education.id == education_id, Education.resume_id == resume_id).first()
+    )
     if not education_entry:
-        raise NoResultFound(f"Education entry with ID {education_id} not found.")
+        raise NoResultFound(f"Education entry with ID {education_id} not found for resume {resume_id}.")
     session.delete(education_entry)
     session.commit()
     return True
@@ -282,11 +254,11 @@ async def add_project(session: Session, resume_id: int) -> Project:
     )
 
 
-async def delete_project_by_id(session: Session, project_id: int) -> bool:
+async def delete_project_by_id(session: Session, resume_id: int, project_id: int) -> bool:
     """Delete a project by its ID."""
-    project_entry = session.query(Project).filter(Project.id == project_id).first()
+    project_entry = session.query(Project).filter(Project.id == project_id, Project.resume_id == resume_id).first()
     if not project_entry:
-        raise NoResultFound(f"Project entry with ID {project_id} not found.")
+        raise NoResultFound(f"Project entry with ID {project_id} not found for resume {resume_id}.")
     session.delete(project_entry)
     session.commit()
     return True
@@ -305,11 +277,13 @@ async def add_experience(session: Session, resume_id: int) -> Experience:
     return await _add_item_to_collection(session, resume_id, Experience, default_values)
 
 
-async def delete_experience_by_id(session: Session, experience_id: int) -> bool:
+async def delete_experience_by_id(session: Session, resume_id: int, experience_id: int) -> bool:
     """Delete an experience entry by its ID."""
-    experience_entry = session.query(Experience).filter(Experience.id == experience_id).first()
+    experience_entry = (
+        session.query(Experience).filter(Experience.id == experience_id, Experience.resume_id == resume_id).first()
+    )
     if not experience_entry:
-        raise NoResultFound(f"Experience entry with ID {experience_id} not found.")
+        raise NoResultFound(f"Experience entry with ID {experience_id} not found for resume {resume_id}.")
     session.delete(experience_entry)
     session.commit()
     return True
@@ -320,12 +294,12 @@ async def delete_resume_by_id(session: Session, resume_id: int) -> bool:
     resume = await get_resume_by_id(session, resume_id)
     if not resume:
         raise NoResultFound(f"Resume with ID {resume_id} not found.")
-    
+
     # Don't delete if it's the only resume
     count = session.query(Resume).count()
     if count <= 1:
         raise ValueError("Cannot delete the only resume. At least one resume must exist.")
-    
+
     session.delete(resume)
     session.commit()
     return True

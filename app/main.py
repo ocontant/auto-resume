@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 
 import uvicorn
-from fastapi import Depends, FastAPI, Query, Request, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -9,10 +9,10 @@ from sqlalchemy.orm import Session
 
 from app.db import create_db_and_tables, engine, get_session
 from app.routes.ats import ats_router
+from app.routes.config import config_router
 from app.routes.resume import resume_router
 from app.services.ats import init_llm
-from app.services.resume import get_resume_dict, get_all_resumes
-from app.routes.config import config_router
+from app.services.resume import get_all_resumes, get_resume_dict
 
 
 @asynccontextmanager
@@ -61,8 +61,8 @@ async def root(session: Session = Depends(get_session)):
 @app.get("/resume/{resume_id}", response_class=HTMLResponse)
 async def home(request: Request, resume_id: int, tab: str = Query(None), session: Session = Depends(get_session)):
     resume_data = await get_resume_dict(session, resume_id)
-    
-    # Use the same default tab as frontend 
+
+    # Use the same default tab as frontend
     active_tab = tab or DEFAULT_TAB
 
     return templates.TemplateResponse(

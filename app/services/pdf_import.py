@@ -1,10 +1,11 @@
-import fitz # noqa
-from sqlalchemy.orm import Session
-from typing import Dict, Any
+from typing import Any, Dict
 
+import fitz  # noqa
 from litellm import completion
-from app.services.resume import create_resume
+from sqlalchemy.orm import Session
+
 from app.db import Resume
+from app.services.resume import create_resume
 
 
 async def extract_text_from_pdf(file_content: bytes) -> str:
@@ -21,10 +22,13 @@ async def extract_text_from_pdf(file_content: bytes) -> str:
 
 async def parse_resume_text(text: str) -> Dict[str, Any]:
     """Use LiteLLM to parse resume text into structured data matching our models."""
+    from app.models import ResumeModel
+
+    schema_str = json.dumps(ResumeModel.model_json_schema(), indent=2)
+
     prompt = f"""
-    Extract the following information from this resume text and format it as a JSON object:
-    
-    Resume Text:
+    You are an expert resume parser that extracts structured information from resume text.
+    RESUME TEXT:
     {text}
     
     Extract the following sections:
@@ -34,7 +38,14 @@ async def parse_resume_text(text: str) -> Dict[str, Any]:
     4. Projects (name, url, technologies, points/description)
     5. Education (institution, degree, graduation_date)
     
-    Format the response as valid JSON matching this structure:
+    OUTPUT SCHEMA:
+    {schema_str}
+    
+    EXTRACTION RULES:
+    - Extract all information precisely as it appears in the text
+    - For experience positions, format bullet points with clear separations
+    - Convert project bullet points to an array of strings
+    - Match formatting exactly to the required schema structure
     {{
         "personal_info": {{
             "name": "...",
@@ -75,35 +86,39 @@ async def parse_resume_text(text: str) -> Dict[str, Any]:
         ]
     }}
     
-    If you can't find specific information, use empty strings or appropriate default values.
-    Only return the JSON object, no additional text.
+    Return ONLY a valid, parseable JSON object that follows the schema structure.
+    Do not include additional text, markdown formatting, or explanations.
     """
-    
+
     try:
         response = completion(
             model="gpt-4.1-mini",
             messages=[
-                {"role": "system", "content": "You are a resume parsing assistant that extracts structured data from resume text."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are a precision resume parser that extracts structured data from text and creates valid JSON.",
+                },
+                {"role": "user", "content": prompt},
             ],
-            temperature=0.1,
+            temperature=0.0,
         )
-        
+
         content = response.choices[0].message.content
-        
+
+        print("Received response from LLM for resume parsing")
         # Find JSON in the response
         import json
         import re
-        
+
         # Try to extract JSON from the response if it's wrapped in markdown code blocks
-        json_match = re.search(r'```(?:json)?\s*([\s\S]*?)\s*```', content)
+        json_match = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", content)
         if json_match:
             content = json_match.group(1)
-        
+
         # Parse the JSON response
         resume_data = json.loads(content)
         return resume_data
-    
+
     except Exception as e:
         raise ValueError(f"Error parsing resume text: {str(e)}")
 
@@ -112,6 +127,6 @@ async def import_resume_from_pdf(file_content: bytes, session: Session, name: st
     """Process a PDF resume file and create a new resume in the database."""
     text = await extract_text_from_pdf(file_content)
     parsed_data = await parse_resume_text(text)
-    
+
     resume = await create_resume(session, name, parsed_data)
     return resume

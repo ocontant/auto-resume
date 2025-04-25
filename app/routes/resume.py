@@ -3,7 +3,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
-from app.db import get_session 
+from app.db import get_session
 from app.services.resume import (
     add_education,
     add_experience,
@@ -192,7 +192,9 @@ async def add_education_endpoint(request: Request, resume_id: int, session: Sess
         # Verify resume exists
         await get_resume_by_id(session, resume_id)
         new_education = await add_education(session, resume_id)
-        return templates.TemplateResponse("components/education_item.html", {"request": request, "edu": new_education})
+        return templates.TemplateResponse(
+            "components/education_item.html", {"request": request, "edu": new_education}
+        )
     except NoResultFound:
         raise HTTPException(status_code=404, detail=f"Resume with ID {resume_id} not found")
     except Exception as e:
@@ -218,7 +220,9 @@ async def add_project_endpoint(request: Request, resume_id: int, session: Sessio
         # Verify resume exists
         await get_resume_by_id(session, resume_id)
         new_project = await add_project(session, resume_id)
-        return templates.TemplateResponse("components/project_item.html", {"request": request, "project": new_project})
+        return templates.TemplateResponse(
+            "components/project_item.html", {"request": request, "project": new_project}
+        )
     except NoResultFound:
         raise HTTPException(status_code=404, detail=f"Resume with ID {resume_id} not found")
     except Exception as e:
@@ -240,7 +244,7 @@ async def delete_project_endpoint(resume_id: int, project_id: int, session: Sess
 @resume_router.post("/{resume_id}/experience")
 async def add_experience_endpoint(request: Request, resume_id: int, session: Session = Depends(get_session)):
     """Add a new experience entry to the resume"""
-    try: 
+    try:
         # Verify resume exists
         await get_resume_by_id(session, resume_id)
         new_experience = await add_experience(session, resume_id)
