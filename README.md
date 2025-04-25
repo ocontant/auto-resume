@@ -44,7 +44,7 @@ ResumeLM is a web application designed to help users build and optimize their re
     ```bash
     cp .env.example .env
     ```
-    Edit `.env` and add your API keys for the desired LLM provider (e.g., `OPENAI_API_KEY`). Make sure the `DEFAULT_LLM_MODEL` variable matches a model identifier supported by OpenAI.
+    Edit `.env` and add your API keys for the desired LLM provider (e.g., `OPENAI_API_KEY`). Make sure the `OPENAI_LLM_MODEL` variable matches a model identifier supported by OpenAI.
 
 3.  **Build and Run with Docker Compose:**
     This is the recommended way to run the application.

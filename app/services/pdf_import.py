@@ -26,17 +26,19 @@ async def parse_resume_text(text: str) -> Resume:
     structured_llm = llm.as_structured_llm(output_cls=Resume)
 
     prompt = f"""
-    You are an expert resume parser. Extract structured information from this resume:
-    
-    RESUME TEXT:
-    {text}
-    
-    Format the information exactly according to the Resume schema. Guidelines:
-    - For experience entries, convert bullet points into a single string with line breaks for the "points" field
-    - For projects, extract bullet points as separate array elements in the "points" field
-    - Ensure all required fields are populated
-    - Missing information must be set as [FIELD NAME] like [NAME] or [LOCATION] or [GITHUB] etc
-    """
+You are an expert resume parser. Extract structured information from this resume:
+
+RESUME TEXT:
+{text}
+
+---
+
+Format the information exactly according to the Resume schema. Guidelines:
+- For experience entries, convert bullet points into a single string with line breaks for the "points" field
+- For projects, extract bullet points as separate array elements in the "points" field
+- Ensure all required fields are populated
+- Missing information must be set as [FIELD NAME] like [NAME] or [LOCATION] or [GITHUB] etc
+"""
     
     input_msg = ChatMessage.from_str(prompt)
     output = structured_llm.chat([input_msg])

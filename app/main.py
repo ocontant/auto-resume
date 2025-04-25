@@ -11,7 +11,6 @@ from app.db import create_db_and_tables, engine, get_session
 from app.routes.ats import ats_router
 from app.routes.config import config_router
 from app.routes.resume import resume_router
-from app.services.ats import init_llm
 from app.services.resume import get_all_resumes, get_resume_dict
 
 
@@ -20,7 +19,6 @@ async def lifespan(fast_api_app: FastAPI):
     # Actions on startup
     print("Initializing database and LLM...")
     create_db_and_tables()
-    init_llm()
     print("Startup complete.")
     yield
     # Actions on shutdown (if any)

@@ -2,6 +2,8 @@ import json
 import os
 from typing import Any, Dict
 
+from llama_index.core.llms import ChatMessage, MessageRole
+from llama_index.llms.openai import OpenAI
 from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 
@@ -15,22 +17,20 @@ async def optimize_resume(session: Session, resume_id: int) -> str:
     resume = await get_resume_by_id(session, resume_id)
     resume_data = db_resume_to_dict(resume)
     prompt = _create_ats_prompt(resume_data)
-
-    response = completion(
-        model=DEFAULT_MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": "You are an expert resume writer specializing in creating ATS-optimized resumes. "
-                "Focus on keywords, clear formatting, and quantifiable achievements.",
-            },
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0.2,
-        max_tokens=8000,
-    )
-
-    ats_resume_data_html = response.choices[0].message.content
+    
+    system_message = ("You are an expert resume writer specializing in creating ATS-optimized resumes. "
+                      "Focus on keywords, clear formatting, and quantifiable achievements.")
+    
+    model_name = os.getenv("OPENAI_LLM_MODEL")
+    llm = OpenAI(model=model_name, temperature=0.2)
+    
+    messages = [
+        ChatMessage(system_message, role=MessageRole.SYSTEM),
+        ChatMessage(prompt, role=MessageRole.USER)
+    ]
+    response = llm.chat(messages)
+    
+    ats_resume_data_html = response.message.content
 
     clean_ats_resume_data_html = _parse_llm_response(ats_resume_data_html)
     return clean_ats_resume_data_html
@@ -45,6 +45,8 @@ I need you to optimize the following resume to maximize its score on Applicant T
 
 ## CURRENT RESUME DATA:
 {resume_json}
+
+---
 
 ## OPTIMIZATION INSTRUCTIONS:
 1. Add relevant industry keywords based on the skills and experience shown
