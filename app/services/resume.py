@@ -44,58 +44,26 @@ async def create_resume(session: Session, name: str, data: Dict[str, Any]) -> Re
     resume = Resume(name=name)
     session.add(resume)
 
-    # Add personal info
-    personal_info = PersonalInfo(
-        resume=resume,
-        name=data.get("personal_info", {}).get("name", ""),
-        location=data.get("personal_info", {}).get("location", ""),
-        email=data.get("personal_info", {}).get("email", ""),
-        linkedin=data.get("personal_info", {}).get("linkedin", ""),
-        github=data.get("personal_info", {}).get("github", ""),
-    )
+    # Add personal info and skills
+    personal_info = PersonalInfo(resume=resume, **data["personal_info"])
     session.add(personal_info)
 
-    # Add skills
-    skills = SkillSet(
-        resume=resume,
-        programming_languages=data.get("skills", {}).get("programming_languages", ""),
-        frameworks=data.get("skills", {}).get("frameworks", ""),
-        developer_tools=data.get("skills", {}).get("developer_tools", ""),
-    )
+    skills = SkillSet(resume=resume, **data["skills"])
     session.add(skills)
 
     # Add experiences
-    for exp_data in data.get("experience", []):
-        experience = Experience(
-            resume=resume,
-            title=exp_data.get("title", ""),
-            company=exp_data.get("company", ""),
-            location=exp_data.get("location", ""),
-            start_date=exp_data.get("start_date", ""),
-            end_date=exp_data.get("end_date", ""),
-            points=exp_data.get("points", ""),
-        )
+    for exp_data in data["experience"]:
+        experience = Experience(resume=resume, **exp_data)
         session.add(experience)
 
     # Add projects
-    for proj_data in data.get("projects", []):
-        project = Project(
-            resume=resume,
-            name=proj_data.get("name", ""),
-            url=proj_data.get("url", ""),
-            technologies=proj_data.get("technologies", ""),
-            points=proj_data.get("points", []),
-        )
+    for proj_data in data["projects"]:
+        project = Project(resume=resume, **proj_data)
         session.add(project)
 
     # Add education
-    for edu_data in data.get("education", []):
-        education = Education(
-            resume=resume,
-            institution=edu_data.get("institution", ""),
-            degree=edu_data.get("degree", ""),
-            graduation_date=edu_data.get("graduation_date", ""),
-        )
+    for edu_data in data["education"]:
+        education = Education(resume=resume, **edu_data)
         session.add(education)
 
     session.commit()
