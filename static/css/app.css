@@ -24,3 +24,15 @@ body {
     color: #9333ea; /* purple-600 text */
     font-weight: 500;
 }
+
+.rounded-button {
+    border-radius: 30px;
+}
+
+/* HTMX indicators */
+.htmx-indicator {
+    display: none;
+}
+.htmx-request .htmx-indicator {
+    display: inline;
+}

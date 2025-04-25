@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from sqlalchemy import update
 from sqlalchemy.exc import NoResultFound
@@ -9,57 +9,94 @@ from app.db import Education, Experience, PersonalInfo, Project, Resume, SkillSe
 
 async def get_resume_by_id(session: Session, resume_id: int) -> Optional[Resume]:
     """Get a resume by ID"""
-    return session.query(Resume).filter(Resume.id == resume_id).first()
-
-
-async def get_or_create_default_resume(session: Session) -> Dict[str, Any]:
-    """Get or create a default resume"""
-    resume = session.query(Resume).first()
-
+    resume = session.query(Resume).filter(Resume.id == resume_id).one_or_none()
     if not resume:
-        # Create a new resume with default values
-        resume = Resume(name="Default Resume")
+        raise NoResultFound(f"Resume with ID {resume_id} not found")
+    return resume
 
-        # Create personal info
-        personal_info = PersonalInfo(
-            resume=resume,
-            name="Your Name",
-            location="City, Country",
-            email="your.email@example.com",
-            linkedin="linkedin.com/in/yourprofile",
-            github="github.com/yourusername",
-        )
 
-        # Create skills
-        skills = SkillSet(
-            resume=resume,
-            programming_languages="Python, JavaScript, Java",
-            frameworks="React, Django, FastAPI",
-            developer_tools="Git, Docker, VS Code",
-        )
+async def get_resume_dict(session: Session, resume_id: int) -> Dict[str, Any]:
+    """Get a resume by ID and convert it to a dictionary for templates"""
+    resume = await get_resume_by_id(session, resume_id)
+    return _resume_to_dict(resume)
 
-        # Create a default experience entry
+
+async def get_all_resumes(session: Session) -> List[Dict[str, Any]]:
+    """Get all resumes"""
+    resumes = session.query(Resume).all()
+    return [
+        {
+            "id": resume.id,
+            "name": resume.name,
+            "created_at": resume.created_at,
+            "updated_at": resume.updated_at,
+        }
+        for resume in resumes
+    ]
+
+
+async def create_resume(session: Session, name: str, data: Dict[str, Any]) -> Resume:
+    """Create a new resume with the provided data"""
+    resume = Resume(name=name)
+    session.add(resume)
+    
+    # Add personal info
+    personal_info = PersonalInfo(
+        resume=resume,
+        name=data.get("personal_info", {}).get("name", ""),
+        location=data.get("personal_info", {}).get("location", ""),
+        email=data.get("personal_info", {}).get("email", ""),
+        linkedin=data.get("personal_info", {}).get("linkedin", ""),
+        github=data.get("personal_info", {}).get("github", ""),
+    )
+    session.add(personal_info)
+    
+    # Add skills
+    skills = SkillSet(
+        resume=resume,
+        programming_languages=data.get("skills", {}).get("programming_languages", ""),
+        frameworks=data.get("skills", {}).get("frameworks", ""),
+        developer_tools=data.get("skills", {}).get("developer_tools", ""),
+    )
+    session.add(skills)
+    
+    # Add experiences
+    for exp_data in data.get("experience", []):
         experience = Experience(
             resume=resume,
-            title="Sample Job Title",
-            company="Sample Company",
-            location="City, Country",
-            start_date="Jan 2023",
-            end_date="Present",
-            points=[
-                "Responsibility or achievement 1.",
-                "Responsibility or achievement 2.",
-            ],
+            title=exp_data.get("title", ""),
+            company=exp_data.get("company", ""),
+            location=exp_data.get("location", ""),
+            start_date=exp_data.get("start_date", ""),
+            end_date=exp_data.get("end_date", ""),
+            points=exp_data.get("points", "")
         )
-
-        session.add(resume)
-        session.add(personal_info)
-        session.add(skills)
-        session.add(experience)  # Add the default experience to the session
-        session.commit()
-
-    # Convert to dictionary for template rendering
-    return _resume_to_dict(resume)
+        session.add(experience)
+    
+    # Add projects
+    for proj_data in data.get("projects", []):
+        project = Project(
+            resume=resume,
+            name=proj_data.get("name", ""),
+            url=proj_data.get("url", ""),
+            technologies=proj_data.get("technologies", ""),
+            points=proj_data.get("points", [])
+        )
+        session.add(project)
+    
+    # Add education
+    for edu_data in data.get("education", []):
+        education = Education(
+            resume=resume,
+            institution=edu_data.get("institution", ""),
+            degree=edu_data.get("degree", ""),
+            graduation_date=edu_data.get("graduation_date", "")
+        )
+        session.add(education)
+    
+    session.commit()
+    session.refresh(resume)
+    return resume
 
 
 # Private helper function to convert database models to dict
@@ -274,5 +311,21 @@ async def delete_experience_by_id(session: Session, experience_id: int) -> bool:
     if not experience_entry:
         raise NoResultFound(f"Experience entry with ID {experience_id} not found.")
     session.delete(experience_entry)
+    session.commit()
+    return True
+
+
+async def delete_resume_by_id(session: Session, resume_id: int) -> bool:
+    """Delete a resume by ID."""
+    resume = await get_resume_by_id(session, resume_id)
+    if not resume:
+        raise NoResultFound(f"Resume with ID {resume_id} not found.")
+    
+    # Don't delete if it's the only resume
+    count = session.query(Resume).count()
+    if count <= 1:
+        raise ValueError("Cannot delete the only resume. At least one resume must exist.")
+    
+    session.delete(resume)
     session.commit()
     return True

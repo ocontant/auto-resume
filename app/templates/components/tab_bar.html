@@ -1,23 +1,23 @@
 <!-- Tabs -->
 <div class="flex space-x-2 border-b border-gray-200 mb-4 w-full" id="nav-tabs">
     <button class="tab-btn px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-t border-b-2 border-transparent flex-1 flex items-center justify-center"
-            hx-get="/api/resume/section/personal" hx-target="#resume-content-section" data-section="personal">
+            hx-get="/api/resumes/{{ resume_data.id }}/section/personal" hx-target="#resume-content-section" data-section="personal">
         <i class="fas fa-user-circle mr-2 text-gray-500"></i> Basic Info
     </button>
     <button class="tab-btn px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-t border-b-2 border-transparent flex-1 flex items-center justify-center"
-            hx-get="/api/resume/section/experience" hx-target="#resume-content-section" data-section="experience">
+            hx-get="/api/resumes/{{ resume_data.id }}/section/experience" hx-target="#resume-content-section" data-section="experience">
         <i class="fas fa-briefcase mr-2 text-gray-700"></i> Work
     </button>
     <button class="tab-btn px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-t border-b-2 border-transparent flex-1 flex items-center justify-center"
-            hx-get="/api/resume/section/skills" hx-target="#resume-content-section" data-section="skills">
+            hx-get="/api/resumes/{{ resume_data.id }}/section/skills" hx-target="#resume-content-section" data-section="skills">
         <i class="fas fa-tools mr-2 text-gray-500"></i> Skills
     </button>
     <button class="tab-btn px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-t border-b-2 border-transparent flex-1 flex items-center justify-center"
-            hx-get="/api/resume/section/projects" hx-target="#resume-content-section" data-section="projects">
+            hx-get="/api/resumes/{{ resume_data.id }}/section/projects" hx-target="#resume-content-section" data-section="projects">
         <i class="fas fa-project-diagram mr-2 text-gray-500"></i> Projects
     </button>
     <button class="tab-btn px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-t border-b-2 border-transparent flex-1 flex items-center justify-center"
-            hx-get="/api/resume/section/education" hx-target="#resume-content-section" data-section="education">
+            hx-get="/api/resumes/{{ resume_data.id }}/section/education" hx-target="#resume-content-section" data-section="education">
         <i class="fas fa-graduation-cap mr-2 text-gray-500"></i> Education
     </button>
 </div>

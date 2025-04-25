@@ -1,7 +1,8 @@
 from contextlib import asynccontextmanager
 
-from fastapi import Depends, FastAPI, Query, Request
-from fastapi.responses import HTMLResponse
+import uvicorn
+from fastapi import Depends, FastAPI, Query, Request, HTTPException
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -10,7 +11,8 @@ from app.db import create_db_and_tables, engine, get_session
 from app.routes.ats import ats_router
 from app.routes.resume import resume_router
 from app.services.ats import init_llm
-from app.services.resume import get_or_create_default_resume
+from app.services.resume import get_resume_dict, get_all_resumes
+from app.routes.config import config_router
 
 
 @asynccontextmanager
@@ -39,15 +41,28 @@ templates = Jinja2Templates(directory="app/templates")
 # Include routes
 app.include_router(resume_router)
 app.include_router(ats_router)
+app.include_router(config_router)
 
 
-# let's keep it here for simplicity
-@app.get("/", response_class=HTMLResponse)
-async def home(request: Request, tab: str = Query(None), session: Session = Depends(get_session)):
-    # Get resume data directly from the service
-    resume_data = await get_or_create_default_resume(session)
+@app.get("/", response_class=RedirectResponse)
+async def root(session: Session = Depends(get_session)):
+    """Redirect from root to the first available resume"""
+    try:
+        resumes = await get_all_resumes(session)
+        if resumes:
+            return RedirectResponse(f"/resume/{resumes[0]['id']}")
+        else:
+            # If no resumes exist, redirect to config page to create one
+            return RedirectResponse(f"/api/config")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Import failed: {str(e)}")
 
-    # Use the same default tab as frontend
+
+@app.get("/resume/{resume_id}", response_class=HTMLResponse)
+async def home(request: Request, resume_id: int, tab: str = Query(None), session: Session = Depends(get_session)):
+    resume_data = await get_resume_dict(session, resume_id)
+    
+    # Use the same default tab as frontend 
     active_tab = tab or DEFAULT_TAB
 
     return templates.TemplateResponse(
@@ -57,6 +72,4 @@ async def home(request: Request, tab: str = Query(None), session: Session = Depe
 
 
 if __name__ == "__main__":
-    import uvicorn
-
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
