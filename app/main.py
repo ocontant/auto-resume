@@ -50,8 +50,7 @@ async def root(session: Session = Depends(get_session)):
         if resumes:
             return RedirectResponse(f"/resume/{resumes[0]['id']}")
         else:
-            # If no resumes exist, redirect to config page to create one
-            return RedirectResponse(f"/api/config")
+            return RedirectResponse("/api/config")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Import failed: {str(e)}")
 

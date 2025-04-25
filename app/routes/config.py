@@ -41,5 +41,5 @@ async def delete_resume(resume_id: int, session: Session = Depends(get_session))
     try:
         await delete_resume_by_id(session, resume_id)
     except NoResultFound:
-        raise HTTPException(status_code=404, detail=f"Resume or education entry not found")
+        raise HTTPException(status_code=404, detail="Resume or education entry not found")
     return Response(content="", status_code=200, media_type="text/plain")

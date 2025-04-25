@@ -1,9 +1,9 @@
 import fitz  # noqa
-from llama_index.core.llms import ChatMessage, LLM
+from llama_index.core.llms import LLM, ChatMessage
 from llama_index.llms.openai import OpenAI
 from sqlalchemy.orm import Session
-from app.models import Resume
 
+from app.models import Resume
 from app.services.resume import create_resume
 
 
@@ -39,17 +39,14 @@ Format the information exactly according to the Resume schema. Guidelines:
 - Ensure all required fields are populated
 - Missing information must be set as [FIELD NAME] like [NAME] or [LOCATION] or [GITHUB] etc
 """
-    
+
     input_msg = ChatMessage.from_str(prompt)
     output = structured_llm.chat([input_msg])
-    
+
     return output.raw
 
 
-async def import_resume_from_pdf(
-    file_content: bytes, 
-    session: Session, 
-    name: str = "Imported Resume") -> Resume:
+async def import_resume_from_pdf(file_content: bytes, session: Session, name: str = "Imported Resume") -> Resume:
     """Process a PDF resume file and create a new resume in the database."""
     text = await extract_text_from_pdf(file_content)
     parsed_resume = await parse_resume_text(text)

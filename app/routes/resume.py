@@ -120,9 +120,9 @@ async def update_education_field_endpoint(
         await update_education_field(session, resume_id, education_id, field, value)
         return {"value": value}
     except NoResultFound:
-        raise HTTPException(status_code=404, detail=f"Resume or education entry not found")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+        raise HTTPException(status_code=404, detail="Resume or education entry not found")
+    except Exception:
+        raise HTTPException(status_code=500, detail="Database error: {str(e)}")
 
 
 @resume_router.patch("/{resume_id}/experience/{experience_id}/{field}")
@@ -140,7 +140,7 @@ async def update_experience_field_endpoint(
         await update_experience_field(session, resume_id, experience_id, field, value)
         return {"value": value}
     except NoResultFound:
-        raise HTTPException(status_code=404, detail=f"Resume or experience entry not found")
+        raise HTTPException(status_code=404, detail="Resume or experience entry not found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
@@ -160,7 +160,7 @@ async def update_project_field_endpoint(
         await update_project_field(session, resume_id, project_id, field, value)
         return {"value": value}
     except NoResultFound:
-        raise HTTPException(status_code=404, detail=f"Resume or project not found")
+        raise HTTPException(status_code=404, detail="Resume or project not found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
@@ -180,7 +180,7 @@ async def update_project_point_endpoint(
         await update_project_point(session, resume_id, project_id, point_index, value)
         return {"value": value}
     except NoResultFound:
-        raise HTTPException(status_code=404, detail=f"Resume, project, or point index not found")
+        raise HTTPException(status_code=404, detail="Resume, project, or point index not found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
@@ -209,7 +209,7 @@ async def delete_education_endpoint(resume_id: int, education_id: int, session: 
         await get_resume_by_id(session, resume_id)
         await delete_education_by_id(session, resume_id, education_id)
     except NoResultFound:
-        raise HTTPException(status_code=404, detail=f"Resume or education entry not found")
+        raise HTTPException(status_code=404, detail="Resume or education entry not found")
     return Response(content="", status_code=200, media_type="text/plain")
 
 
@@ -237,7 +237,7 @@ async def delete_project_endpoint(resume_id: int, project_id: int, session: Sess
         await get_resume_by_id(session, resume_id)
         await delete_project_by_id(session, resume_id, project_id)
     except NoResultFound:
-        raise HTTPException(status_code=404, detail=f"Resume or project not found")
+        raise HTTPException(status_code=404, detail="Resume or project not found")
     return Response(content="", status_code=200, media_type="text/plain")
 
 
@@ -266,5 +266,5 @@ async def delete_experience_endpoint(resume_id: int, experience_id: int, session
         await get_resume_by_id(session, resume_id)
         await delete_experience_by_id(session, resume_id, experience_id)
     except NoResultFound:
-        raise HTTPException(status_code=404, detail=f"Resume or experience entry not found")
+        raise HTTPException(status_code=404, detail="Resume or experience entry not found")
     return Response(content="", status_code=200, media_type="text/plain")
