@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold mb-4">Resume Management</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Resume Upload -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Import Resume</h2>
+                <form id="resume-upload-form" 
+                      class="space-y-4" 
+                      hx-post="/api/config/import-resume" 
+                      hx-encoding="multipart/form-data"
+                      hx-target="#resume-list-container">
+                    <div>
+                        <label class="block text-gray-700 mb-2">Resume Name</label>
+                        <input type="text" name="resume_name" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">PDF Resume</label>
+                        <input type="file" name="resume_file" accept=".pdf" class="w-full p-2 border rounded" required>
+                    </div>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Import Resume</button>
+                </form>
+            </div>
+            
+            <!-- Resume List -->
+            <div id="resume-list-container" class="bg-white p-6 rounded-lg shadow-md">
+                {% include 'components/resume_list.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -2,14 +2,14 @@
 
 [![Python CI](https://github.com/anywaifu/auto-resume/actions/workflows/ci.yml/badge.svg)](https://github.com/anywaifu/auto-resume/actions/workflows/ci.yml)
 
-ResumeLM is a web application designed to help users build and optimize their resumes with the assistance of AI. It features a dynamic web interface built with FastAPI and HTMX, allowing for interactive editing and real-time previews. The application integrates with Large Language Models (LLMs) via LiteLLM to provide ATS (Applicant Tracking System) optimization suggestions.
+ResumeLM is a web application designed to help users build and optimize their resumes with the assistance of AI. It features a dynamic web interface built with FastAPI and HTMX, allowing for interactive editing and real-time previews. The application integrates with Large Language Models (LLMs) via LLM to provide ATS (Applicant Tracking System) optimization suggestions.
 
 ## Features
 
 *   **Interactive Resume Editor:** Edit personal info, skills, work experience, projects, and education sections.
 *   **Real-time Preview:** See changes reflected instantly in the resume preview panel.
 *   **HTMX Powered:** Dynamic UI updates without full page reloads.
-*   **AI-Powered ATS Optimization:** Leverage LLMs (via LiteLLM) to get suggestions for improving resume content for ATS compatibility.
+*   **AI-Powered ATS Optimization:** Leverage LLMs (via Llamaindex) to get suggestions for improving resume content for ATS compatibility.
 *   **SQLite Database:** Stores resume data persistently.
 *   **Dockerized:** Easy setup and deployment using Docker and Docker Compose.
 *   **Modular Codebase:** Services layer for business logic, FastAPI routes for API endpoints.
@@ -19,7 +19,7 @@ ResumeLM is a web application designed to help users build and optimize their re
 *   **Backend:** Python, FastAPI
 *   **Frontend:** HTML, Tailwind CSS, HTMX, JavaScript (minimal)
 *   **Database:** SQLite, SQLAlchemy (ORM)
-*   **AI Integration:** LiteLLM (supporting various providers like OpenAI, Anthropic, etc.)
+*   **AI Integration:** OpenAI and Llamaindex
 *   **Containerization:** Docker, Docker Compose
 *   **Linting/Formatting:** Flake8, Black, isort, autoflake
 *   **Testing:** Pytest
@@ -44,7 +44,7 @@ ResumeLM is a web application designed to help users build and optimize their re
     ```bash
     cp .env.example .env
     ```
-    Edit `.env` and add your API keys for the desired LLM provider (e.g., `OPENAI_API_KEY`). Make sure the `DEFAULT_LLM_MODEL` variable matches a model identifier supported by LiteLLM and your chosen provider.
+    Edit `.env` and add your API keys for the desired LLM provider (e.g., `OPENAI_API_KEY`). Make sure the `OPENAI_LLM_MODEL` variable matches a model identifier supported by OpenAI.
 
 3.  **Build and Run with Docker Compose:**
     This is the recommended way to run the application.
