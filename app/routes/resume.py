@@ -28,7 +28,7 @@ templates = Jinja2Templates(directory="app/templates")
 @resume_router.get("/{resume_id}/section/personal")
 async def get_personal_section(request: Request, resume_id: int, session: Session = Depends(get_session)):
     """Get the personal information section of a specific resume form"""
-    resume_data = await get_resume_dict(session, request.query_params.get("resume_id", 1))
+    resume_data = await get_resume_dict(session, resume_id)
     return templates.TemplateResponse(
         "components/personal_form.html",
         {"request": request, "resume_data": resume_data},
@@ -38,7 +38,7 @@ async def get_personal_section(request: Request, resume_id: int, session: Sessio
 @resume_router.get("/{resume_id}/section/experience")
 async def get_experience_section(request: Request, resume_id: int, session: Session = Depends(get_session)):
     """Get the experience section of a specific resume form"""
-    resume_data = await get_resume_dict(session, request.query_params.get("resume_id", 1))
+    resume_data = await get_resume_dict(session, resume_id)
     return templates.TemplateResponse(
         "components/resume_form.html", {"request": request, "resume_data": resume_data}
     )
@@ -47,7 +47,7 @@ async def get_experience_section(request: Request, resume_id: int, session: Sess
 @resume_router.get("/{resume_id}/section/skills")
 async def get_skills_section(request: Request, resume_id: int, session: Session = Depends(get_session)):
     """Get the skills section of a specific resume form"""
-    resume_data = await get_resume_dict(session, request.query_params.get("resume_id", 1))
+    resume_data = await get_resume_dict(session, resume_id)
     return templates.TemplateResponse(
         "components/skills_form.html", {"request": request, "resume_data": resume_data}
     )
@@ -56,7 +56,7 @@ async def get_skills_section(request: Request, resume_id: int, session: Session 
 @resume_router.get("/{resume_id}/section/education")
 async def get_education_section(request: Request, resume_id: int, session: Session = Depends(get_session)):
     """Get the education section of a specific resume form"""
-    resume_data = await get_resume_dict(session, request.query_params.get("resume_id", 1))
+    resume_data = await get_resume_dict(session, resume_id)
     return templates.TemplateResponse(
         "components/education_form.html",
         {"request": request, "resume_data": resume_data},
@@ -66,7 +66,7 @@ async def get_education_section(request: Request, resume_id: int, session: Sessi
 @resume_router.get("/{resume_id}/section/projects")
 async def get_projects_section(request: Request, resume_id: int, session: Session = Depends(get_session)):
     """Get the projects section of a specific resume form"""
-    resume_data = await get_resume_dict(session, request.query_params.get("resume_id", 1))
+    resume_data = await get_resume_dict(session, resume_id)
     return templates.TemplateResponse(
         "components/projects_form.html",
         {"request": request, "resume_data": resume_data},
