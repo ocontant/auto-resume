@@ -1,7 +1,6 @@
 fastapi==0.115.12
 uvicorn==0.34.0
 jinja2==3.1.6
-litellm==1.67.2
 python-dotenv==1.1.0
 pydantic==2.11.3
 SQLAlchemy==2.0.40
@@ -14,3 +13,5 @@ black==25.1.0
 autoflake==2.3.1
 isort==6.0.1
 pymupdf==1.25.5
+llama-index-llms-openai==0.3.38
+llama-index==0.12.33
