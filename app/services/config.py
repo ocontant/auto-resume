@@ -32,8 +32,8 @@ I need you to optimize the following resume to maximize its score on Applicant T
 
 OUTPUT HTML FORMATED. It Will be added inside a container. Compact spacing
 Apply required inline css to keep html formated
-The outer div spacing should keep a small padding only besides font sans
 Do not output other info than the resume html
+Font must be sans
 
 RESULT MUST BE FORMATTED WITH PURE HTML AND CSS
 ONLY PURE CSS AND HTML ARE ALLOWED
