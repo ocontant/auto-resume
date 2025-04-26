@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const navTabs = document.getElementById('nav-tabs');
     const contentSection = document.getElementById('resume-content-section');
-    
+
     const DEFAULT_TAB = 'personal';
 
     function getTabFromUrl() {
@@ -34,6 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initializeTabs() {
         const initialTab = getTabFromUrl();
+        
+        if (!contentSection) return;
         
         setActiveTab(initialTab);
 
