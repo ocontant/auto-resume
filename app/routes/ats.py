@@ -45,9 +45,7 @@ async def get_optimized_resume(resume_id: int, request: Request, session: Sessio
 
 @ats_router.post("/{resume_id}/download-ats-pdf")
 async def download_ats_resume_pdf_from_html(
-    resume_id: int,
-    html_content: str = Form(...),
-    session: Session = Depends(get_session)
+    resume_id: int, html_content: str = Form(...), session: Session = Depends(get_session)
 ):
     """Generate and download the ATS-optimized version of the resume as PDF from provided HTML."""
     try:
