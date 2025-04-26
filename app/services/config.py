@@ -37,7 +37,7 @@ Do not output other info than the resume html
 """
 
 
-async def get_config_value(session: Session, key: str, default: Optional[str]) ->  str:
+async def get_config_value(session: Session, key: str, default: Optional[str]) -> str:
     """Get a configuration value by key"""
     config_entry = session.query(Config).filter(Config.key == key).first()
     if config_entry:
@@ -46,7 +46,9 @@ async def get_config_value(session: Session, key: str, default: Optional[str]) -
     return default
 
 
-async def set_config_value(session: Session, key: str, value: Optional[str], description: Optional[str] = None) -> None:
+async def set_config_value(
+    session: Session, key: str, value: Optional[str], description: Optional[str] = None
+) -> None:
     """Set a configuration value by key"""
     config_entry = session.query(Config).filter(Config.key == key).first()
     if config_entry:

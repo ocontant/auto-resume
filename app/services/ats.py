@@ -37,7 +37,7 @@ async def optimize_resume(session: Session, resume_id: int) -> str:
 async def build_user_message(resume_data: Dict[str, Any], job_description: str) -> str:
     """Create a simple user message with resume data and job description"""
     resume_json = json.dumps(resume_data, indent=2)
-    
+
     user_message = f"""Please optimize my resume for ATS systems based on the following data:
 
 ## RESUME DATA:

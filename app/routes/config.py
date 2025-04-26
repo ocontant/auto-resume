@@ -17,8 +17,11 @@ async def get_config_page(request: Request, session: Session = Depends(get_sessi
     """Render the configuration page."""
     resumes = await get_all_resumes(session)
     job_description, ats_prompt = await get_ats_settings(session)
-    
-    return templates.TemplateResponse("config.html", {"request": request, "resumes": resumes, "ats_prompt": ats_prompt, "job_description": job_description})
+
+    return templates.TemplateResponse(
+        "config.html",
+        {"request": request, "resumes": resumes, "ats_prompt": ats_prompt, "job_description": job_description},
+    )
 
 
 @config_router.post("/import-resume")
@@ -53,11 +56,15 @@ async def save_ats_settings_endpoint(
     request: Request,
     job_description: str = Form(None),
     ats_prompt: str = Form(...),
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
 ):
     """Save ATS optimization settings"""
     try:
         await save_ats_settings(session, job_description, ats_prompt)
-        return templates.TemplateResponse("components/settings_feedback.html", {"request": request, "success": True})
+        return templates.TemplateResponse(
+            "components/settings_feedback.html", {"request": request, "success": True}
+        )
     except Exception as e:
-        return templates.TemplateResponse("components/settings_feedback.html", {"request": request, "success": False, "error": str(e)})
+        return templates.TemplateResponse(
+            "components/settings_feedback.html", {"request": request, "success": False, "error": str(e)}
+        )
