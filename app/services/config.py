@@ -41,7 +41,8 @@ async def get_config_value(session: Session, key: str, default: Optional[str]) -
     """Get a configuration value by key"""
     config_entry = session.query(Config).filter(Config.key == key).first()
     if config_entry:
-        return str(config_entry.value)
+        if value := str(config_entry.value):
+            return value
     return default
 
 
