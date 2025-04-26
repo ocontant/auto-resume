@@ -22,7 +22,8 @@ async def get_resume_dict(session: Session, resume_id: int) -> Dict[str, Any]:
     if not resume:
         raise NoResultFound(f"Resume with ID {resume_id} not found")
 
-    return db_resume_to_dict(resume)
+    resume_dict = await db_resume_to_dict(resume)
+    return resume_dict
 
 
 async def get_all_resumes(session: Session) -> List[Dict[str, Any]]:
