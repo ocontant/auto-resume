@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const navTabs = document.getElementById('nav-tabs');
     const contentSection = document.getElementById('resume-content-section');
-    
+
     const DEFAULT_TAB = 'personal';
 
     function getTabFromUrl() {
@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function initializeTabs() {
         const initialTab = getTabFromUrl();
         
+        if (!contentSection) return;
+        
         setActiveTab(initialTab);
 
         contentSection.addEventListener('htmx:afterSwap', function(event) {
@@ -47,5 +49,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function handleAtsDownload(button) {
+        const url = button.dataset.url;
+        const contentSelector = button.dataset.contentSelector;
+        const contentElement = document.querySelector(contentSelector);
+        const htmlContent = contentElement ? contentElement.innerHTML : "";
+
+        if (!url || !contentSelector) {
+            console.error("Button is missing data-url or data-content-selector");
+            return;
+        }
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+        form.style.display = 'none'; // Hide the form
+
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'html_content';
+        input.value = htmlContent;
+        form.appendChild(input);
+
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+    }
+
     initializeTabs();
+
+    const downloadAtsButton = document.getElementById('download-ats-button');
+    if (downloadAtsButton) {
+        downloadAtsButton.addEventListener('click', function() {
+            handleAtsDownload(this);
+        });
+    }
 });

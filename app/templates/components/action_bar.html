@@ -14,7 +14,10 @@
         <div id="optimize-indicator" class="htmx-indicator ml-2"><i class="fas fa-spinner fa-spin"></i></div>
     </button>
     <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center text-sm transition-colors"
-            id="download-button">
-        <i class="fas fa-download mr-2"></i> Download
+            id="download-ats-button"
+            data-url="/api/resumes/{{ resume_data.id }}/download-ats-pdf"
+            data-content-selector="#resume-preview .ats-content"
+            title="Download Optimized Resume as PDF (Requires Optimize first)">
+        <i class="fas fa-download mr-2"></i> <span>Download Optimized</span>
     </button>
 </div>
