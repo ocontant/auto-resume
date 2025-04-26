@@ -8,46 +8,10 @@ from llama_index.llms.openai import OpenAI
 from sqlalchemy.orm import Session
 
 from app.models import db_resume_to_dict
-from app.services.resume import get_resume_by_id
 from app.services.config import get_ats_settings
+from app.services.resume import get_resume_by_id
 
 load_dotenv()
-
-
-async def get_default_ats_prompt() -> str:
-    """Get the default ATS prompt template"""
-    return """
-I need you to optimize the following resume to maximize its score on Applicant Tracking Systems (ATS).
-
-## CURRENT RESUME DATA:
-{resume_json}
-
-## JOB DESCRIPTION (IF PROVIDED):
-{job_description}
-
----
-
-## OPTIMIZATION INSTRUCTIONS:
-1. Add relevant industry keywords based on the skills and experience shown
-2. Use active voice and strong action verbs to begin bullet points
-3. Quantify achievements where possible (%, $, numbers)
-4. Standardize section headings to be ATS-friendly
-5. Ensure consistent formatting of dates and locations
-6. Focus on relevant skills and experiences
-7. IMPORTANT: DO NOT ADD FICTIONAL INFORMATION OR MAKE UP DETAILS - only reword and enhance what already exists
-8. Restructure information to highlight strengths
-
-## STRICT REQUIREMENTS:
-- NEVER create fictional experience, skills, or projects that don't exist in the input resume
-- DO NOT modify fundamental details like names, companies, education institutions
-- Maintain all existing projects, experiences, and education entries
-- Only enhance wording, formatting, and keyword placement based on ACTUAL resume content
-- If job description is provided, tailor keywords and highlights to match, but NEVER invent new experiences
-
-OUTPUT HTML FORMATTED. It will be added inside a container. You can use Tailwind for it. Compact spacing.
-Apply required css to keep html formatted.
-The outer div spacing should keep a small padding only besides font sans.
-"""
 
 
 async def optimize_resume(session: Session, resume_id: int) -> str:
