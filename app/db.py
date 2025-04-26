@@ -110,6 +110,16 @@ class Resume(Base):
     education = relationship("Education", back_populates="resume", cascade="all, delete-orphan")
 
 
+class Config(Base):
+    __tablename__ = "config"
+
+    id = Column(Integer, primary_key=True)
+    key = Column(String, nullable=False, unique=True)
+    value = Column(String, nullable=True)
+    description = Column(String, nullable=True)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+
 # Database initialization
 def create_db_and_tables():
     Base.metadata.create_all(engine)

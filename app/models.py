@@ -82,7 +82,7 @@ class AIPointsRequest(BaseModel):
     company: str
 
 
-def db_resume_to_dict(db_resume):
+async def db_resume_to_dict(db_resume):
     """Convert a SQLAlchemy Resume object to a dictionary using Pydantic validation"""
     pydantic_resume = Resume.model_validate(db_resume)
     return pydantic_resume.model_dump()

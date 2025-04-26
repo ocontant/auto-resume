@@ -4,6 +4,7 @@ from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
 from app.db import get_session
+from app.services.config import get_ats_settings, save_ats_settings
 from app.services.pdf_import import import_resume_from_pdf
 from app.services.resume import delete_resume_by_id, get_all_resumes
 
@@ -15,7 +16,12 @@ templates = Jinja2Templates(directory="app/templates")
 async def get_config_page(request: Request, session: Session = Depends(get_session)):
     """Render the configuration page."""
     resumes = await get_all_resumes(session)
-    return templates.TemplateResponse("config.html", {"request": request, "resumes": resumes})
+    job_description, ats_prompt = await get_ats_settings(session)
+
+    return templates.TemplateResponse(
+        "config.html",
+        {"request": request, "resumes": resumes, "ats_prompt": ats_prompt, "job_description": job_description},
+    )
 
 
 @config_router.post("/import-resume")
@@ -43,3 +49,22 @@ async def delete_resume(resume_id: int, session: Session = Depends(get_session))
     except NoResultFound:
         raise HTTPException(status_code=404, detail="Resume or education entry not found")
     return Response(content="", status_code=200, media_type="text/plain")
+
+
+@config_router.post("/save-ats-settings")
+async def save_ats_settings_endpoint(
+    request: Request,
+    job_description: str = Form(None),
+    ats_prompt: str = Form(...),
+    session: Session = Depends(get_session),
+):
+    """Save ATS optimization settings"""
+    try:
+        await save_ats_settings(session, job_description, ats_prompt)
+        return templates.TemplateResponse(
+            "components/settings_feedback.html", {"request": request, "success": True}
+        )
+    except Exception as e:
+        return templates.TemplateResponse(
+            "components/settings_feedback.html", {"request": request, "success": False, "error": str(e)}
+        )

@@ -41,7 +41,7 @@ Format the information exactly according to the Resume schema. Guidelines:
 """
 
     input_msg = ChatMessage.from_str(prompt)
-    output = structured_llm.chat([input_msg])
+    output = await structured_llm.achat([input_msg])
 
     return output.raw
 

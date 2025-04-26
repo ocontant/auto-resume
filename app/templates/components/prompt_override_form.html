@@ -1,0 +1,23 @@
+<!-- Prompt Override -->
+<h2 class="text-xl font-semibold mb-4">ATS Settings</h2>
+<form id="ats-settings-form"
+      class="space-y-4"
+      hx-post="/api/config/save-ats-settings"
+      hx-target="#ats-settings-feedback">
+    <div>
+        <label class="block text-gray-700 mb-2">Job Description (Optional)</label>
+        <textarea name="job_description"
+                  class="w-full p-2 border rounded min-h-[100px]" 
+                  placeholder="Paste the job description here to optimize resume specifically for this job">{{ job_description }}</textarea>
+        <p class="text-sm text-gray-500 mt-1">This will be used to tailor the resume optimization to a specific job.</p>
+    </div>
+    <div>
+        <label class="block text-gray-700 mb-2">Custom ATS Prompt</label>
+        <textarea name="ats_prompt" class="w-full p-2 border rounded min-h-[150px]">{{ ats_prompt }}</textarea>
+        <p class="text-sm text-gray-500 mt-1">Define how the AI should optimize your resume. Leave blank to reset to default.</p>
+    </div>
+    <div id="ats-settings-feedback"></div>
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Save ATS Settings
+    </button>
+</form>
