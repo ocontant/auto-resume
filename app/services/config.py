@@ -21,19 +21,18 @@ I need you to optimize the following resume to maximize its score on Applicant T
 4. Standardize section headings to be ATS-friendly
 5. Ensure consistent formatting of dates and locations
 6. Focus on relevant skills and experiences
-7. IMPORTANT: DO NOT ADD FICTIONAL INFORMATION OR MAKE UP DETAILS - only reword and enhance what already exists
+7. DO NOT add fictional information - only enhance what exists
 8. Restructure information to highlight strengths
 
-## STRICT REQUIREMENTS:
-- NEVER create fictional experience, skills, or projects that don't exist in the input resume
-- DO NOT modify fundamental details like names, companies, education institutions
-- Maintain all existing projects, experiences, and education entries
-- Only enhance wording, formatting, and keyword placement based on ACTUAL resume content
-- If job description is provided, tailor keywords and highlights to match, but NEVER invent new experiences
+## IMPORTANT REQUIREMENTS:
+- Do not modify fundamental details like names, companies, education institutions
+- Maintain all projects, experiences, and education entries
+- Enhance descriptions with industry-specific terminology
+- Ensure formatting is clean and consistent
 
-OUTPUT HTML FORMATTED. It will be added inside a container. You can use Tailwind for it. Compact spacing.
-Apply required css to keep html formatted.
-The outer div spacing should keep a small padding only besides font sans.
+OUTPUT HTML FORMATED. It Will be added inside a container. You can use Tailwind for it. Compact spacing
+Apply required css to keep html formated
+The outer div spacing should keep a small padding only besides font sans
 """
 
 
