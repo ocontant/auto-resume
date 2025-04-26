@@ -31,7 +31,7 @@ I need you to optimize the following resume to maximize its score on Applicant T
 - Ensure formatting is clean and consistent
 
 OUTPUT HTML FORMATED. It Will be added inside a container. You can use Tailwind for it. Compact spacing
-Apply required css to keep html formated
+Apply required inline css to keep html formated
 The outer div spacing should keep a small padding only besides font sans
 Do not output other info than the resume html
 """
