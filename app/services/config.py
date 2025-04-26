@@ -14,14 +14,6 @@ async def get_default_ats_prompt() -> str:
     return """
 I need you to optimize the following resume to maximize its score on Applicant Tracking Systems (ATS).
 
-## CURRENT RESUME DATA:
-{resume_json}
-
-## JOB DESCRIPTION (IF PROVIDED):
-{job_description}
-
----
-
 ## OPTIMIZATION INSTRUCTIONS:
 1. Add relevant industry keywords based on the skills and experience shown
 2. Use active voice and strong action verbs to begin bullet points

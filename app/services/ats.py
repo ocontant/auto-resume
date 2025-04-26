@@ -20,18 +20,12 @@ async def optimize_resume(session: Session, resume_id: int) -> str:
 
     job_description, ats_prompt = await get_ats_settings(session)
 
-    ats_prompt = await build_ats_prompt(resume_data, job_description, ats_prompt)
-
-    system_message = (
-        "You are an expert resume writer specializing in creating ATS-optimized resumes. "
-        "Focus on keywords, clear formatting, and quantifiable achievements. "
-        "Never include fictional information not present in the original resume."
-    )
+    user_message = await build_user_message(resume_data, job_description)
 
     model_name = os.getenv("OPENAI_LLM_MODEL")
     llm = OpenAI(model=model_name, temperature=0.1)  # Lower temperature for more factual responses
 
-    messages = [ChatMessage(system_message, role=MessageRole.SYSTEM), ChatMessage(ats_prompt, role=MessageRole.USER)]
+    messages = [ChatMessage(ats_prompt, role=MessageRole.SYSTEM), ChatMessage(user_message, role=MessageRole.USER)]
     response = await llm.achat(messages)
 
     ats_resume_data_html = response.message.content
@@ -40,13 +34,21 @@ async def optimize_resume(session: Session, resume_id: int) -> str:
     return clean_ats_resume_data_html
 
 
-async def build_ats_prompt(resume_data: Dict[str, Any], ats_prompt: str, job_description: str) -> str:
-    """Create a prompt for the LLM based on the resume data"""
+async def build_user_message(resume_data: Dict[str, Any], job_description: str) -> str:
+    """Create a simple user message with resume data and job description"""
     resume_json = json.dumps(resume_data, indent=2)
-    return ats_prompt.format(
-        resume_json=resume_json,
-        job_description=job_description
-    )
+    
+    user_message = f"""Please optimize my resume for ATS systems based on the following data:
+
+## RESUME DATA:
+{resume_json}
+
+## JOB DESCRIPTION:
+{job_description}
+
+Please format the optimized resume in HTML format that I can directly use.
+"""
+    return user_message
 
 
 def _parse_llm_response(content: str) -> str:
