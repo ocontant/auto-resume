@@ -50,15 +50,17 @@ body {
     grid-template-areas: 
         "settings"
         "resumes";
-    gap: 2rem;
-    height: calc(100vh - 150px);
-    min-height: 600px;
+    gap: 1.5rem;
+    /* Let height be determined by content and parent margin */
+    margin-bottom: 2rem;
+    max-width: 100%;
 }
 
 @media (min-width: 1024px) {
     .config-grid-container {
         grid-template-columns: 2fr 1fr;
         grid-template-areas: "settings resumes";
+        /* Let height be determined by content */
     }
 }
 
@@ -66,8 +68,7 @@ body {
     grid-area: settings;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    height: 100%;
+    height: auto;
 }
 
 .config-resume-list {
@@ -80,15 +81,14 @@ body {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    max-height: 100%;
+}
+
+#resume-list-container .overflow-y-auto {
+    max-height: calc(100vh - 250px);
 }
 
 /* PDF page margin styles */
 @page {
     margin: 2cm; /* Default margin that can be overridden by settings */
-}
-
-/* System settings cards */
-.settings-card {
-    transition: all 0.2s ease-in-out;
-    height: 100%;
 }
