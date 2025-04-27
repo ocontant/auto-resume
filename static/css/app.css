@@ -87,8 +87,3 @@ body {
 #resume-list-container .overflow-y-auto {
     max-height: calc(100vh - 250px);
 }
-
-/* PDF page margin styles */
-@page {
-    margin: 2cm; /* Default margin that can be overridden by settings */
-}

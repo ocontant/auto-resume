@@ -5,6 +5,7 @@ from weasyprint import HTML
 
 from app.db import get_session
 from app.services.ats import optimize_resume
+from app.services.config import get_pdf_page_margin
 from app.services.resume import get_resume_by_id
 
 ats_router = APIRouter(prefix="/api/resumes", tags=["ats"])
@@ -20,7 +21,7 @@ HTML_TO_PDF_BASE = """
     <style>
         @page {{
             size: A4;
-            margin: 0;
+            margin: {pdf_margin};
         }}
     </style>
 </head>
@@ -50,7 +51,9 @@ async def download_ats_resume_pdf_from_html(
     """Generate and download the ATS-optimized version of the resume as PDF from provided HTML."""
     try:
         resume = await get_resume_by_id(session, resume_id)
-        full_html = HTML_TO_PDF_BASE.format(html_content=html_content)
+        pdf_margin = await get_pdf_page_margin(session)
+
+        full_html = HTML_TO_PDF_BASE.format(html_content=html_content, pdf_margin=pdf_margin)
         pdf_bytes = HTML(string=full_html).write_pdf()
 
         return Response(
