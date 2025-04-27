@@ -1,6 +1,4 @@
-<div class="bg-white rounded-lg border border-gray-200 p-5 mb-6">
-    <h3 class="text-lg font-semibold mb-4 text-indigo-700">OpenAI Integration</h3>
-    <form id="llm-settings-form"
+<form id="llm-settings-form"
           class="space-y-4"
           hx-post="/api/config/save-llm-settings"
           hx-target="#llm-settings-feedback">
@@ -24,5 +22,4 @@
         </div>
         <div id="llm-settings-feedback"></div>
         <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Save Settings</button>
-    </form>
-</div>
+</form>
