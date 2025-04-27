@@ -11,6 +11,7 @@ os.makedirs("app/data", exist_ok=True)
 SQLITE_FILE_NAME = "resume.db"
 SQLITE_URL = f"sqlite:///{SQLITE_FILE_NAME}"
 
+# let's keep session sync for while
 engine = create_engine(SQLITE_URL)
 
 # Create base model

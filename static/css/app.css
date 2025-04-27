@@ -35,12 +35,42 @@ body {
     background-color: #f1f1f1;
 }
 
-/* HTMX indicators */
+/* HTMX indicator styles */
 .htmx-indicator {
-    display: none;
+    display: none; /* Hide by default */
 }
+
+/* When the request is in flight */
 .htmx-request .htmx-indicator {
-    display: inline;
+    display: flex; /* Show the indicator */
+    align-items: center;
+    justify-content: center; /* Center spinner */
+}
+
+/* Optimize button styles during request */
+#optimize-button.htmx-request {
+    pointer-events: none; /* Prevent clicks */
+    background-color: #4338ca; /* Darker indigo */
+}
+
+/* Hide the original button content (icon and text) during request */
+#optimize-button.htmx-request .button-content {
+    visibility: hidden; /* Hide instead of display:none to maintain button size */
+}
+
+/* Spinner icon styling */
+#optimize-button .fa-spin {
+    animation: fa-spin 1s infinite linear;
+}
+@keyframes fa-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Style for disabled download button */
+#download-ats-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* Config page layout */

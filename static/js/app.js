@@ -84,4 +84,20 @@ document.addEventListener('DOMContentLoaded', () => {
             handleAtsDownload(this);
         });
     }
+
+    document.body.addEventListener('htmx:afterSwap', function(event) {
+        // Check if the target of the swap was the resume preview
+        // event.detail.target is the element that was swapped
+        const swapTarget = event.detail.target;
+        // Check if the request was triggered by the optimize button
+        const triggerElement = event.detail.requestConfig?.elt;
+
+        if (swapTarget && swapTarget.id === 'resume-preview' && triggerElement && triggerElement.id === 'optimize-button') {
+            const downloadButton = document.getElementById('download-ats-button');
+            if (downloadButton) {
+                downloadButton.disabled = false;
+                downloadButton.title = "Download Optimized Resume as PDF";
+            }
+        }
+    });
 });
