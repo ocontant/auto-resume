@@ -13,9 +13,12 @@
     <!-- Skills -->
     <div class="mb-6">
         <h2 class="text-lg font-bold uppercase mb-2">Skills</h2>
-        <p><strong>Programming Languages:</strong> {{ resume_data.skills.programming_languages }}</p>
-        <p><strong>Frameworks/Libraries:</strong> {{ resume_data.skills.frameworks }}</p>
-        <p><strong>Developer Tools:</strong> {{ resume_data.skills.developer_tools }}</p>
+        {% if resume_data.skills.technical_skills %}
+            <p><strong>Technical Skills:</strong> {{ resume_data.skills.technical_skills }}</p>{% endif %}
+        {% if resume_data.skills.soft_skills %}
+            <p><strong>Soft Skills:</strong> {{ resume_data.skills.soft_skills }}</p>{% endif %}
+        {% if resume_data.skills.tools %}
+            <p><strong>Tools & Technologies:</strong> {{ resume_data.skills.tools }}</p>{% endif %}
     </div>
 
     <!-- Experience -->
@@ -45,11 +48,6 @@
                 <a href="https://{{ project.url }}" class="text-blue-600">{{ project.url }}</a>
             </div>
             <p class="text-sm"><strong>Technologies:</strong> {{ project.technologies }}</p>
-            <ul class="list-disc ml-5 mt-2">
-                {% for point in project.points %}
-                <li class="mb-1">{{ point }}</li>
-                {% endfor %}
-            </ul>
         </div>
         {% endfor %}
     </div>

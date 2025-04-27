@@ -18,9 +18,9 @@ class PersonalInfo(BaseModel):
 class SkillSet(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    programming_languages: str
-    frameworks: str
-    developer_tools: str
+    technical_skills: str
+    soft_skills: str
+    tools: str
     id: Optional[int] = None
     resume_id: Optional[int] = None
 
@@ -44,7 +44,6 @@ class Project(BaseModel):
     name: str
     url: str
     technologies: str
-    points: List[str]
     id: Optional[int] = None
     resume_id: Optional[int] = None
 

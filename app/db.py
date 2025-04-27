@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, String, create_engine
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
 # Ensure database directory exists
@@ -39,9 +39,9 @@ class SkillSet(Base):
 
     id = Column(Integer, primary_key=True)
     resume_id = Column(Integer, ForeignKey("resume.id"))
-    programming_languages = Column(String, nullable=False, default="")
-    frameworks = Column(String, nullable=False, default="")
-    developer_tools = Column(String, nullable=False, default="")
+    technical_skills = Column(String, nullable=False, default="")
+    soft_skills = Column(String, nullable=False, default="")
+    tools = Column(String, nullable=False, default="")
 
     # Relationship
     resume = relationship("Resume", back_populates="skills")
@@ -84,7 +84,6 @@ class Project(Base):
     name = Column(String, nullable=False)
     url = Column(String, nullable=False)
     technologies = Column(String, nullable=False)
-    points = Column(JSON, nullable=False)  # Store as JSON array
 
     # Relationship
     resume = relationship("Resume", back_populates="projects")

@@ -35,8 +35,8 @@
             <div class="config-resume-list">
                 <div id="resume-list-container" class="bg-white p-6 rounded-lg shadow-md h-full flex flex-col">
                     <h2 class="text-xl font-semibold mb-4 text-indigo-800 border-b pb-2">My Resumes</h2>
-                    <div class="overflow-y-auto flex-grow">
-                        {% include 'components/resume_list.html' %}
+                    <div id="resume-list-items" class="overflow-y-auto flex-grow">
+                        {% include 'components/resume_list_items.html' %} {# Just the list items #}
                     </div>
                 </div>
             </div>

@@ -22,9 +22,7 @@ async def optimize_resume(session: Session, resume_id: int) -> str:
 
     user_message = await build_user_message(resume_data, job_description)
 
-    llm = OpenAI(
-        api_key=api_key, model=model_name, temperature=0.1
-    )
+    llm = OpenAI(api_key=api_key, model=model_name, temperature=0.1)
 
     messages = [ChatMessage(ats_prompt, role=MessageRole.SYSTEM), ChatMessage(user_message, role=MessageRole.USER)]
     response = await llm.achat(messages)

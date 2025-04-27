@@ -99,5 +99,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 downloadButton.title = "Download Optimized Resume as PDF";
             }
         }
+
+        // Check if the target was the resume list container after import
+        const importForm = document.getElementById('resume-upload-form');
+        const resumeListContainer = document.getElementById('resume-list-container');
+
+        if (swapTarget && swapTarget.id === 'resume-list-items' && triggerElement && triggerElement.id === 'import-resume-button') {
+             // Check if the swap was successful (e.g., look for a success message or specific element)
+             // This example assumes success if the swap happened. A more robust check might be needed.
+             if (importForm) {
+                 const nameInput = importForm.querySelector('input[name="resume_name"]');
+                 const fileInput = importForm.querySelector('input[name="resume_file"]');
+                 if (nameInput) nameInput.value = '';
+                 if (fileInput) fileInput.value = null; // Clears the file input
+             }
+        }
     });
 });

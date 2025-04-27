@@ -4,7 +4,7 @@
         <h2 class="text-lg font-semibold">Work Experience</h2>
         <div class="flex space-x-2">
             <button class="flex items-center text-sm text-green-600 hover:text-green-800 transition-colors"
-                    hx-post="/api/resume/experience"
+                    hx-post="/api/resumes/{{ resume_data.id }}/experience"
                     hx-target="#experience-list"
                     hx-swap="beforeend">
                 <i class="fas fa-plus mr-1"></i> Add Work Experience
@@ -14,8 +14,8 @@
 
     <div id="experience-list">
         {% for item in resume_data.experience %}
-            {% with index=loop.index0 %}
-                {% include 'components/experience_item.html' with context %}
+            {% with item=item, resume_id=resume_data.id %}
+                {% include 'components/experience_item.html' %}
             {% endwith %}
         {% endfor %}
     </div>

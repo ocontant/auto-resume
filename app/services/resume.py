@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Type
 
 from sqlalchemy import update
 from sqlalchemy.exc import NoResultFound
@@ -92,36 +92,6 @@ async def update_entity_field(
     return True
 
 
-async def update_entity_point(
-    session: Session,
-    entity_class,
-    filter_by: Dict[str, Any],
-    point_index: int,
-    value: str,
-) -> bool:
-    """
-    Update a point in an entity's points array (JSON field).
-    Returns True on success. Raises NoResultFound if the entity was not found or index is out of range.
-    """
-    filter_conditions = []
-    for key, val in filter_by.items():
-        filter_conditions.append(getattr(entity_class, key) == val)
-    entity = session.query(entity_class).filter(*filter_conditions).first()
-
-    if not entity:
-        raise NoResultFound(f"{entity_class.__name__} item not found for update.")
-    try:
-        points = entity.points
-        if point_index >= len(points):
-            raise NoResultFound(f"{entity_class.__name__} item not found for update.")
-        points[point_index] = value
-        entity.points = points
-        session.commit()
-        return True
-    except AttributeError:
-        raise ValueError(f"{entity_class.__name__} doesn't have points attribute")
-
-
 async def update_personal_info(session: Session, resume_id: int, field: str, value: str) -> bool:
     """Update a personal info field"""
     return await update_entity_field(session, PersonalInfo, {"resume_id": resume_id}, field, value)
@@ -165,16 +135,7 @@ async def update_project_field(session: Session, resume_id: int, project_id: int
     return await update_entity_field(session, Project, {"id": project_id, "resume_id": resume_id}, field, value)
 
 
-async def update_project_point(
-    session: Session, resume_id: int, project_id: int, point_index: int, value: str
-) -> bool:
-    """Update a specific project point"""
-    return await update_entity_point(
-        session, Project, {"id": project_id, "resume_id": resume_id}, point_index, value
-    )
-
-
-async def _add_item_to_collection(session: Session, resume_id: int, item_class, default_values=None):
+async def _add_item_to_collection(session: Session, resume_id: int, item_class: Type[Any], default_values=None):
     """Generic function to add an item to a resume collection"""
     item = item_class(resume_id=resume_id, **(default_values or {}))
     session.add(item)
@@ -218,7 +179,7 @@ async def add_project(session: Session, resume_id: int) -> Project:
             "name": "Project Name",
             "url": "github.com/username/project",
             "technologies": "Technology 1, Technology 2",
-            "points": [],
+            # "points": "• Describe key features or details here.", # Points removed
         },
     )
 
@@ -264,11 +225,5 @@ async def delete_resume_by_id(session: Session, resume_id: int) -> bool:
     if not resume:
         raise NoResultFound(f"Resume with ID {resume_id} not found.")
 
-    # Don't delete if it's the only resume
-    count = session.query(Resume).count()
-    if count <= 1:
-        raise ValueError("Cannot delete the only resume. At least one resume must exist.")
-
     session.delete(resume)
     session.commit()
-    return True

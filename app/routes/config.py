@@ -29,7 +29,15 @@ async def get_config_page(request: Request, session: Session = Depends(get_sessi
 
     return templates.TemplateResponse(
         "config.html",
-        {"request": request, "resumes": resumes, "ats_prompt": ats_prompt, "job_description": job_description, "api_key": api_key, "model": model, "pdf_margin": pdf_margin},
+        {
+            "request": request,
+            "resumes": resumes,
+            "ats_prompt": ats_prompt,
+            "job_description": job_description,
+            "api_key": api_key,
+            "model": model,
+            "pdf_margin": pdf_margin,
+        },
     )
 
 
@@ -45,7 +53,7 @@ async def import_resume(
         await import_resume_from_pdf(file_content, session, resume_name)
 
         resumes = await get_all_resumes(session)
-        return templates.TemplateResponse("components/resume_list.html", {"request": request, "resumes": resumes})
+        return templates.TemplateResponse("components/resume_list_items.html", {"request": request, "resumes": resumes})
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Import failed: {str(e)}")
 
@@ -105,7 +113,9 @@ async def save_pdf_margin_endpoint(
     """Save PDF margin setting"""
     try:
         await save_pdf_page_margin(session, margin)
-        return templates.TemplateResponse("components/settings_feedback.html", {"request": request, "success": True})
+        return templates.TemplateResponse(
+            "components/settings_feedback.html", {"request": request, "success": True}
+        )
     except Exception as e:
         return templates.TemplateResponse(
             "components/settings_feedback.html", {"request": request, "success": False, "error": str(e)}

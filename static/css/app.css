@@ -67,6 +67,17 @@ body {
     100% { transform: rotate(360deg); }
 }
 
+/* Import button styles during request */
+#import-resume-button.htmx-request {
+    pointer-events: none; /* Prevent clicks */
+    background-color: #4338ca; /* Darker indigo */
+}
+
+/* Hide the original button content (icon and text) during request */
+#import-resume-button.htmx-request .button-content {
+    visibility: hidden; /* Hide instead of display:none to maintain button size */
+}
+
 /* Style for disabled download button */
 #download-ats-button:disabled {
     opacity: 0.5;

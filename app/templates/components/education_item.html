@@ -2,29 +2,32 @@
     <div class="flex justify-between items-center mb-2">
         <h3 class="text-gray-700 font-medium">INSTITUTION</h3>
         <button class="text-red-500 hover:text-red-700 transition-colors"
-                hx-delete="/api/resume/education/{{ edu.id }}"
+                hx-delete="/api/resumes/{{ resume_id }}/education/{{ edu.id }}"
                 hx-target="#education-{{ edu.id }}"
                 hx-swap="outerHTML" hx-confirm="Are you sure you want to delete this education entry?">
             <i class="fas fa-trash"></i>
         </button>
     </div>
     <input type="text" value="{{ edu.institution }}"
-           class="w-full p-2 border border-gray-300 rounded mb-2"
-           hx-patch="/api/resume/education/{{ edu.id }}/institution"
+           autocomplete="off"
+           class="w-full p-2 border border-gray-300 rounded mb-2" 
+           hx-patch="/api/resumes/{{ resume_id }}/education/{{ edu.id }}/institution"
            hx-trigger="change"
            name="value">
 
     <h3 class="text-gray-700 font-medium mb-2">DEGREE/PROGRAM</h3>
     <input type="text" value="{{ edu.degree }}"
+           autocomplete="off"
            class="w-full p-2 border border-gray-300 rounded mb-2"
-           hx-patch="/api/resume/education/{{ edu.id }}/degree"
+           hx-patch="/api/resumes/{{ resume_id }}/education/{{ edu.id }}/degree"
            hx-trigger="change"
            name="value">
 
     <h3 class="text-gray-700 font-medium mb-2">GRADUATION DATE</h3>
     <input type="text" value="{{ edu.graduation_date }}"
+           autocomplete="off"
            class="w-full p-2 border border-gray-300 rounded"
-           hx-patch="/api/resume/education/{{ edu.id }}/graduation_date"
+           hx-patch="/api/resumes/{{ resume_id }}/education/{{ edu.id }}/graduation_date"
            hx-trigger="change"
            name="value">
 </div>

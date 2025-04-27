@@ -3,14 +3,22 @@
       class="space-y-4"
       hx-post="/api/config/import-resume"
       hx-encoding="multipart/form-data"
-      hx-target="#resume-list-container">
+      hx-target="#resume-list-items"
+      hx-swap="innerHTML">
     <div>
         <label class="block text-gray-700 mb-2 font-medium">Resume Name</label>
-        <input type="text" name="resume_name" class="w-full p-2 border rounded" required>
+        <input type="text" autocomplete="off" name="resume_name" class="w-full p-2 border rounded" required>
     </div>
     <div>
         <label class="block text-gray-700 mb-2 font-medium">PDF Resume</label>
         <input type="file" name="resume_file" accept=".pdf" class="w-full p-2 border rounded" required>
     </div>
-    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Import Resume</button>
+    <button type="submit" id="import-resume-button" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 relative flex items-center justify-center">
+        <span class="button-content flex items-center">
+            <i class="fas fa-file-import mr-2"></i> Import Resume
+        </span>
+        <span class="htmx-indicator absolute inset-0 flex items-center justify-center">
+            <i class="fas fa-spinner fa-spin text-lg"></i>
+        </span>
+    </button>
 </form>
