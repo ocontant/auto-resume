@@ -38,7 +38,7 @@ RESUME TEXT:
 
 Format the information exactly according to the Resume schema. Guidelines:
 - For experience entries, convert bullet points into a single string with line breaks for the "description" field
-- For projects, summarize the project description or features into the 'technologies' or 'name' field if appropriate, or omit detailed points. The Project model no longer has a 'points' field.
+- For projects, summarize the project description or features into the 'description' field. Combine relevant points into a single string with line breaks.
 - For skills, categorize them into "technical_skills", "soft_skills", and "tools" as appropriate. Combine related skills into comma-separated strings for each field.
 - Ensure all required fields are populated
 - If specific information like name, location, email, linkedin, github is missing,

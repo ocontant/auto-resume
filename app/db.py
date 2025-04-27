@@ -84,6 +84,7 @@ class Project(Base):
     name = Column(String, nullable=False)
     url = Column(String, nullable=False)
     technologies = Column(String, nullable=False)
+    description = Column(String, nullable=False, default="")
 
     # Relationship
     resume = relationship("Resume", back_populates="projects")

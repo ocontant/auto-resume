@@ -65,7 +65,7 @@
         <textarea
             class="w-full p-3 border border-gray-300 rounded min-h-[150px] resize-y"
             hx-patch="/api/resumes/{{ resume_id }}/experience/{{ item.id }}/description"
-            hx-trigger="change delay:500ms"
+            hx-trigger="change"
             name="value">{{ item.description }}</textarea>
     </div>
 </div>

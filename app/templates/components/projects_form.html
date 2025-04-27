@@ -51,6 +51,14 @@
                 </div>
             </div>
             
+            <div>
+                <h3 class="text-gray-700 font-medium mb-2">Key Features & Details</h3>
+                <textarea
+                    class="w-full p-3 border border-gray-300 rounded min-h-[150px] resize-y"
+                    hx-patch="/api/resumes/{{ resume_data.id }}/project/{{ project.id }}/description"
+                    hx-trigger="chang"
+                    name="value">{{ project.description }}</textarea>
+            </div>
         </div>
         {% endfor %}
     </div>

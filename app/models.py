@@ -44,6 +44,7 @@ class Project(BaseModel):
     name: str
     url: str
     technologies: str
+    description: str
     id: Optional[int] = None
     resume_id: Optional[int] = None
 

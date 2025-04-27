@@ -179,7 +179,7 @@ async def add_project(session: Session, resume_id: int) -> Project:
             "name": "Project Name",
             "url": "github.com/username/project",
             "technologies": "Technology 1, Technology 2",
-            # "points": "• Describe key features or details here.", # Points removed
+            "description": "• Describe key features or details here.",
         },
     )
 

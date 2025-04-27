@@ -48,6 +48,9 @@
                 <a href="https://{{ project.url }}" class="text-blue-600">{{ project.url }}</a>
             </div>
             <p class="text-sm"><strong>Technologies:</strong> {{ project.technologies }}</p>
+            <div class="whitespace-pre-line mt-2 text-sm">
+                {{ project.description }}
+            </div>
         </div>
         {% endfor %}
     </div>
