@@ -64,8 +64,8 @@
         <h3 class="text-gray-700 font-medium mb-2">Key Responsibilities & Achievements</h3>
         <textarea
             class="w-full p-3 border border-gray-300 rounded min-h-[150px] resize-y"
-            hx-patch="/api/resumes/{{ resume_id }}/experience/{{ item.id }}/points"
+            hx-patch="/api/resumes/{{ resume_id }}/experience/{{ item.id }}/description"
             hx-trigger="change delay:500ms"
-            name="value">{{ item.points }}</textarea>
+            name="value">{{ item.description }}</textarea>
     </div>
 </div>

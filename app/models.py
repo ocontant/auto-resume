@@ -33,7 +33,7 @@ class Experience(BaseModel):
     location: Optional[str] = None
     start_date: str
     end_date: str
-    points: str
+    description: str
     id: Optional[int] = None
     resume_id: Optional[int] = None
 

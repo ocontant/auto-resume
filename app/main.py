@@ -5,6 +5,7 @@ from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
 from app.db import create_db_and_tables, engine, get_session
@@ -57,15 +58,17 @@ async def root(session: Session = Depends(get_session)):
 
 @app.get("/resume/{resume_id}", response_class=HTMLResponse)
 async def home(request: Request, resume_id: int, tab: str = Query(None), session: Session = Depends(get_session)):
-    resume_data = await get_resume_dict(session, resume_id)
+    try:
+        resume_data = await get_resume_dict(session, resume_id)
 
-    # Use the same default tab as frontend
-    active_tab = tab or DEFAULT_TAB
+        active_tab = tab or DEFAULT_TAB
 
-    return templates.TemplateResponse(
-        "index.html",
-        {"request": request, "resume_data": resume_data, "active_tab": active_tab},
-    )
+        return templates.TemplateResponse(
+            "index.html",
+            {"request": request, "resume_data": resume_data, "active_tab": active_tab},
+        )
+    except NoResultFound:
+        raise HTTPException(status_code=404, detail="Resume entry not found")
 
 
 if __name__ == "__main__":

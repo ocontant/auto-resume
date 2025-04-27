@@ -202,7 +202,7 @@ async def add_experience(session: Session, resume_id: int) -> Experience:
         "location": "City, Country",
         "start_date": "Month Year",
         "end_date": "Present",
-        "points": "• List key responsibilities and achievements here.",
+        "description": "• List key responsibilities and achievements here.",
     }
     return await _add_item_to_collection(session, resume_id, Experience, default_values)
 
@@ -219,7 +219,7 @@ async def delete_experience_by_id(session: Session, resume_id: int, experience_i
     return True
 
 
-async def delete_resume_by_id(session: Session, resume_id: int) -> bool:
+async def delete_resume_by_id(session: Session, resume_id: int) -> None:
     """Delete a resume by ID."""
     resume = await get_resume_by_id(session, resume_id)
     if not resume:
