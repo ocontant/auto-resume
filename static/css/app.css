@@ -29,10 +29,66 @@ body {
     border-radius: 30px;
 }
 
+/* Config page styles */
+.overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+    background-color: #f1f1f1;
+}
+
 /* HTMX indicators */
 .htmx-indicator {
     display: none;
 }
 .htmx-request .htmx-indicator {
     display: inline;
+}
+
+/* Config page layout */
+.config-grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+        "settings"
+        "resumes";
+    gap: 2rem;
+    height: calc(100vh - 150px);
+    min-height: 600px;
+}
+
+@media (min-width: 1024px) {
+    .config-grid-container {
+        grid-template-columns: 2fr 1fr;
+        grid-template-areas: "settings resumes";
+    }
+}
+
+.config-settings-column {
+    grid-area: settings;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.config-resume-list {
+    grid-area: resumes;
+    height: 100%;
+    display: flex;
+}
+
+#resume-list-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* PDF page margin styles */
+@page {
+    margin: 2cm; /* Default margin that can be overridden by settings */
+}
+
+/* System settings cards */
+.settings-card {
+    transition: all 0.2s ease-in-out;
+    height: 100%;
 }

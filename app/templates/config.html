@@ -1,21 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold mb-4">Resume Management</h1>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                {% include "components/resume_upload_form.html" %}
-                {% include "components/prompt_override_form.html" %}
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-3">Resume Configuration</h1>
+
+        <!-- Reorganized grid layout -->
+        <div class="config-grid-container">
+            <!-- Left column: All Settings -->
+            <div class="config-settings-column">
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h2 class="text-xl font-semibold mb-4 text-indigo-800 border-b pb-2">Import Resume</h2>
+                    {% include "components/resume_upload_form.html" %}
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h2 class="text-xl font-semibold mb-4 text-indigo-800 border-b pb-2">ATS Optimization</h2>
+                    {% include "components/prompt_override_form.html" %}
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                    <h2 class="text-xl font-semibold mb-4 text-indigo-800 border-b pb-2">LLM Settings</h2>
+
+                    {% include "components/llm_settings_form.html" %}
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold mb-4 text-indigo-800 border-b pb-2">PDF Settings</h2>
+
+                    {% include "components/pdf_settings_form.html" %}
+                </div>
             </div>
-            
-            <!-- Resume List -->
-            <div id="resume-list-container" class="bg-white p-6 rounded-lg shadow-md">
-                {% include 'components/resume_list.html' %}
+
+            <!-- Right column: Resume List -->
+            <div class="config-resume-list">
+                <div id="resume-list-container" class="bg-white p-6 rounded-lg shadow-md h-full flex flex-col">
+                    <h2 class="text-xl font-semibold mb-4 text-indigo-800 border-b pb-2">My Resumes</h2>
+                    <div class="overflow-y-auto flex-grow">
+                        {% include 'components/resume_list.html' %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

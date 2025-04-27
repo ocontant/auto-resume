@@ -4,7 +4,14 @@ from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
 from app.db import get_session
-from app.services.config import get_ats_settings, save_ats_settings
+from app.services.config import (
+    get_ats_settings,
+    get_llm_settings,
+    get_pdf_page_margin,
+    save_ats_settings,
+    save_llm_settings,
+    save_pdf_page_margin,
+)
 from app.services.pdf_import import import_resume_from_pdf
 from app.services.resume import delete_resume_by_id, get_all_resumes
 
@@ -17,10 +24,12 @@ async def get_config_page(request: Request, session: Session = Depends(get_sessi
     """Render the configuration page."""
     resumes = await get_all_resumes(session)
     job_description, ats_prompt = await get_ats_settings(session)
+    api_key, model = await get_llm_settings(session)
+    pdf_margin = await get_pdf_page_margin(session)
 
     return templates.TemplateResponse(
         "config.html",
-        {"request": request, "resumes": resumes, "ats_prompt": ats_prompt, "job_description": job_description},
+        {"request": request, "resumes": resumes, "ats_prompt": ats_prompt, "job_description": job_description, "api_key": api_key, "model": model, "pdf_margin": pdf_margin},
     )
 
 
@@ -64,6 +73,39 @@ async def save_ats_settings_endpoint(
         return templates.TemplateResponse(
             "components/settings_feedback.html", {"request": request, "success": True}
         )
+    except Exception as e:
+        return templates.TemplateResponse(
+            "components/settings_feedback.html", {"request": request, "success": False, "error": str(e)}
+        )
+
+
+@config_router.post("/save-llm-settings")
+async def save_llm_settings_endpoint(
+    request: Request,
+    api_key: str = Form(...),
+    model: str = Form(...),
+    session: Session = Depends(get_session),
+):
+    """Save LLM settings"""
+    try:
+        await save_llm_settings(session, api_key, model)
+        return templates.TemplateResponse(
+            "components/settings_feedback.html", {"request": request, "success": True}
+        )
+    except Exception as e:
+        return templates.TemplateResponse(
+            "components/settings_feedback.html", {"request": request, "success": False, "error": str(e)}
+        )
+
+
+@config_router.post("/save-pdf-margin")
+async def save_pdf_margin_endpoint(
+    request: Request, margin: str = Form(...), session: Session = Depends(get_session)
+):
+    """Save PDF margin setting"""
+    try:
+        await save_pdf_page_margin(session, margin)
+        return templates.TemplateResponse("components/settings_feedback.html", {"request": request, "success": True})
     except Exception as e:
         return templates.TemplateResponse(
             "components/settings_feedback.html", {"request": request, "success": False, "error": str(e)}

@@ -1,5 +1,4 @@
 import json
-import os
 from typing import Any, Dict
 
 from dotenv import load_dotenv
@@ -8,7 +7,7 @@ from llama_index.llms.openai import OpenAI
 from sqlalchemy.orm import Session
 
 from app.models import db_resume_to_dict
-from app.services.config import get_ats_settings
+from app.services.config import get_ats_settings, get_llm_settings
 from app.services.resume import get_resume_by_id
 
 load_dotenv()
@@ -19,11 +18,13 @@ async def optimize_resume(session: Session, resume_id: int) -> str:
     resume_data = await db_resume_to_dict(resume)
 
     job_description, ats_prompt = await get_ats_settings(session)
+    api_key, model_name = await get_llm_settings(session)
 
     user_message = await build_user_message(resume_data, job_description)
 
-    model_name = os.getenv("OPENAI_LLM_MODEL")
-    llm = OpenAI(model=model_name, temperature=0.1)  # Lower temperature for more factual responses
+    llm = OpenAI(
+        api_key=api_key, model=model_name, temperature=0.1
+    )
 
     messages = [ChatMessage(ats_prompt, role=MessageRole.SYSTEM), ChatMessage(user_message, role=MessageRole.USER)]
     response = await llm.achat(messages)
