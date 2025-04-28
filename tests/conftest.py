@@ -57,9 +57,9 @@ def valid_personal_info_incomplete() -> Dict[str, Any]:
 def valid_skill_set() -> Dict[str, Any]:
     """Provides a valid SkillSet data dictionary."""
     return {
-        "programming_languages": "Python, FastAPI, SQL",
-        "frameworks": "React, Vue",
-        "developer_tools": "Git, Docker",
+        "technical_skills": "Python, FastAPI, SQL, React, Vue",
+        "soft_skills": "Communication, Teamwork",
+        "tools": "Git, Docker, Kubernetes",
     }
 
 
@@ -67,9 +67,9 @@ def valid_skill_set() -> Dict[str, Any]:
 def invalid_skill_set_type_data() -> Dict[str, Any]:
     """Provides SkillSet data with an invalid type for a field."""
     return {
-        "programming_languages": 123,
-        "frameworks": "React, Django",
-        "developer_tools": "Git, Docker",
+        "technical_skills": 123,  # Invalid type
+        "soft_skills": "Communication",
+        "tools": "Git",
     }
 
 
@@ -82,7 +82,7 @@ def valid_experience() -> Dict[str, Any]:
         "location": "Anytown, USA",
         "start_date": "2020-01-01",
         "end_date": "2023-12-31",
-        "points": "Developed feature X\nFixed bug Y",
+        "description": "Developed feature X. Fixed bug Y.",
     }
 
 
@@ -94,7 +94,7 @@ def missing_experience_field_data() -> Dict[str, Any]:
         "location": "Anytown, USA",
         "start_date": "2020-01-01",
         "end_date": "2023-12-31",
-        "points": "Developed feature X\nFixed bug Y",
+        "description": "Developed feature X. Fixed bug Y.",
     }
 
 
@@ -107,7 +107,7 @@ def invalid_experience_type_data() -> Dict[str, Any]:
         "location": "Anytown, USA",
         "start_date": 20200101,
         "end_date": "2023-12-31",
-        "points": "Developed feature X\nFixed bug Y",
+        "description": "Developed feature X. Fixed bug Y.",
     }
 
 
@@ -119,7 +119,7 @@ def experience_data_optional_location_absent() -> Dict[str, Any]:
         "company": "Tech Corp",
         "start_date": "Jan 2020",
         "end_date": "Present",
-        "points": "Developed feature X",
+        "description": "Developed feature X.",
     }
 
 
@@ -130,7 +130,7 @@ def valid_project() -> Dict[str, Any]:
         "name": "Cool Project",
         "url": "github.com/johndoe/coolproject",
         "technologies": "Python, FastAPI",
-        "points": ["Implemented API", "Wrote tests"],
+        "description": "Implemented API and wrote tests.",
     }
 
 
@@ -140,7 +140,7 @@ def missing_project_field_data() -> Dict[str, Any]:
     return {
         "url": "github.com/johndoe/coolproject",
         "technologies": "Python, FastAPI",
-        "points": ["Implemented API", "Wrote tests"],
+        "description": "Implemented API and wrote tests.",
     }
 
 
@@ -151,18 +151,18 @@ def invalid_project_type_data() -> Dict[str, Any]:
         "name": "Cool Project",
         "url": "github.com/johndoe/coolproject",
         "technologies": "Python, FastAPI",
-        "points": "This should be a list",
+        "description": ["This should be a string"],  # Invalid type for description
     }
 
 
 @pytest.fixture(scope="function")
-def invalid_project_points_type_data() -> Dict[str, Any]:
-    """Provides Project data with points having the wrong type."""
+def invalid_project_description_type_data() -> Dict[str, Any]:
+    """Provides Project data with description having the wrong type."""
     return {
         "name": "Cool Project",
         "url": "github.com/johndoe/coolproject",
         "technologies": "Python, FastAPI",
-        "points": 12345,
+        "description": 12345,  # Invalid type for description
     }
 
 
@@ -358,11 +358,11 @@ def sample_project_object(valid_project):
 
 
 @pytest.fixture(scope="function")
-def sample_project_with_points(valid_project):
-    """Provides a mock SQLAlchemy Project object with an ID and points list."""
+def sample_project_with_description(valid_project):
+    """Provides a mock SQLAlchemy Project object with an ID and description."""
     data = valid_project.copy()
-    if isinstance(data.get("points"), list):
-        data["points"] = data["points"][:]
+    # Ensure description is a string if it exists
+    # No specific manipulation needed here for description as it's already a string
     return _create_mock_db_object(data)
 
 

@@ -121,7 +121,7 @@ async def test_update_project_field_invalid_field(mock_session, sample_project_o
 
 # --- Test update_project_point ---
 @pytest.mark.asyncio
-async def test_update_project_point_success(mock_session, sample_project_with_points):
+async def test_update_project_point_success(mock_session, sample_project_with_description):
     """Test successfully updating a point in a Project's points list."""
 
 
