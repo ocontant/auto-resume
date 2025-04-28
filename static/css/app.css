@@ -87,7 +87,7 @@ body {
 .config-grid-container {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-areas: 
+    grid-template-areas:
         "settings"
         "resumes";
     gap: 1.5rem;
