@@ -72,6 +72,18 @@ async def get_projects_section(request: Request, resume_id: int, session: Sessio
     )
 
 
+@resume_router.get("/{resume_id}/preview")
+async def get_resume_preview(request: Request, resume_id: int, session: Session = Depends(get_session)):
+    """Get the standard resume preview component."""
+    try:
+        resume_data = await get_resume_dict(session, resume_id)
+        return templates.TemplateResponse(
+            "components/resume_preview.html", {"request": request, "resume_data": resume_data}
+        )
+    except NoResultFound:
+        raise HTTPException(status_code=404, detail=f"Resume with ID {resume_id} not found")
+
+
 @resume_router.patch("/{resume_id}/personal_info/{field}")
 async def update_personal_info_field(
     resume_id: int, field: str, value: str = Form(...), session: Session = Depends(get_session)
@@ -189,7 +201,7 @@ async def delete_education_endpoint(resume_id: int, education_id: int, session: 
 async def add_project_endpoint(request: Request, resume_id: int, session: Session = Depends(get_session)):
     """Add a new project to the resume"""
     try:
-        await get_resume_by_id(session, resume_id) # Needed for template context
+        await get_resume_by_id(session, resume_id)  # Needed for template context
         new_project = await add_project(session, resume_id)
         return templates.TemplateResponse(
             "components/project_item.html", {"request": request, "project": new_project, "resume_id": resume_id}

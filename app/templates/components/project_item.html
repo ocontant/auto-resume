@@ -1,7 +1,7 @@
 <div class="border border-gray-200 rounded-lg p-4 mb-4 added-item" id="project-{{ project.id }}" data-project-id="{{ project.id }}">
     <div class="flex justify-between items-center mb-2">
         <h3 class="text-gray-700 font-medium">PROJECT NAME</h3>
-        <button class="text-red-500 hover:text-red-700 transition-colors"
+        <button class="text-red-500 hover:text-red-700 transition-colors refresh-preview-on-success"
                 hx-delete="/api/resumes/{{ resume_id }}/project/{{ project.id }}"
                 hx-target="#project-{{ project.id }}"
                 hx-swap="outerHTML" hx-confirm="Are you sure you want to delete this project?">
@@ -12,8 +12,8 @@
     <input type="text" value="{{ project.name }}"
            autocomplete="off"
            class="w-full p-2 border border-gray-300 rounded mb-2" 
-           hx-patch="/api/resumes/{{ resume_id }}/project/{{ project.id }}/name"
-           hx-trigger="change"
+           hx-patch="/api/resumes/{{ resume_id }}/project/{{ project.id }}/name" 
+           hx-trigger="input changed delay:500ms"
            name="value">
 
     <div class="grid grid-cols-2 gap-4 mb-4">
@@ -22,18 +22,18 @@
             <input type="text" value="{{ project.url }}"
                    autocomplete="off"
                    class="w-full p-2 border border-gray-300 rounded"
-                   hx-patch="/api/resumes/{{ resume_id }}/project/{{ project.id }}/url"
-                   hx-trigger="change"
+                   hx-patch="/api/resumes/{{ resume_id }}/project/{{ project.id }}/url" 
+                   hx-trigger="input changed delay:500ms"
                    name="value">
                    
         </div>
         <div>
-            <h3 class="text-gray-700 font-medium mb-2">TECHNOLOGIES USED</h3>
+            <h3 class="text-gray-700 font-medium mb-2">TECHNOLOGIES USED (comma-separated)</h3>
             <input type="text" value="{{ project.technologies }}"
                    autocomplete="off"
                    class="w-full p-2 border border-gray-300 rounded"
-                   hx-patch="/api/resumes/{{ resume_id }}/project/{{ project.id }}/technologies"
-                   hx-trigger="change"
+                   hx-patch="/api/resumes/{{ resume_id }}/project/{{ project.id }}/technologies" 
+                   hx-trigger="input changed delay:500ms"
                    name="value">
         </div>
     </div>
@@ -41,8 +41,8 @@
         <h3 class="text-gray-700 font-medium mb-2">Key Features & Details</h3>
         <textarea
             class="w-full p-3 border border-gray-300 rounded min-h-[150px] resize-y"
-            hx-patch="/api/resumes/{{ resume_id }}/project/{{ project.id }}/description"
-            hx-trigger="change"
+            hx-patch="/api/resumes/{{ resume_id }}/project/{{ project.id }}/description" 
+            hx-trigger="input changed delay:500ms"
             name="value">{{ project.description }}</textarea>
     </div>
 </div>

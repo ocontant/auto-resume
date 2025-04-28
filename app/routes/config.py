@@ -53,7 +53,9 @@ async def import_resume(
         await import_resume_from_pdf(file_content, session, resume_name)
 
         resumes = await get_all_resumes(session)
-        return templates.TemplateResponse("components/resume_list_items.html", {"request": request, "resumes": resumes})
+        return templates.TemplateResponse(
+            "components/resume_list_items.html", {"request": request, "resumes": resumes}
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Import failed: {str(e)}")
 

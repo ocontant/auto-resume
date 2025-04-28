@@ -13,11 +13,11 @@
         <label class="block text-gray-700 mb-2 font-medium">PDF Resume</label>
         <input type="file" name="resume_file" accept=".pdf" class="w-full p-2 border rounded" required>
     </div>
-    <button type="submit" id="import-resume-button" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 relative flex items-center justify-center">
+    <button type="submit" id="import-resume-button" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 relative flex items-center justify-center min-w-[150px]">
         <span class="button-content flex items-center">
             <i class="fas fa-file-import mr-2"></i> Import Resume
         </span>
-        <span class="htmx-indicator absolute inset-0 flex items-center justify-center">
+        <span class="htmx-indicator absolute inset-0 flex items-center justify-center bg-indigo-600 rounded">
             <i class="fas fa-spinner fa-spin text-lg"></i>
         </span>
     </button>

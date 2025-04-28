@@ -11,7 +11,7 @@
                    value="{{ resume_data.personal_info.name }}"
                    class="w-full p-2 border border-gray-300 rounded"
                    hx-patch="/api/resumes/{{ resume_data.id }}/personal_info/name"
-                   hx-trigger="change"
+                   hx-trigger="input changed delay:500ms"
                    name="value">
         </div>
 
@@ -22,7 +22,7 @@
                    value="{{ resume_data.personal_info.location }}"
                    class="w-full p-2 border border-gray-300 rounded"
                    hx-patch="/api/resumes/{{ resume_data.id }}/personal_info/location"
-                   hx-trigger="change"
+                   hx-trigger="input changed delay:500ms"
                    name="value">
         </div>
 
@@ -32,7 +32,7 @@
                    value="{{ resume_data.personal_info.email }}"
                    class="w-full p-2 border border-gray-300 rounded"
                    hx-patch="/api/resumes/{{ resume_data.id }}/personal_info/email"
-                   hx-trigger="change"
+                   hx-trigger="input changed delay:500ms"
                    name="value">
         </div>
 
@@ -43,7 +43,7 @@
                        autocomplete="off"
                        class="w-full p-2 border border-gray-300 rounded"
                        hx-patch="/api/resumes/{{ resume_data.id }}/personal_info/linkedin"
-                       hx-trigger="change"
+                       hx-trigger="input changed delay:500ms"
                        name="value">
             </div>
             <div class="mb-4">
@@ -52,7 +52,7 @@
                        autocomplete="off"
                        class="w-full p-2 border border-gray-300 rounded"
                        hx-patch="/api/resumes/{{ resume_data.id }}/personal_info/github"
-                       hx-trigger="change"
+                       hx-trigger="input changed delay:500ms"
                        name="value">
             </div>
         </div>

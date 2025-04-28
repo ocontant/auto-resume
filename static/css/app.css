@@ -69,8 +69,7 @@ body {
 
 /* Import button styles during request */
 #import-resume-button.htmx-request {
-    pointer-events: none; /* Prevent clicks */
-    background-color: #4338ca; /* Darker indigo */
+    pointer-events: none;
 }
 
 /* Hide the original button content (icon and text) during request */
@@ -127,4 +126,14 @@ body {
 
 #resume-list-container .overflow-y-auto {
     max-height: calc(100vh - 250px);
+}
+
+#resume-preview-container.loading .preview-loader {
+    display: block;
+}
+
+#resume-preview-container.loading #resume-preview {
+    opacity: 0.3;
+    filter: blur(2px);
+    transition: opacity 0.2s, filter 0.2s;
 }

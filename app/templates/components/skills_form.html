@@ -7,9 +7,9 @@
         <div class="mb-4">
             <h3 class="text-gray-700 font-medium mb-2">TECHNICAL SKILLS</h3>
             <textarea
-                class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-y"
-                hx-patch="/api/resumes/{{ resume_data.id }}/skills/technical_skills"
-                hx-trigger="change"
+                class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-y" 
+                hx-patch="/api/resumes/{{ resume_data.id }}/skills/technical_skills" 
+                hx-trigger="input changed delay:500ms"
                 name="value">{{ resume_data.skills.technical_skills }}</textarea>
             <div class="mt-1 text-sm text-gray-500">
                 Separate technologies with commas
@@ -19,9 +19,9 @@
         <div class="mb-4">
             <h3 class="text-gray-700 font-medium mb-2">SOFT SKILLS</h3>
             <textarea
-                class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-y"
-                hx-patch="/api/resumes/{{ resume_data.id }}/skills/soft_skills"
-                hx-trigger="change"
+                class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-y" 
+                hx-patch="/api/resumes/{{ resume_data.id }}/skills/soft_skills" 
+                hx-trigger="input changed delay:500ms"
                 name="value">{{ resume_data.skills.soft_skills }}</textarea>
             <div class="mt-1 text-sm text-gray-500">
                 Separate technologies with commas
@@ -31,9 +31,9 @@
         <div class="mb-4">
             <h3 class="text-gray-700 font-medium mb-2">TOOLS & TECHNOLOGIES</h3>
             <textarea
-                class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-y"
-                hx-patch="/api/resumes/{{ resume_data.id }}/skills/tools"
-                hx-trigger="change"
+                class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-y" 
+                hx-patch="/api/resumes/{{ resume_data.id }}/skills/tools" 
+                hx-trigger="input changed delay:500ms"
                 name="value">{{ resume_data.skills.tools }}</textarea>
             <div class="mt-1 text-sm text-gray-500">
                 Separate technologies with commas

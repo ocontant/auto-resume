@@ -7,7 +7,7 @@
     <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded flex items-center justify-center text-sm transition-colors relative"
             id="optimize-button" 
             hx-get="/api/resumes/{{ resume_data.id }}/optimize" 
-            hx-target="#resume-preview"
+            hx-target="#resume-preview-content"
             hx-swap="outerHTML">
         <span class="button-content flex items-center">
              <i class="fas fa-robot mr-2"></i>
@@ -20,7 +20,7 @@
     <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center text-sm transition-colors"
             id="download-ats-button"
             disabled
-            data-url="/api/resumes/{{ resume_data.id }}/download-ats-pdf"
+            data-url="/api/resumes/{{ resume_data.id }}/download-ats-pdf" 
             data-content-selector="#resume-preview .ats-content"
             title="Download Optimized Resume as PDF (Requires Optimize first)">
         <i class="fas fa-download mr-2"></i> <span>Download Optimized</span>
