@@ -4,11 +4,8 @@ from datetime import datetime
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
-# Ensure database directory exists
-os.makedirs("app/data", exist_ok=True)
-
 # Database settings
-SQLITE_FILE_NAME = "resume.db"
+SQLITE_FILE_NAME = "data/resume.db"
 SQLITE_URL = f"sqlite:///{SQLITE_FILE_NAME}"
 
 # let's keep session sync for while
@@ -123,6 +120,9 @@ class Config(Base):
 
 # Database initialization
 def create_db_and_tables():
+    # Ensure the directory for the database file exists
+    db_dir = os.path.dirname(SQLITE_FILE_NAME)
+    os.makedirs(db_dir, exist_ok=True)
     Base.metadata.create_all(engine)
 
 

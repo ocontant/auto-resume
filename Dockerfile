@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.11-slim as base
+FROM python:3.12-slim AS base
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -24,14 +24,10 @@ RUN pip install --no-cache-dir --upgrade pip && \
 COPY ./app /app/app
 COPY ./static /app/static
 
-# Change ownership to the app user
-RUN chown -R app:app /app
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
 
-# Switch to the non-root user
-USER app
+EXPOSE 8010
 
-# Expose the port the app runs on
-EXPOSE 8000
-
-# Define the command to run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8010", "--reload"]
