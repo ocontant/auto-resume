@@ -1,35 +1,39 @@
 <div class="border border-gray-200 rounded-lg p-4 mb-4" id="experience-{{ item.id }}" data-experience-id="{{ item.id }}">
     <div class="flex justify-between items-center mb-4">
         <h3 class="text-gray-700 font-medium">POSITION</h3>
-        <button class="text-red-500 hover:text-red-700 transition-colors"
-                hx-delete="/api/resume/experience/{{ item.id }}"
+        <button class="text-red-500 hover:text-red-700 transition-colors refresh-preview-on-success"
+                hx-delete="/api/resumes/{{ resume_id }}/experience/{{ item.id }}"
                 hx-target="#experience-{{ item.id }}"
                 hx-swap="outerHTML" hx-confirm="Are you sure you want to delete this experience entry?">
             <i class="fas fa-trash"></i>
         </button>
     </div>
     <input type="text" value="{{ item.title }}"
+           autocomplete="off"
            class="w-full p-2 border border-gray-300 rounded mb-2"
-           hx-patch="/api/resume/experience/{{ item.id }}/title"
-           hx-trigger="change"
+           hx-patch="/api/resumes/{{ resume_id }}/experience/{{ item.id }}/title"
+           hx-trigger="input changed delay:500ms"
            name="value">
 
     <div class="grid grid-cols-2 gap-4 mb-2">
         <div>
             <h3 class="text-gray-700 font-medium mb-2">COMPANY</h3>
             <input type="text" value="{{ item.company }}"
+                   autocomplete="off"
                    class="w-full p-2 border border-gray-300 rounded"
-                   hx-patch="/api/resume/experience/{{ item.id }}/company"
-                   hx-trigger="change"
+                   hx-patch="/api/resumes/{{ resume_id }}/experience/{{ item.id }}/company"
+                   hx-trigger="input changed delay:500ms"
                    name="value">
+                   
         </div>
         <div>
             <h3 class="text-gray-700 font-medium mb-2">LOCATION</h3>
             <input type="text" value="{{ item.location }}"
+                   autocomplete="off"
                    class="w-full p-2 border border-gray-300 rounded"
-                   hx-patch="/api/resume/experience/{{ item.id }}/location"
-                   hx-trigger="change"
-                   name="value">
+                   hx-patch="/api/resumes/{{ resume_id }}/experience/{{ item.id }}/location"
+                   hx-trigger="input changed delay:500ms"
+                   name="value"> 
         </div>
     </div>
 
@@ -37,15 +41,18 @@
         <h3 class="text-gray-700 font-medium mb-2">DATE</h3>
         <div class="flex items-center space-x-2">
             <input type="text" value="{{ item.start_date }}"
+                   autocomplete="off"
                    class="w-full p-2 border border-gray-300 rounded date-input" placeholder="Start Date"
-                   hx-patch="/api/resume/experience/{{ item.id }}/start_date"
-                   hx-trigger="change"
+                   hx-patch="/api/resumes/{{ resume_id }}/experience/{{ item.id }}/start_date"
+                   hx-trigger="input changed delay:500ms"
                    name="value">
             <span>–</span>
-            <input type="text" value="{{ item.end_date }}" placeholder="End Date"
+            <input type="text" value="{{ item.end_date }}"
+                   autocomplete="off"
+                   placeholder="End Date"
                    class="w-full p-2 border border-gray-300 rounded date-input"
-                   hx-patch="/api/resume/experience/{{ item.id }}/end_date"
-                   hx-trigger="change"
+                   hx-patch="/api/resumes/{{ resume_id }}/experience/{{ item.id }}/end_date"
+                   hx-trigger="input changed delay:500ms"
                    name="value">
         </div>
         <div class="mt-1 text-sm text-gray-500">
@@ -57,8 +64,8 @@
         <h3 class="text-gray-700 font-medium mb-2">Key Responsibilities & Achievements</h3>
         <textarea
             class="w-full p-3 border border-gray-300 rounded min-h-[150px] resize-y"
-            hx-patch="/api/resume/experience/{{ item.id }}/points"
-            hx-trigger="change delay:500ms"
-            name="value">{{ item.points }}</textarea>
+            hx-patch="/api/resumes/{{ resume_id }}/experience/{{ item.id }}/description"
+            hx-trigger="input changed delay:500ms"
+            name="value">{{ item.description }}</textarea>
     </div>
 </div>

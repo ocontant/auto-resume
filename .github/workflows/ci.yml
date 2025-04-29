@@ -2,16 +2,16 @@ name: Python CI
 
 on:
   push:
-    branches: [ "master" ] # Adjust branch names if needed
+    branches: [ "master" ]
   pull_request:
-    branches: [ "master" ] # Adjust branch names if needed
+    branches: [ "master" ]
 
 jobs:
   test-and-lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.12"] # Specify Python versions to test against
+        python-version: ["3.12"]
 
     steps:
     - uses: actions/checkout@v4
@@ -28,10 +28,8 @@ jobs:
 
     - name: Lint with flake8
       run: |
-        # Use the Makefile target for linting
         make lint
 
     - name: Test with pytest
       run: |
-        # Use the Makefile target for testing
         make test

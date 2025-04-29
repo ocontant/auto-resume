@@ -5,36 +5,36 @@
 
     <div class="border border-gray-200 rounded-lg p-4 mb-4">
         <div class="mb-4">
-            <h3 class="text-gray-700 font-medium mb-2">PROGRAMMING LANGUAGES</h3>
-            <textarea 
-                class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-y"
-                hx-patch="/api/resume/skills/programming_languages"
-                hx-trigger="change"
-                name="value">{{ resume_data.skills.programming_languages }}</textarea>
+            <h3 class="text-gray-700 font-medium mb-2">TECHNICAL SKILLS</h3>
+            <textarea
+                class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-y" 
+                hx-patch="/api/resumes/{{ resume_data.id }}/skills/technical_skills" 
+                hx-trigger="input changed delay:500ms"
+                name="value">{{ resume_data.skills.technical_skills }}</textarea>
             <div class="mt-1 text-sm text-gray-500">
                 Separate technologies with commas
             </div>
         </div>
 
         <div class="mb-4">
-            <h3 class="text-gray-700 font-medium mb-2">FRAMEWORKS & LIBRARIES</h3>
-            <textarea 
-                class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-y"
-                hx-patch="/api/resume/skills/frameworks"
-                hx-trigger="change"
-                name="value">{{ resume_data.skills.frameworks }}</textarea>
+            <h3 class="text-gray-700 font-medium mb-2">SOFT SKILLS</h3>
+            <textarea
+                class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-y" 
+                hx-patch="/api/resumes/{{ resume_data.id }}/skills/soft_skills" 
+                hx-trigger="input changed delay:500ms"
+                name="value">{{ resume_data.skills.soft_skills }}</textarea>
             <div class="mt-1 text-sm text-gray-500">
                 Separate technologies with commas
             </div>
         </div>
 
         <div class="mb-4">
-            <h3 class="text-gray-700 font-medium mb-2">DEVELOPER TOOLS</h3>
-            <textarea 
-                class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-y"
-                hx-patch="/api/resume/skills/developer_tools"
-                hx-trigger="change"
-                name="value">{{ resume_data.skills.developer_tools }}</textarea>
+            <h3 class="text-gray-700 font-medium mb-2">TOOLS & TECHNOLOGIES</h3>
+            <textarea
+                class="w-full p-3 border border-gray-300 rounded min-h-[80px] resize-y" 
+                hx-patch="/api/resumes/{{ resume_data.id }}/skills/tools" 
+                hx-trigger="input changed delay:500ms"
+                name="value">{{ resume_data.skills.tools }}</textarea>
             <div class="mt-1 text-sm text-gray-500">
                 Separate technologies with commas
             </div>

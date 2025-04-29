@@ -121,18 +121,13 @@ async def test_update_project_field_invalid_field(mock_session, sample_project_o
 
 # --- Test update_project_point ---
 @pytest.mark.asyncio
-async def test_update_project_point_success(mock_session, sample_project_with_points):
+async def test_update_project_point_success(mock_session, sample_project_with_description):
     """Test successfully updating a point in a Project's points list."""
 
 
 @pytest.mark.asyncio
 async def test_update_project_point_project_not_found(mock_session, default_resume):
     """Test updating Project point raises NoResultFound if project doesn't exist."""
-
-
-@pytest.mark.asyncio
-async def test_update_project_point_index_out_of_range(mock_session, sample_project_with_points):
-    """Test updating Project point raises NoResultFound for invalid index."""
 
 
 # --- Test add_education ---

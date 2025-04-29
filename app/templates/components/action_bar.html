@@ -4,19 +4,24 @@
        class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center text-sm transition-colors">
         <i class="fas fa-cog mr-2"></i> Config
     </a>
-    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded flex items-center text-sm transition-colors"
-            id="optimize-button"
-            hx-get="/api/resumes/{{ resume_data.id }}/optimize"
-            hx-target="#resume-preview"
-            hx-indicator="#optimize-indicator" hx-swap="outerHTML">
-        <i class="fas fa-robot mr-2"></i> 
-        <span>ATS Optimize</span>
-        <div id="optimize-indicator" class="htmx-indicator ml-2"><i class="fas fa-spinner fa-spin"></i></div>
+    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded flex items-center justify-center text-sm transition-colors relative"
+            id="optimize-button" 
+            hx-get="/api/resumes/{{ resume_data.id }}/optimize" 
+            hx-target="#resume-preview-content"
+            hx-swap="outerHTML">
+        <span class="button-content flex items-center">
+             <i class="fas fa-robot mr-2"></i>
+             <span class="optimize-text">ATS Optimize</span>
+        </span>
+        <span class="htmx-indicator absolute inset-0 flex items-center justify-center">
+             <i class="fas fa-spinner fa-spin text-lg"></i>
+        </span>
     </button>
     <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center text-sm transition-colors"
             id="download-ats-button"
-            data-url="/api/resumes/{{ resume_data.id }}/download-ats-pdf"
-            data-content-selector="#resume-preview .ats-content"
+            disabled
+            data-url="/api/resumes/{{ resume_data.id }}/download-ats-pdf" 
+            data-content-selector="#resume-preview-content .ats-content"
             title="Download Optimized Resume as PDF (Requires Optimize first)">
         <i class="fas fa-download mr-2"></i> <span>Download Optimized</span>
     </button>

@@ -29,10 +29,111 @@ body {
     border-radius: 30px;
 }
 
-/* HTMX indicators */
-.htmx-indicator {
-    display: none;
+/* Config page styles */
+.overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+    background-color: #f1f1f1;
 }
+
+/* HTMX indicator styles */
+.htmx-indicator {
+    display: none; /* Hide by default */
+}
+
+/* When the request is in flight */
 .htmx-request .htmx-indicator {
-    display: inline;
+    display: flex; /* Show the indicator */
+    align-items: center;
+    justify-content: center; /* Center spinner */
+}
+
+/* Optimize button styles during request */
+#optimize-button.htmx-request {
+    pointer-events: none; /* Prevent clicks */
+    background-color: #4338ca; /* Darker indigo */
+}
+
+/* Hide the original button content (icon and text) during request */
+#optimize-button.htmx-request .button-content {
+    visibility: hidden; /* Hide instead of display:none to maintain button size */
+}
+
+/* Spinner icon styling */
+#optimize-button .fa-spin {
+    animation: fa-spin 1s infinite linear;
+}
+@keyframes fa-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Import button styles during request */
+#import-resume-button.htmx-request {
+    pointer-events: none;
+}
+
+/* Hide the original button content (icon and text) during request */
+#import-resume-button.htmx-request .button-content {
+    visibility: hidden; /* Hide instead of display:none to maintain button size */
+}
+
+/* Style for disabled download button */
+#download-ats-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Config page layout */
+.config-grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "settings"
+        "resumes";
+    gap: 1.5rem;
+    /* Let height be determined by content and parent margin */
+    margin-bottom: 2rem;
+    max-width: 100%;
+}
+
+@media (min-width: 1024px) {
+    .config-grid-container {
+        grid-template-columns: 2fr 1fr;
+        grid-template-areas: "settings resumes";
+        /* Let height be determined by content */
+    }
+}
+
+.config-settings-column {
+    grid-area: settings;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+}
+
+.config-resume-list {
+    grid-area: resumes;
+    height: 100%;
+    display: flex;
+}
+
+#resume-list-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+}
+
+#resume-list-container .overflow-y-auto {
+    max-height: calc(100vh - 250px);
+}
+
+#resume-preview-container.loading .preview-loader {
+    display: block;
+}
+
+#resume-preview-container.loading #resume-preview {
+    opacity: 0.3;
+    filter: blur(2px);
+    transition: opacity 0.2s, filter 0.2s;
 }

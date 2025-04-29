@@ -1,9 +1,10 @@
 import fitz  # noqa
-from llama_index.core.llms import LLM, ChatMessage
+from llama_index.core.llms import ChatMessage
 from llama_index.llms.openai import OpenAI
 from sqlalchemy.orm import Session
 
 from app.models import Resume
+from app.services.config import get_llm_settings
 from app.services.resume import create_resume
 
 
@@ -20,9 +21,11 @@ async def extract_text_from_pdf(file_content: bytes) -> str:
         raise ValueError(f"Error extracting text from PDF: {str(e)}")
 
 
-async def parse_resume_text(text: str) -> Resume:
+async def parse_resume_text(session, text: str) -> Resume:
     """Use Llamaindex to parse resume text into structured data matching our models."""
-    llm: LLM = OpenAI(model_name="gpt-4.1-mini", temperature=0.1)
+    api_key, model_name = await get_llm_settings(session)
+
+    llm = OpenAI(api_key=api_key, model=model_name, temperature=0.1)
     structured_llm = llm.as_structured_llm(output_cls=Resume)
 
     prompt = f"""
@@ -34,10 +37,14 @@ RESUME TEXT:
 ---
 
 Format the information exactly according to the Resume schema. Guidelines:
-- For experience entries, convert bullet points into a single string with line breaks for the "points" field
-- For projects, extract bullet points as separate array elements in the "points" field
+- For experience entries, convert bullet points into a single string with line breaks for the "description" field
+- For projects, summarize the project description or features into the 'description' field.
+ Combine relevant points into a single string with line breaks.
+- For skills, categorize them into "technical_skills", "soft_skills", and "tools" as appropriate.
+ Combine related skills into comma-separated strings for each field.
 - Ensure all required fields are populated
-- Missing information must be set as [FIELD NAME] like [NAME] or [LOCATION] or [GITHUB] etc
+- If specific information like name, location, email, linkedin, github is missing,
+ use placeholders like '[NAME]', '[LOCATION]', '[EMAIL]', '[LINKEDIN]', '[GITHUB]'.
 """
 
     input_msg = ChatMessage.from_str(prompt)
@@ -49,6 +56,6 @@ Format the information exactly according to the Resume schema. Guidelines:
 async def import_resume_from_pdf(file_content: bytes, session: Session, name: str = "Imported Resume") -> Resume:
     """Process a PDF resume file and create a new resume in the database."""
     text = await extract_text_from_pdf(file_content)
-    parsed_resume = await parse_resume_text(text)
+    parsed_resume = await parse_resume_text(session, text)
     resume = await create_resume(session, name, parsed_resume.model_dump())
     return resume

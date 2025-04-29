@@ -3,7 +3,7 @@
 {% block content %}
 <div class="resume-editor">
     <!-- Left side - Editor -->
-    <div class="bg-white rounded-lg shadow-md p-6 overflow-y-auto">
+    <div class="bg-white rounded-lg shadow-md p-6 overflow-y-auto" data-resume-id="{{ resume_data.id }}">
         <div class="mb-6">
         {% include 'components/action_bar.html' %}
         {% include 'components/tab_bar.html' %}
@@ -28,8 +28,15 @@
     </div>
     
     <!-- Right side - Preview -->
-    <div class="bg-white rounded-lg shadow-md p-6 overflow-y-auto">
-        {% include 'components/resume_preview.html' %}
+    <div id="resume-preview-container" class="bg-white rounded-lg shadow-md p-6 overflow-y-auto relative">
+         <!-- Loading indicator overlay -->
+         <div class="preview-loader absolute inset-0 bg-white bg-opacity-80 z-10 hidden">
+             <div class="w-full h-full flex items-center justify-center">
+              <i class="fas fa-spinner fa-spin text-3xl text-indigo-600"></i>
+              </div>
+          </div>
+         <!-- Initial render of the preview component -->
+         {% include 'components/resume_preview.html' with context %}
     </div>
 </div>
 {% endblock %}

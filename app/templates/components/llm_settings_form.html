@@ -1,0 +1,33 @@
+<form id="llm-settings-form"
+          class="space-y-4"
+          hx-post="/api/config/save-llm-settings"
+          hx-target="#llm-settings-feedback">
+        <div>
+            <label class="block text-gray-700 mb-2 font-medium">API Key</label>
+            <input type="password" 
+                   name="api_key" 
+                   class="w-full p-2 border rounded" 
+                   value="{{ api_key }}"
+                   placeholder="sk-...">
+            <p class="text-xs text-gray-500 mt-1">Your OpenAI API key is required for resume optimization</p>
+        </div>
+        <div>
+            <label class="block text-gray-700 mb-2 font-medium">Model</label>
+            <select name="model" class="w-full p-2 border rounded">
+                <option value="gpt-4.1" {% if model == "gpt-4.1" %}selected{% endif %}>GPT-4.1</option>
+                <option value="gpt-4.1-mini" {% if model == "gpt-4.1-mini" %}selected{% endif %}>GPT-4.1 Mini</option>
+                <option value="gpt-4.1-nano" {% if model == "gpt-4.1-nano" %}selected{% endif %}>GPT-4.1 Nano</option>
+                <option value="gpt-4o" {% if model == "gpt-4o" %}selected{% endif %}>GPT-4o</option>
+                <option value="gpt-4o-mini" {% if model == "gpt-4o-mini" %}selected{% endif %}>GPT-4o Mini</option>
+                <option value="o1" {% if model == "o1" %}selected{% endif %}>o1</option>
+                <option value="o1-pro" {% if model == "o1-pro" %}selected{% endif %}>o1 Pro</option>
+                <option value="o3" {% if model == "o3" %}selected{% endif %}>o3</option>
+                <option value="o4-mini" {% if model == "o4-mini" %}selected{% endif %}>o4 Mini</option>
+                <option value="o3-mini" {% if model == "o3-mini" %}selected{% endif %}>o3 Mini</option>
+                <option value="o1-mini" {% if model == "o1-mini" %}selected{% endif %}>o1 Mini</option>
+            </select>
+            <p class="text-xs text-gray-500 mt-1">More advanced models provide better quality but cost more</p>
+        </div>
+        <div id="llm-settings-feedback"></div>
+        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Save</button>
+</form>

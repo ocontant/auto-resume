@@ -1,4 +1,5 @@
-<div id="resume-preview" class="resume-preview">
+<!-- This outer div ID might not be strictly needed anymore if JS targets the inner one -->
+<div id="resume-preview-content" class="resume-preview">
     <!-- Header -->
     <div class="mb-6">
         <h1 class="text-3xl font-bold text-center">{{ resume_data.personal_info.name }}</h1>
@@ -13,9 +14,12 @@
     <!-- Skills -->
     <div class="mb-6">
         <h2 class="text-lg font-bold uppercase mb-2">Skills</h2>
-        <p><strong>Programming Languages:</strong> {{ resume_data.skills.programming_languages }}</p>
-        <p><strong>Frameworks/Libraries:</strong> {{ resume_data.skills.frameworks }}</p>
-        <p><strong>Developer Tools:</strong> {{ resume_data.skills.developer_tools }}</p>
+        {% if resume_data.skills.technical_skills %}
+            <p><strong>Technical Skills:</strong> {{ resume_data.skills.technical_skills }}</p>{% endif %}
+        {% if resume_data.skills.soft_skills %}
+            <p><strong>Soft Skills:</strong> {{ resume_data.skills.soft_skills }}</p>{% endif %}
+        {% if resume_data.skills.tools %}
+            <p><strong>Tools & Technologies:</strong> {{ resume_data.skills.tools }}</p>{% endif %}
     </div>
 
     <!-- Experience -->
@@ -29,7 +33,7 @@
             </div>
             <p class="font-medium">{{ exp.company }}</p>
             <div class="whitespace-pre-line mt-2 text-sm">
-                {{ exp.points }}
+                {{ exp.description }}
             </div>
         </div>
         {% endfor %}
@@ -45,11 +49,9 @@
                 <a href="https://{{ project.url }}" class="text-blue-600">{{ project.url }}</a>
             </div>
             <p class="text-sm"><strong>Technologies:</strong> {{ project.technologies }}</p>
-            <ul class="list-disc ml-5 mt-2">
-                {% for point in project.points %}
-                <li class="mb-1">{{ point }}</li>
-                {% endfor %}
-            </ul>
+            <div class="whitespace-pre-line mt-2 text-sm">
+                {{ project.description }}
+            </div>
         </div>
         {% endfor %}
     </div>

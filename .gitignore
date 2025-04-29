@@ -330,3 +330,5 @@ __pycache__
 tailwindcss
 .idea
 *.db
+data
+

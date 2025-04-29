@@ -43,13 +43,9 @@ def test_personal_info_invalid_type(valid_personal_info):
 def test_skill_set_valid(valid_skill_set):
     """Test creating SkillSet with valid data."""
     skills = SkillSet(**valid_skill_set)
-    assert skills.programming_languages == valid_skill_set["programming_languages"]
-    assert skills.frameworks == valid_skill_set["frameworks"]
-    assert skills.developer_tools == valid_skill_set["developer_tools"]
-
-
-def test_skill_set_valid_old(valid_skill_set):
-    test_skill_set_valid(valid_skill_set)
+    assert skills.technical_skills == valid_skill_set["technical_skills"]
+    assert skills.soft_skills == valid_skill_set["soft_skills"]
+    assert skills.tools == valid_skill_set["tools"]
 
 
 def test_skill_set_invalid_type(invalid_skill_set_type_data):
@@ -62,8 +58,8 @@ def test_experience_valid(valid_experience):
     """Test creating Experience with valid data."""
     exp_data = valid_experience
     exp = Experience(**exp_data)
-    assert isinstance(exp.points, str)
-    assert exp.points == exp_data["points"]
+    assert isinstance(exp.description, str)
+    assert exp.description == exp_data["description"]
 
 
 def test_experience_missing_field(missing_experience_field_data):
@@ -88,10 +84,9 @@ def test_experience_optional_location_absent(experience_data_optional_location_a
 def test_project_valid(valid_project):
     """Test creating Project with valid data."""
     proj_data = valid_project
-    assert isinstance(proj_data["points"], list)
     proj = Project(**proj_data)
     assert proj.name == proj_data["name"]
-    assert proj.points == proj_data["points"]
+    assert proj.description == proj_data["description"]
     assert proj.technologies == proj_data["technologies"]
 
 
@@ -102,18 +97,18 @@ def test_project_missing_field(missing_project_field_data):
 
 
 def test_project_invalid_type(invalid_project_type_data):
-    """Test Project raises ValidationError for incorrect data types."""
+    """Test Project raises ValidationError for incorrect description data type."""
     with pytest.raises(ValidationError):
         Project(**invalid_project_type_data)
 
 
-def test_project_points_validation(invalid_project_points_type_data):
+def test_project_points_validation(invalid_project_description_type_data):
     """Test Project validation for 'points' field type."""
     with pytest.raises(ValidationError):
-        Project(**invalid_project_points_type_data)
+        Project(**invalid_project_description_type_data)
 
 
-def test_education_valid(valid_education):
+def test_education_valid(valid_education: dict):
     """Test creating Education with valid data."""
     edu_data = valid_education
     edu = Education(**edu_data)
@@ -138,10 +133,10 @@ def test_resume_valid(sample_resume_data):
     """Test creating Resume with valid nested models."""
     cleaned_data = {k: v for k, v in sample_resume_data.items() if k != "id"}
     resume = Resume(**cleaned_data)
-    assert resume.personal_info.name == cleaned_data["personal_info"]["name"]
-    assert resume.skills.programming_languages == cleaned_data["skills"]["programming_languages"]
-    assert isinstance(resume.experience[0].points, str)
-    assert isinstance(resume.projects[0].points, list)
+    assert resume.personal_info.name == cleaned_data["personal_info"]["name"]  # type: ignore
+    assert resume.skills.technical_skills == cleaned_data["skills"]["technical_skills"]  # type: ignore
+    assert isinstance(resume.experience[0].description, str)
+    assert isinstance(resume.projects[0].description, str)
 
 
 def test_resume_missing_section(missing_resume_section_data):

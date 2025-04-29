@@ -1,16 +1,14 @@
 import os
 from datetime import datetime
 
-from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, String, create_engine
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
-# Ensure database directory exists
-os.makedirs("app/data", exist_ok=True)
-
 # Database settings
-SQLITE_FILE_NAME = "resume.db"
+SQLITE_FILE_NAME = "data/resume.db"
 SQLITE_URL = f"sqlite:///{SQLITE_FILE_NAME}"
 
+# let's keep session sync for while
 engine = create_engine(SQLITE_URL)
 
 # Create base model
@@ -38,9 +36,9 @@ class SkillSet(Base):
 
     id = Column(Integer, primary_key=True)
     resume_id = Column(Integer, ForeignKey("resume.id"))
-    programming_languages = Column(String, nullable=False, default="")
-    frameworks = Column(String, nullable=False, default="")
-    developer_tools = Column(String, nullable=False, default="")
+    technical_skills = Column(String, nullable=False, default="")
+    soft_skills = Column(String, nullable=False, default="")
+    tools = Column(String, nullable=False, default="")
 
     # Relationship
     resume = relationship("Resume", back_populates="skills")
@@ -69,7 +67,7 @@ class Experience(Base):
     location = Column(String, nullable=True)
     start_date = Column(String, nullable=False)
     end_date = Column(String, nullable=False)
-    points = Column(String, nullable=False, default="")  # Store as a single text block
+    description = Column(String, nullable=False, default="")
 
     # Relationship
     resume = relationship("Resume", back_populates="experience")
@@ -83,7 +81,7 @@ class Project(Base):
     name = Column(String, nullable=False)
     url = Column(String, nullable=False)
     technologies = Column(String, nullable=False)
-    points = Column(JSON, nullable=False)  # Store as JSON array
+    description = Column(String, nullable=False, default="")
 
     # Relationship
     resume = relationship("Resume", back_populates="projects")
@@ -122,6 +120,9 @@ class Config(Base):
 
 # Database initialization
 def create_db_and_tables():
+    # Ensure the directory for the database file exists
+    db_dir = os.path.dirname(SQLITE_FILE_NAME)
+    os.makedirs(db_dir, exist_ok=True)
     Base.metadata.create_all(engine)
 
 
