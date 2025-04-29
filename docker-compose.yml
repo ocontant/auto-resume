@@ -3,8 +3,11 @@ services:
     build: .
     volumes:
       - ./app:/app/app
-      - ./data:/app/data
+      - resume_data:/app/data
     ports:
       - "127.0.0.1:8010:8010"
     env_file:
       - .env
+
+volumes:
+  resume_data: {}
