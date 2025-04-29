@@ -1,30 +1,22 @@
-# ResumeLM - Self Hosted ATS Optimization Resume Editor
+# AutoResume AI - Self Hosted ATS Optimization Resume Editor
 
 [![Python CI](https://github.com/anywaifu/auto-resume/actions/workflows/ci.yml/badge.svg)](https://github.com/anywaifu/auto-resume/actions/workflows/ci.yml)
 
-ResumeLM is a self-hosted web application for creating, managing, and optimizing resumes for Applicant Tracking Systems (ATS) using AI. It provides a private, efficient way to tailor your resume for specific job applications and generate professional PDF outputs.
-
-<!-- Placeholder for Resume Edit Page Screenshot -->
-<div align="center">
-  [INSERT RESUME EDIT SCREENSHOT HERE]
-  <p><i>Fig 1: The resume editor interface with live preview.</i></p>
-</div>
+AutoResume AI is a self-hosted web application for creating, managing, and optimizing resumes for Applicant Tracking Systems (ATS) using AI. It provides a private, efficient way to tailor your resume for specific job applications.
 
 ## ✨ Features
 
-*   **📄 Resume Management:** Import existing PDF resumes or build new ones using a structured editor. Manage multiple resume versions.
+*   **📄 Resume Management:** Import existing PDF resumes or build new ones using a structured editor. Manage multiple resume versions within the application.
 *   **🤖 Smart ATS Optimization:**
     *   Utilizes AI (OpenAI models like GPT-4o Mini) to analyze your resume against a provided job description.
     *   Rewrites content to incorporate relevant keywords and phrasing, aiming to improve ATS compatibility.
     *   Allows customization of the AI's instructions (prompt) via the configuration settings.
 *   **🚀 PDF Export:** Download the AI-optimized version of your resume as a clean, formatted PDF, ready for submission.
-*   **⚙️ Web-Based Configuration:** Set your OpenAI API key, choose the AI model, and manage resume settings directly through the **config** page.
+*   **⚙️ Web-Based Configuration:** Set your OpenAI API key, choose the AI model, and manage resume settings directly through the application's interface.
 
-<!-- Placeholder for Config Page Screenshot -->
-<div align="center">
-  [INSERT CONFIG PAGE SCREENSHOT HERE]
-  <p><i>Fig 2: Configuration page for AI settings and resume management.</i></p>
-</div>
+
+<img src="sample/edit-resume.png" alt="AutoResume Editor Interface" width="60%">
+
 
 ## 🚀 Getting Started
 
@@ -39,7 +31,7 @@ ResumeLM is a self-hosted web application for creating, managing, and optimizing
     docker-compose up -d --build
     ```
 
-3.  **Access ResumeLM:**
+3.  **Access AutoResume AI:**
     Open your web browser to: [http://localhost:8010](http://localhost:8010)
 
 4.  **Initial Configuration:**
