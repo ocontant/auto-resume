@@ -15,7 +15,7 @@ AutoResume AI is a self-hosted web application for creating, managing, and optim
 *   **⚙️ Web-Based Configuration:** Set your OpenAI API key, choose the AI model, and manage resume settings directly through the application's interface.
 
 
-<img src="sample/edit-resume.png" alt="AutoResume Editor Interface" width="60%">
+<img src="sample/edit-resume.png" alt="AutoResume Editor Interface">
 
 
 ## 🚀 Getting Started
