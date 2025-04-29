@@ -40,7 +40,7 @@ ResumeLM is a self-hosted web application for creating, managing, and optimizing
     ```
 
 3.  **Access ResumeLM:**
-    Open your web browser to: `http://localhost:8010`
+    Open your web browser to: [http://localhost:8010](http://localhost:8010)
 
 4.  **Initial Configuration:**
     *   Navigate to the **Config** page.
