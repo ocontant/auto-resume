@@ -1,106 +1,88 @@
-# ResumeLM - AI-Powered Resume Builder
+# ResumeLM - Self Hosted ATS Optimization Resume Editor
 
 [![Python CI](https://github.com/anywaifu/auto-resume/actions/workflows/ci.yml/badge.svg)](https://github.com/anywaifu/auto-resume/actions/workflows/ci.yml)
 
-ResumeLM is a web application designed to help users build and optimize their resumes with the assistance of AI. It features a dynamic web interface built with FastAPI and HTMX, allowing for interactive editing and real-time previews. The application integrates with Large Language Models (LLMs) via LLM to provide ATS (Applicant Tracking System) optimization suggestions.
+ResumeLM is a self-hosted web application for creating, managing, and optimizing resumes for Applicant Tracking Systems (ATS) using AI. It provides a private, efficient way to tailor your resume for specific job applications and generate professional PDF outputs.
 
-## Features
+<!-- Placeholder for Resume Edit Page Screenshot -->
+<div align="center">
+  [INSERT RESUME EDIT SCREENSHOT HERE]
+  <p><i>Fig 1: The resume editor interface with live preview.</i></p>
+</div>
 
-*   **Interactive Resume Editor:** Edit personal info, skills, work experience, projects, and education sections.
-*   **Real-time Preview:** See changes reflected instantly in the resume preview panel.
-*   **HTMX Powered:** Dynamic UI updates without full page reloads.
-*   **AI-Powered ATS Optimization:** Leverage LLMs (via Llamaindex) to get suggestions for improving resume content for ATS compatibility.
-*   **SQLite Database:** Stores resume data persistently.
-*   **Dockerized:** Easy setup and deployment using Docker and Docker Compose.
-*   **Modular Codebase:** Services layer for business logic, FastAPI routes for API endpoints.
+## ✨ Features
 
-## Tech Stack
+*   **📄 Resume Management:** Import existing PDF resumes or build new ones using a structured editor. Manage multiple resume versions.
+*   **🤖 Smart ATS Optimization:**
+    *   Utilizes AI (OpenAI models like GPT-4o Mini) to analyze your resume against a provided job description.
+    *   Rewrites content to incorporate relevant keywords and phrasing, aiming to improve ATS compatibility.
+    *   Allows customization of the AI's instructions (prompt) via the configuration settings.
+*   **🚀 PDF Export:** Download the AI-optimized version of your resume as a clean, formatted PDF, ready for submission.
+*   **⚙️ Web-Based Configuration:** Set your OpenAI API key, choose the AI model, and manage resume settings directly through the **config** page.
 
-*   **Backend:** Python, FastAPI
-*   **Frontend:** HTML, Tailwind CSS, HTMX, JavaScript (minimal)
-*   **Database:** SQLite, SQLAlchemy (ORM)
-*   **AI Integration:** OpenAI and Llamaindex
-*   **Containerization:** Docker, Docker Compose
-*   **Linting/Formatting:** Flake8, Black, isort, autoflake
-*   **Testing:** Pytest
+<!-- Placeholder for Config Page Screenshot -->
+<div align="center">
+  [INSERT CONFIG PAGE SCREENSHOT HERE]
+  <p><i>Fig 2: Configuration page for AI settings and resume management.</i></p>
+</div>
 
-## Getting Started
+## 🚀 Getting Started
 
-### Prerequisites
-
-*   Python 3.10+
-*   Docker and Docker Compose
-*   Git
-
-### Installation & Setup
-
-1.  **Clone the repository:**
+1.  **Clone the Repository:**
     ```bash
     git clone https://github.com/anywaifu/auto-resume.git
     cd auto-resume
     ```
-2.  **Create Environment File:**
-    Copy the example environment file and configure your LLM settings:
+2.  **Launch with Docker:**
+    (Requires Docker and Docker Compose)
     ```bash
-    cp .env.example .env
-    ```
-    Edit `.env` and add your API keys for the desired LLM provider (e.g., `OPENAI_API_KEY`). Make sure the `OPENAI_LLM_MODEL` variable matches a model identifier supported by OpenAI.
-
-3.  **Build and Run with Docker Compose:**
-    This is the recommended way to run the application.
-    ```bash
-    docker-compose up --build
-    ```
-    This command will:
-    *   Build the Docker image using the `Dockerfile`.
-    *   Start the `web` service defined in `docker-compose.yml`.
-    *   Mount your local code for hot-reloading during development (if using bind mounts) or use named volumes.
-    *   Load environment variables from your `.env` file.
-    *   Persist the SQLite database (`resume.db`) in the project root.
-
-### Accessing the Application
-
-Once the containers are running, open your web browser and navigate to:
-`http://localhost:8000`
-
-## Development
-
-### Running Locally (Without Docker)
-
-1.  Create and activate a virtual environment:
-    ```bash
-    python -m venv venv
-    source venv/bin/activate # On Windows use `venv\Scripts\activate`
-    ```
-2.  Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
-3.  Ensure your `.env` file is configured (see Installation).
-4.  Run the FastAPI development server:
-    ```bash
-    uvicorn app.main:app --reload
+    docker-compose up -d --build
     ```
 
-### Running Tests
-bash
-make test
+3.  **Access ResumeLM:**
+    Open your web browser to: `http://localhost:8010`
 
-### Linting and Formatting
+4.  **Initial Configuration:**
+    *   Navigate to the **Config** page.
+    *   Enter your **OpenAI API Key** in the "LLM Settings" section. This is required for PDF import parsing and ATS optimization.
+    *   Select your preferred OpenAI model (e.g., `gpt-4o-mini`).
+    *   Save the settings.
 
-*   Check for linting errors:
-    ```bash
-    make lint
-    ```
-*   Automatically format code and fix imports:
-    ```bash
-    make fix
-    ```
+## 💻 Workflow (Import -> Configure -> Select -> Optimize & Download)
 
-## Contributing
+Follow these steps for efficient resume tailoring:
 
-Contributions are welcome! Please feel free to submit pull requests or open issues.
+1.  **Import Resume:**
+    *   Go to the **Config** page.
+    *   Use the "Import Resume" section to upload your base resume PDF. Assign it a name.
+    *   *(Tip: You can use the sample resume PDF located in the `sample/` folder if you don't have one handy).*
+    *   The resume will appear in the "My Resumes" list on the right.
+2.  **(Optional) Configure Optimization Settings:**
+    *   **Provide Job Context:** While still on the **Config** page, paste the target **Job Description** into the "ATS Optimization" section and save. This helps the AI tailor the resume more specifically. *Optimization can also run without a job description set.*
+    *   **Adjust AI Instructions:** Review the "Custom ATS Prompt" on the Config page. Modify it if you want to change how the AI optimizes. *Note: The prompt should instruct the AI to generate HTML styled with pure inline CSS, as this ensures proper rendering in the exported PDF.* Save any changes. *The default prompt includes this instruction.*
+3.  **Select & Review:**
+    *   Now, in the "My Resumes" list on the Config page, click "Select" next to your resume. This takes you to the editor page.
+    *   Review the parsed content across the different tabs (Basic Info, Work, Skills, etc.). Make any necessary edits; changes are saved automatically.
+4.  **Optimize & Download:**
+    *   Click the **"ATS Optimize"** button on the editor page.
+    *   Wait for the AI to process and update the preview panel.
+    *   Review the AI-enhanced resume content.
+    *   Click the **"Download Optimized"** button (which becomes active after optimization) to get the tailored PDF.
 
-## License
 
-This project is licensed under the MIT License.
+## 🔧 Technical Details
+
+*   **Backend:** Python / FastAPI
+*   **Frontend:** HTMX / Tailwind CSS
+*   **AI Integration:** OpenAI API via LlamaIndex
+*   **PDF Handling:** WeasyPrint (Export - supports HTML + pure CSS) / PyMuPDF (Import)
+*   **Database:** SQLite
+*   **Deployment:** Docker / Docker Compose
+
+## 🤝 Contributing
+
+Contributions are welcome. Please fork the repository, create a feature branch, make your changes, ensure tests pass (`make test`), format your code (`make fix`), and open a Pull Request.
+
+## 📄 License
+
+MIT Licensed.
