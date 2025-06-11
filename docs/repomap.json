@@ -1,0 +1,1674 @@
+{
+  "project": "",
+  "structure": {
+    "generate_repomap": {
+      "path": "generate_repomap.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "extract_python_structure",
+          "line": 14
+        },
+        {
+          "name": "traverse",
+          "line": 28
+        },
+        {
+          "name": "generate_repomap",
+          "line": 79
+        },
+        {
+          "name": "format_markdown_report",
+          "line": 119
+        }
+      ],
+      "imports": [
+        {
+          "statement": "import os",
+          "line": 4
+        },
+        {
+          "statement": "from pathlib import Path",
+          "line": 5
+        },
+        {
+          "statement": "import tree_sitter_python as tspython",
+          "line": 6
+        },
+        {
+          "statement": "from tree_sitter import Language, Parser",
+          "line": 7
+        },
+        {
+          "statement": "import json",
+          "line": 8
+        }
+      ]
+    },
+    "app.db": {
+      "path": "app/db.py",
+      "classes": [
+        {
+          "name": "PersonalInfo",
+          "methods": [],
+          "line": 19
+        },
+        {
+          "name": "SkillSet",
+          "methods": [],
+          "line": 34
+        },
+        {
+          "name": "Education",
+          "methods": [],
+          "line": 47
+        },
+        {
+          "name": "Experience",
+          "methods": [],
+          "line": 60
+        },
+        {
+          "name": "Project",
+          "methods": [],
+          "line": 76
+        },
+        {
+          "name": "Resume",
+          "methods": [],
+          "line": 90
+        },
+        {
+          "name": "Config",
+          "methods": [],
+          "line": 111
+        }
+      ],
+      "functions": [
+        {
+          "name": "create_db_and_tables",
+          "line": 122
+        },
+        {
+          "name": "get_session",
+          "line": 133
+        }
+      ],
+      "imports": [
+        {
+          "statement": "import os",
+          "line": 1
+        },
+        {
+          "statement": "from datetime import datetime",
+          "line": 2
+        },
+        {
+          "statement": "from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine",
+          "line": 4
+        },
+        {
+          "statement": "from sqlalchemy.orm import declarative_base, relationship, sessionmaker",
+          "line": 5
+        }
+      ]
+    },
+    "app.models": {
+      "path": "app/models.py",
+      "classes": [
+        {
+          "name": "PersonalInfo",
+          "methods": [],
+          "line": 6
+        },
+        {
+          "name": "SkillSet",
+          "methods": [],
+          "line": 18
+        },
+        {
+          "name": "Experience",
+          "methods": [],
+          "line": 28
+        },
+        {
+          "name": "Project",
+          "methods": [],
+          "line": 41
+        },
+        {
+          "name": "Education",
+          "methods": [],
+          "line": 52
+        },
+        {
+          "name": "Resume",
+          "methods": [],
+          "line": 62
+        },
+        {
+          "name": "AIEnhanceRequest",
+          "methods": [],
+          "line": 74
+        },
+        {
+          "name": "AIPointsRequest",
+          "methods": [],
+          "line": 78
+        }
+      ],
+      "functions": [
+        {
+          "name": "db_resume_to_dict",
+          "line": 85
+        }
+      ],
+      "imports": [
+        {
+          "statement": "from typing import List, Optional",
+          "line": 1
+        },
+        {
+          "statement": "from pydantic import BaseModel, ConfigDict",
+          "line": 3
+        }
+      ]
+    },
+    "app.__init__": {
+      "path": "app/__init__.py",
+      "classes": [],
+      "functions": [],
+      "imports": []
+    },
+    "app.main": {
+      "path": "app/main.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "lifespan",
+          "line": 19
+        },
+        {
+          "name": "root",
+          "line": 47
+        },
+        {
+          "name": "home",
+          "line": 60
+        }
+      ],
+      "imports": [
+        {
+          "statement": "from contextlib import asynccontextmanager",
+          "line": 1
+        },
+        {
+          "statement": "import uvicorn",
+          "line": 3
+        },
+        {
+          "statement": "from fastapi import Depends, FastAPI, HTTPException, Query, Request",
+          "line": 4
+        },
+        {
+          "statement": "from fastapi.responses import HTMLResponse, RedirectResponse",
+          "line": 5
+        },
+        {
+          "statement": "from fastapi.staticfiles import StaticFiles",
+          "line": 6
+        },
+        {
+          "statement": "from fastapi.templating import Jinja2Templates",
+          "line": 7
+        },
+        {
+          "statement": "from sqlalchemy.exc import NoResultFound",
+          "line": 8
+        },
+        {
+          "statement": "from sqlalchemy.orm import Session",
+          "line": 9
+        },
+        {
+          "statement": "from app.db import create_db_and_tables, engine, get_session",
+          "line": 11
+        },
+        {
+          "statement": "from app.routes.ats import ats_router",
+          "line": 12
+        },
+        {
+          "statement": "from app.routes.config import config_router",
+          "line": 13
+        },
+        {
+          "statement": "from app.routes.resume import resume_router",
+          "line": 14
+        },
+        {
+          "statement": "from app.services.resume import get_all_resumes, get_resume_dict",
+          "line": 15
+        }
+      ]
+    },
+    "tests.test_services_ats": {
+      "path": "tests/test_services_ats.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "test_init_llm_configures_litellm_if_possible",
+          "line": 10
+        },
+        {
+          "name": "test_create_ats_prompt_structure",
+          "line": 16
+        },
+        {
+          "name": "test_create_ats_prompt_handles_missing_sections",
+          "line": 20
+        },
+        {
+          "name": "test_parse_llm_response_success",
+          "line": 27
+        },
+        {
+          "name": "test_parse_llm_response_handles_malformed_content",
+          "line": 31
+        },
+        {
+          "name": "test_parse_llm_response_handles_missing_sections_in_response",
+          "line": 35
+        },
+        {
+          "name": "test_optimize_resume_success",
+          "line": 43
+        },
+        {
+          "name": "test_optimize_resume_llm_api_error",
+          "line": 48
+        },
+        {
+          "name": "test_optimize_resume_parsing_error",
+          "line": 53
+        },
+        {
+          "name": "test_optimize_resume_error_getting_resume",
+          "line": 60
+        }
+      ],
+      "imports": [
+        {
+          "statement": "import pytest",
+          "line": 3
+        }
+      ]
+    },
+    "tests.conftest": {
+      "path": "tests/conftest.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "mock_session",
+          "line": 15
+        },
+        {
+          "name": "client",
+          "line": 21
+        },
+        {
+          "name": "valid_personal_info",
+          "line": 32
+        },
+        {
+          "name": "valid_personal_info_incomplete",
+          "line": 45
+        },
+        {
+          "name": "valid_skill_set",
+          "line": 57
+        },
+        {
+          "name": "invalid_skill_set_type_data",
+          "line": 67
+        },
+        {
+          "name": "valid_experience",
+          "line": 77
+        },
+        {
+          "name": "missing_experience_field_data",
+          "line": 90
+        },
+        {
+          "name": "invalid_experience_type_data",
+          "line": 102
+        },
+        {
+          "name": "experience_data_optional_location_absent",
+          "line": 115
+        },
+        {
+          "name": "valid_project",
+          "line": 127
+        },
+        {
+          "name": "missing_project_field_data",
+          "line": 138
+        },
+        {
+          "name": "invalid_project_type_data",
+          "line": 148
+        },
+        {
+          "name": "invalid_project_description_type_data",
+          "line": 159
+        },
+        {
+          "name": "valid_education",
+          "line": 170
+        },
+        {
+          "name": "missing_education_field_data",
+          "line": 180
+        },
+        {
+          "name": "invalid_education_type_data",
+          "line": 186
+        },
+        {
+          "name": "valid_experience_list",
+          "line": 196
+        },
+        {
+          "name": "valid_project_list",
+          "line": 202
+        },
+        {
+          "name": "valid_education_list",
+          "line": 208
+        },
+        {
+          "name": "sample_resume_data",
+          "line": 214
+        },
+        {
+          "name": "missing_resume_section_data",
+          "line": 233
+        },
+        {
+          "name": "invalid_resume_data_section_type",
+          "line": 249
+        },
+        {
+          "name": "valid_ai_points_request",
+          "line": 266
+        },
+        {
+          "name": "valid_ai_enhance_data",
+          "line": 277
+        },
+        {
+          "name": "invalid_ai_enhance_type_data",
+          "line": 283
+        },
+        {
+          "name": "incomplete_ai_points_request",
+          "line": 289
+        },
+        {
+          "name": "invalid_ai_points_type_context_data",
+          "line": 295
+        },
+        {
+          "name": "invalid_ai_points_type_num_data",
+          "line": 301
+        },
+        {
+          "name": "sample_resume_data_missing_sections",
+          "line": 307
+        },
+        {
+          "name": "default_resume",
+          "line": 316
+        },
+        {
+          "name": "existing_resume_data",
+          "line": 322
+        },
+        {
+          "name": "_create_mock_db_object",
+          "line": 327
+        },
+        {
+          "name": "sample_education_object",
+          "line": 337
+        },
+        {
+          "name": "sample_experience_object",
+          "line": 345
+        },
+        {
+          "name": "sample_project_object",
+          "line": 353
+        },
+        {
+          "name": "sample_project_with_description",
+          "line": 361
+        },
+        {
+          "name": "sample_resume_object",
+          "line": 370
+        },
+        {
+          "name": "sample_resume_object_missing_data",
+          "line": 376
+        },
+        {
+          "name": "sample_llm_response_content",
+          "line": 382
+        },
+        {
+          "name": "malformed_llm_response_content",
+          "line": 391
+        },
+        {
+          "name": "llm_response_missing_sections",
+          "line": 397
+        },
+        {
+          "name": "_create_mock_fixture",
+          "line": 402
+        },
+        {
+          "name": "mock_get_or_create_resume",
+          "line": 411
+        },
+        {
+          "name": "mock_get_or_create_resume_error",
+          "line": 416
+        },
+        {
+          "name": "mock_optimize_resume",
+          "line": 421
+        },
+        {
+          "name": "mock_optimize_resume_error",
+          "line": 428
+        },
+        {
+          "name": "mock_litellm_acompletion",
+          "line": 433
+        },
+        {
+          "name": "mock_litellm_acompletion_error",
+          "line": 442
+        },
+        {
+          "name": "mock_update_personal_info",
+          "line": 449
+        },
+        {
+          "name": "mock_update_personal_info_not_found",
+          "line": 454
+        },
+        {
+          "name": "mock_update_personal_info_error",
+          "line": 459
+        },
+        {
+          "name": "mock_update_skills",
+          "line": 464
+        },
+        {
+          "name": "mock_update_skills_not_found",
+          "line": 469
+        },
+        {
+          "name": "mock_update_skills_error",
+          "line": 474
+        },
+        {
+          "name": "mock_update_education_field",
+          "line": 479
+        },
+        {
+          "name": "mock_update_education_field_not_found",
+          "line": 484
+        },
+        {
+          "name": "mock_update_education_field_error",
+          "line": 489
+        },
+        {
+          "name": "mock_add_education",
+          "line": 494
+        },
+        {
+          "name": "mock_add_education_error",
+          "line": 501
+        },
+        {
+          "name": "mock_delete_education",
+          "line": 506
+        },
+        {
+          "name": "mock_delete_education_not_found",
+          "line": 511
+        },
+        {
+          "name": "mock_delete_education_error",
+          "line": 516
+        },
+        {
+          "name": "mock_update_experience_field",
+          "line": 521
+        },
+        {
+          "name": "mock_update_experience_field_not_found",
+          "line": 526
+        },
+        {
+          "name": "mock_update_experience_field_error",
+          "line": 531
+        },
+        {
+          "name": "mock_add_experience",
+          "line": 536
+        },
+        {
+          "name": "mock_add_experience_error",
+          "line": 543
+        },
+        {
+          "name": "mock_delete_experience",
+          "line": 548
+        },
+        {
+          "name": "mock_delete_experience_not_found",
+          "line": 553
+        },
+        {
+          "name": "mock_delete_experience_error",
+          "line": 558
+        },
+        {
+          "name": "mock_update_project_field",
+          "line": 563
+        },
+        {
+          "name": "mock_update_project_field_not_found",
+          "line": 568
+        },
+        {
+          "name": "mock_update_project_field_error",
+          "line": 573
+        },
+        {
+          "name": "mock_update_project_point",
+          "line": 578
+        },
+        {
+          "name": "mock_update_project_point_not_found",
+          "line": 583
+        },
+        {
+          "name": "mock_update_project_point_out_of_range",
+          "line": 588
+        },
+        {
+          "name": "mock_update_project_point_error",
+          "line": 593
+        },
+        {
+          "name": "mock_add_project",
+          "line": 598
+        },
+        {
+          "name": "mock_add_project_error",
+          "line": 605
+        },
+        {
+          "name": "mock_delete_project",
+          "line": 610
+        },
+        {
+          "name": "mock_delete_project_not_found",
+          "line": 615
+        },
+        {
+          "name": "mock_delete_project_error",
+          "line": 620
+        }
+      ],
+      "imports": [
+        {
+          "statement": "from typing import Any, Dict, List",
+          "line": 3
+        },
+        {
+          "statement": "from unittest.mock import AsyncMock, MagicMock, patch",
+          "line": 4
+        },
+        {
+          "statement": "import pytest",
+          "line": 6
+        },
+        {
+          "statement": "import pytest_asyncio",
+          "line": 7
+        },
+        {
+          "statement": "from fastapi.testclient import TestClient",
+          "line": 8
+        },
+        {
+          "statement": "from sqlalchemy.orm.exc import NoResultFound",
+          "line": 9
+        },
+        {
+          "statement": "from app.main import app as fastapi_app",
+          "line": 11
+        }
+      ]
+    },
+    "tests.test_routes_ats": {
+      "path": "tests/test_routes_ats.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "test_ats_optimize_success",
+          "line": 12
+        },
+        {
+          "name": "test_ats_optimize_error_getting_resume",
+          "line": 17
+        },
+        {
+          "name": "test_ats_optimize_error_during_optimization",
+          "line": 22
+        }
+      ],
+      "imports": [
+        {
+          "statement": "import pytest",
+          "line": 3
+        },
+        {
+          "statement": "from fastapi.testclient import TestClient",
+          "line": 4
+        }
+      ]
+    },
+    "tests.test_services_resume": {
+      "path": "tests/test_services_resume.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "test_get_resume_by_id_found",
+          "line": 11
+        },
+        {
+          "name": "test_get_resume_by_id_not_found",
+          "line": 16
+        },
+        {
+          "name": "test_get_or_create_default_resume_creates_new",
+          "line": 22
+        },
+        {
+          "name": "test_get_or_create_default_resume_returns_existing",
+          "line": 27
+        },
+        {
+          "name": "test_resume_to_dict_conversion",
+          "line": 32
+        },
+        {
+          "name": "test_resume_to_dict_handles_missing_optional_relations",
+          "line": 36
+        },
+        {
+          "name": "test_update_personal_info_success",
+          "line": 44
+        },
+        {
+          "name": "test_update_personal_info_not_found",
+          "line": 49
+        },
+        {
+          "name": "test_update_personal_info_invalid_field",
+          "line": 54
+        },
+        {
+          "name": "test_update_skills_success",
+          "line": 60
+        },
+        {
+          "name": "test_update_skills_not_found",
+          "line": 65
+        },
+        {
+          "name": "test_update_skills_invalid_field",
+          "line": 70
+        },
+        {
+          "name": "test_update_education_field_success",
+          "line": 76
+        },
+        {
+          "name": "test_update_education_field_not_found",
+          "line": 81
+        },
+        {
+          "name": "test_update_education_field_invalid_field",
+          "line": 86
+        },
+        {
+          "name": "test_update_experience_field_success",
+          "line": 92
+        },
+        {
+          "name": "test_update_experience_field_not_found",
+          "line": 97
+        },
+        {
+          "name": "test_update_experience_field_invalid_field",
+          "line": 102
+        },
+        {
+          "name": "test_update_project_field_success",
+          "line": 108
+        },
+        {
+          "name": "test_update_project_field_not_found",
+          "line": 113
+        },
+        {
+          "name": "test_update_project_field_invalid_field",
+          "line": 118
+        },
+        {
+          "name": "test_update_project_point_success",
+          "line": 124
+        },
+        {
+          "name": "test_update_project_point_project_not_found",
+          "line": 129
+        },
+        {
+          "name": "test_add_education_success",
+          "line": 135
+        },
+        {
+          "name": "test_delete_education_by_id_success",
+          "line": 141
+        },
+        {
+          "name": "test_delete_education_by_id_not_found",
+          "line": 146
+        },
+        {
+          "name": "test_add_project_success",
+          "line": 152
+        },
+        {
+          "name": "test_delete_project_by_id_success",
+          "line": 158
+        },
+        {
+          "name": "test_delete_project_by_id_not_found",
+          "line": 163
+        },
+        {
+          "name": "test_add_experience_success",
+          "line": 169
+        },
+        {
+          "name": "test_delete_experience_by_id_success",
+          "line": 175
+        },
+        {
+          "name": "test_delete_experience_by_id_not_found",
+          "line": 180
+        }
+      ],
+      "imports": [
+        {
+          "statement": "import pytest",
+          "line": 3
+        }
+      ]
+    },
+    "tests.__init__": {
+      "path": "tests/__init__.py",
+      "classes": [],
+      "functions": [],
+      "imports": []
+    },
+    "tests.test_routes_resume": {
+      "path": "tests/test_routes_resume.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "test_get_personal_section",
+          "line": 12
+        },
+        {
+          "name": "test_get_experience_section",
+          "line": 17
+        },
+        {
+          "name": "test_get_skills_section",
+          "line": 22
+        },
+        {
+          "name": "test_get_education_section",
+          "line": 27
+        },
+        {
+          "name": "test_get_projects_section",
+          "line": 32
+        },
+        {
+          "name": "test_update_personal_info_field_success",
+          "line": 38
+        },
+        {
+          "name": "test_update_personal_info_field_not_found",
+          "line": 43
+        },
+        {
+          "name": "test_update_personal_info_field_server_error",
+          "line": 48
+        },
+        {
+          "name": "test_update_personal_info_field_validation_error",
+          "line": 53
+        },
+        {
+          "name": "test_update_skills_field_success",
+          "line": 59
+        },
+        {
+          "name": "test_update_skills_field_not_found",
+          "line": 64
+        },
+        {
+          "name": "test_update_skills_field_server_error",
+          "line": 69
+        },
+        {
+          "name": "test_update_skills_field_validation_error",
+          "line": 74
+        },
+        {
+          "name": "test_update_education_field_endpoint_success",
+          "line": 80
+        },
+        {
+          "name": "test_update_education_field_endpoint_not_found",
+          "line": 85
+        },
+        {
+          "name": "test_update_education_field_endpoint_server_error",
+          "line": 92
+        },
+        {
+          "name": "test_update_education_field_endpoint_validation_error",
+          "line": 97
+        },
+        {
+          "name": "test_update_experience_field_endpoint_success",
+          "line": 103
+        },
+        {
+          "name": "test_update_experience_field_endpoint_not_found",
+          "line": 108
+        },
+        {
+          "name": "test_update_experience_field_endpoint_server_error",
+          "line": 115
+        },
+        {
+          "name": "test_update_experience_field_endpoint_validation_error",
+          "line": 122
+        },
+        {
+          "name": "test_update_project_field_endpoint_success",
+          "line": 128
+        },
+        {
+          "name": "test_update_project_field_endpoint_not_found",
+          "line": 133
+        },
+        {
+          "name": "test_update_project_field_endpoint_server_error",
+          "line": 138
+        },
+        {
+          "name": "test_update_project_field_endpoint_validation_error",
+          "line": 143
+        },
+        {
+          "name": "test_update_project_point_endpoint_success",
+          "line": 149
+        },
+        {
+          "name": "test_update_project_point_endpoint_not_found",
+          "line": 154
+        },
+        {
+          "name": "test_update_project_point_endpoint_out_of_range",
+          "line": 159
+        },
+        {
+          "name": "test_update_project_point_endpoint_server_error",
+          "line": 166
+        },
+        {
+          "name": "test_update_project_point_endpoint_validation_error",
+          "line": 171
+        },
+        {
+          "name": "test_add_education_endpoint_success",
+          "line": 177
+        },
+        {
+          "name": "test_add_education_endpoint_server_error",
+          "line": 182
+        },
+        {
+          "name": "test_delete_education_endpoint_success",
+          "line": 190
+        },
+        {
+          "name": "test_delete_education_endpoint_not_found",
+          "line": 195
+        },
+        {
+          "name": "test_delete_education_endpoint_server_error",
+          "line": 200
+        },
+        {
+          "name": "test_add_project_endpoint_success",
+          "line": 206
+        },
+        {
+          "name": "test_add_project_endpoint_server_error",
+          "line": 211
+        },
+        {
+          "name": "test_delete_project_endpoint_success",
+          "line": 219
+        },
+        {
+          "name": "test_delete_project_endpoint_not_found",
+          "line": 224
+        },
+        {
+          "name": "test_delete_project_endpoint_server_error",
+          "line": 229
+        },
+        {
+          "name": "test_add_experience_endpoint_success",
+          "line": 235
+        },
+        {
+          "name": "test_add_experience_endpoint_server_error",
+          "line": 240
+        },
+        {
+          "name": "test_delete_experience_endpoint_success",
+          "line": 248
+        },
+        {
+          "name": "test_delete_experience_endpoint_not_found",
+          "line": 253
+        },
+        {
+          "name": "test_delete_experience_endpoint_server_error",
+          "line": 258
+        }
+      ],
+      "imports": [
+        {
+          "statement": "import pytest",
+          "line": 3
+        },
+        {
+          "statement": "from fastapi.testclient import TestClient",
+          "line": 4
+        }
+      ]
+    },
+    "tests.test_models": {
+      "path": "tests/test_models.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "test_personal_info_valid",
+          "line": 17
+        },
+        {
+          "name": "test_personal_info_missing_field",
+          "line": 27
+        },
+        {
+          "name": "test_personal_info_invalid_type",
+          "line": 35
+        },
+        {
+          "name": "test_skill_set_valid",
+          "line": 43
+        },
+        {
+          "name": "test_skill_set_invalid_type",
+          "line": 51
+        },
+        {
+          "name": "test_experience_valid",
+          "line": 57
+        },
+        {
+          "name": "test_experience_missing_field",
+          "line": 65
+        },
+        {
+          "name": "test_experience_invalid_type",
+          "line": 72
+        },
+        {
+          "name": "test_experience_optional_location_absent",
+          "line": 78
+        },
+        {
+          "name": "test_project_valid",
+          "line": 84
+        },
+        {
+          "name": "test_project_missing_field",
+          "line": 93
+        },
+        {
+          "name": "test_project_invalid_type",
+          "line": 99
+        },
+        {
+          "name": "test_project_points_validation",
+          "line": 105
+        },
+        {
+          "name": "test_education_valid",
+          "line": 111
+        },
+        {
+          "name": "test_education_missing_field",
+          "line": 120
+        },
+        {
+          "name": "test_education_invalid_type",
+          "line": 126
+        },
+        {
+          "name": "test_resume_valid",
+          "line": 132
+        },
+        {
+          "name": "test_resume_missing_section",
+          "line": 142
+        },
+        {
+          "name": "test_resume_invalid_section_type",
+          "line": 148
+        },
+        {
+          "name": "test_ai_enhance_request_valid",
+          "line": 154
+        },
+        {
+          "name": "test_ai_enhance_request_missing_field",
+          "line": 160
+        },
+        {
+          "name": "test_ai_enhance_request_invalid_type",
+          "line": 166
+        },
+        {
+          "name": "test_ai_points_request_valid",
+          "line": 172
+        },
+        {
+          "name": "test_ai_points_request_missing_field",
+          "line": 181
+        },
+        {
+          "name": "test_ai_points_request_invalid_type_context",
+          "line": 188
+        },
+        {
+          "name": "test_ai_points_request_invalid_type_num_points",
+          "line": 194
+        }
+      ],
+      "imports": [
+        {
+          "statement": "import pytest",
+          "line": 1
+        },
+        {
+          "statement": "from pydantic import ValidationError",
+          "line": 2
+        },
+        {
+          "statement": "from app.models import (\n    AIEnhanceRequest,\n    AIPointsRequest,\n    Education,\n    Experience,\n    PersonalInfo,\n    Project,\n    Resume,\n    SkillSet,\n)",
+          "line": 5
+        }
+      ]
+    },
+    "app.utils.__init__": {
+      "path": "app/utils/__init__.py",
+      "classes": [],
+      "functions": [],
+      "imports": []
+    },
+    "app.routes.config": {
+      "path": "app/routes/config.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "get_config_page",
+          "line": 23
+        },
+        {
+          "name": "import_resume",
+          "line": 45
+        },
+        {
+          "name": "delete_resume",
+          "line": 64
+        },
+        {
+          "name": "save_ats_settings_endpoint",
+          "line": 74
+        },
+        {
+          "name": "save_llm_settings_endpoint",
+          "line": 93
+        },
+        {
+          "name": "save_pdf_margin_endpoint",
+          "line": 112
+        }
+      ],
+      "imports": [
+        {
+          "statement": "from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, Response, UploadFile",
+          "line": 1
+        },
+        {
+          "statement": "from fastapi.templating import Jinja2Templates",
+          "line": 2
+        },
+        {
+          "statement": "from sqlalchemy.exc import NoResultFound",
+          "line": 3
+        },
+        {
+          "statement": "from sqlalchemy.orm import Session",
+          "line": 4
+        },
+        {
+          "statement": "from app.db import get_session",
+          "line": 6
+        },
+        {
+          "statement": "from app.services.config import (\n    get_ats_settings,\n    get_llm_settings,\n    get_pdf_page_margin,\n    save_ats_settings,\n    save_llm_settings,\n    save_pdf_page_margin,\n)",
+          "line": 7
+        },
+        {
+          "statement": "from app.services.pdf_import import import_resume_from_pdf",
+          "line": 15
+        },
+        {
+          "statement": "from app.services.resume import delete_resume_by_id, get_all_resumes",
+          "line": 16
+        }
+      ]
+    },
+    "app.routes.resume": {
+      "path": "app/routes/resume.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "get_personal_section",
+          "line": 28
+        },
+        {
+          "name": "get_experience_section",
+          "line": 38
+        },
+        {
+          "name": "get_skills_section",
+          "line": 47
+        },
+        {
+          "name": "get_education_section",
+          "line": 56
+        },
+        {
+          "name": "get_projects_section",
+          "line": 66
+        },
+        {
+          "name": "get_resume_preview",
+          "line": 76
+        },
+        {
+          "name": "update_personal_info_field",
+          "line": 88
+        },
+        {
+          "name": "update_skills_field_endpoint",
+          "line": 103
+        },
+        {
+          "name": "update_education_field_endpoint",
+          "line": 118
+        },
+        {
+          "name": "update_experience_field_endpoint",
+          "line": 137
+        },
+        {
+          "name": "update_project_field_endpoint",
+          "line": 156
+        },
+        {
+          "name": "add_education_endpoint",
+          "line": 175
+        },
+        {
+          "name": "delete_education_endpoint",
+          "line": 190
+        },
+        {
+          "name": "add_project_endpoint",
+          "line": 201
+        },
+        {
+          "name": "delete_project_endpoint",
+          "line": 216
+        },
+        {
+          "name": "add_experience_endpoint",
+          "line": 227
+        },
+        {
+          "name": "delete_experience_endpoint",
+          "line": 243
+        }
+      ],
+      "imports": [
+        {
+          "statement": "from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response",
+          "line": 1
+        },
+        {
+          "statement": "from fastapi.templating import Jinja2Templates",
+          "line": 2
+        },
+        {
+          "statement": "from sqlalchemy.exc import NoResultFound",
+          "line": 3
+        },
+        {
+          "statement": "from sqlalchemy.orm import Session",
+          "line": 4
+        },
+        {
+          "statement": "from app.db import get_session",
+          "line": 6
+        },
+        {
+          "statement": "from app.services.resume import (\n    add_education,\n    add_experience,\n    add_project,\n    delete_education_by_id,\n    delete_experience_by_id,\n    delete_project_by_id,\n    get_resume_by_id,\n    get_resume_dict,\n    update_education_field,\n    update_experience_field,\n    update_personal_info,\n    update_project_field,\n    update_skills,\n)",
+          "line": 7
+        }
+      ]
+    },
+    "app.routes.__init__": {
+      "path": "app/routes/__init__.py",
+      "classes": [],
+      "functions": [],
+      "imports": []
+    },
+    "app.routes.ats": {
+      "path": "app/routes/ats.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "get_optimized_resume",
+          "line": 34
+        },
+        {
+          "name": "download_ats_resume_pdf_from_html",
+          "line": 48
+        }
+      ],
+      "imports": [
+        {
+          "statement": "from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response",
+          "line": 1
+        },
+        {
+          "statement": "from fastapi.templating import Jinja2Templates",
+          "line": 2
+        },
+        {
+          "statement": "from sqlalchemy.orm import Session",
+          "line": 3
+        },
+        {
+          "statement": "from weasyprint import HTML",
+          "line": 4
+        },
+        {
+          "statement": "from app.db import get_session",
+          "line": 6
+        },
+        {
+          "statement": "from app.services.ats import optimize_resume",
+          "line": 7
+        },
+        {
+          "statement": "from app.services.config import get_pdf_page_margin",
+          "line": 8
+        },
+        {
+          "statement": "from app.services.resume import get_resume_by_id",
+          "line": 9
+        }
+      ]
+    },
+    "app.services.config": {
+      "path": "app/services/config.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "get_default_ats_prompt",
+          "line": 18
+        },
+        {
+          "name": "get_config_value",
+          "line": 50
+        },
+        {
+          "name": "set_config_value",
+          "line": 59
+        },
+        {
+          "name": "get_ats_settings",
+          "line": 72
+        },
+        {
+          "name": "save_ats_settings",
+          "line": 80
+        },
+        {
+          "name": "get_llm_settings",
+          "line": 86
+        },
+        {
+          "name": "save_llm_settings",
+          "line": 93
+        },
+        {
+          "name": "get_pdf_page_margin",
+          "line": 99
+        },
+        {
+          "name": "save_pdf_page_margin",
+          "line": 104
+        }
+      ],
+      "imports": [
+        {
+          "statement": "import os",
+          "line": 1
+        },
+        {
+          "statement": "from typing import Optional",
+          "line": 2
+        },
+        {
+          "statement": "from sqlalchemy.orm import Session",
+          "line": 4
+        },
+        {
+          "statement": "from app.db import Config",
+          "line": 6
+        }
+      ]
+    },
+    "app.services.resume": {
+      "path": "app/services/resume.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "get_resume_by_id",
+          "line": 11
+        },
+        {
+          "name": "get_resume_dict",
+          "line": 19
+        },
+        {
+          "name": "get_all_resumes",
+          "line": 29
+        },
+        {
+          "name": "create_resume",
+          "line": 43
+        },
+        {
+          "name": "update_entity_field",
+          "line": 75
+        },
+        {
+          "name": "update_personal_info",
+          "line": 95
+        },
+        {
+          "name": "update_skills",
+          "line": 100
+        },
+        {
+          "name": "update_education_field",
+          "line": 105
+        },
+        {
+          "name": "update_experience_field",
+          "line": 119
+        },
+        {
+          "name": "update_project_field",
+          "line": 133
+        },
+        {
+          "name": "_add_item_to_collection",
+          "line": 138
+        },
+        {
+          "name": "add_education",
+          "line": 146
+        },
+        {
+          "name": "delete_education_by_id",
+          "line": 160
+        },
+        {
+          "name": "add_project",
+          "line": 172
+        },
+        {
+          "name": "delete_project_by_id",
+          "line": 187
+        },
+        {
+          "name": "add_experience",
+          "line": 197
+        },
+        {
+          "name": "delete_experience_by_id",
+          "line": 210
+        },
+        {
+          "name": "delete_resume_by_id",
+          "line": 222
+        }
+      ],
+      "imports": [
+        {
+          "statement": "from typing import Any, Dict, List, Type",
+          "line": 1
+        },
+        {
+          "statement": "from sqlalchemy import update",
+          "line": 3
+        },
+        {
+          "statement": "from sqlalchemy.exc import NoResultFound",
+          "line": 4
+        },
+        {
+          "statement": "from sqlalchemy.orm import Session",
+          "line": 5
+        },
+        {
+          "statement": "from app.db import Education, Experience, PersonalInfo, Project, Resume, SkillSet",
+          "line": 7
+        },
+        {
+          "statement": "from app.models import db_resume_to_dict",
+          "line": 8
+        }
+      ]
+    },
+    "app.services.__init__": {
+      "path": "app/services/__init__.py",
+      "classes": [],
+      "functions": [],
+      "imports": []
+    },
+    "app.services.ats": {
+      "path": "app/services/ats.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "optimize_resume",
+          "line": 16
+        },
+        {
+          "name": "build_user_message",
+          "line": 36
+        },
+        {
+          "name": "_parse_llm_response",
+          "line": 53
+        }
+      ],
+      "imports": [
+        {
+          "statement": "import json",
+          "line": 1
+        },
+        {
+          "statement": "from typing import Any, Dict",
+          "line": 2
+        },
+        {
+          "statement": "from dotenv import load_dotenv",
+          "line": 4
+        },
+        {
+          "statement": "from llama_index.core.llms import ChatMessage, MessageRole",
+          "line": 5
+        },
+        {
+          "statement": "from llama_index.llms.openai import OpenAI",
+          "line": 6
+        },
+        {
+          "statement": "from sqlalchemy.orm import Session",
+          "line": 7
+        },
+        {
+          "statement": "from app.models import db_resume_to_dict",
+          "line": 9
+        },
+        {
+          "statement": "from app.services.config import get_ats_settings, get_llm_settings",
+          "line": 10
+        },
+        {
+          "statement": "from app.services.resume import get_resume_by_id",
+          "line": 11
+        }
+      ]
+    },
+    "app.services.pdf_import": {
+      "path": "app/services/pdf_import.py",
+      "classes": [],
+      "functions": [
+        {
+          "name": "extract_text_from_pdf",
+          "line": 11
+        },
+        {
+          "name": "parse_resume_text",
+          "line": 24
+        },
+        {
+          "name": "import_resume_from_pdf",
+          "line": 56
+        }
+      ],
+      "imports": [
+        {
+          "statement": "import fitz",
+          "line": 1
+        },
+        {
+          "statement": "from llama_index.core.llms import ChatMessage",
+          "line": 2
+        },
+        {
+          "statement": "from llama_index.llms.openai import OpenAI",
+          "line": 3
+        },
+        {
+          "statement": "from sqlalchemy.orm import Session",
+          "line": 4
+        },
+        {
+          "statement": "from app.models import Resume",
+          "line": 6
+        },
+        {
+          "statement": "from app.services.config import get_llm_settings",
+          "line": 7
+        },
+        {
+          "statement": "from app.services.resume import create_resume",
+          "line": 8
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total_files": 22,
+    "total_classes": 15,
+    "total_functions": 267,
+    "total_methods": 0
+  }
+}
